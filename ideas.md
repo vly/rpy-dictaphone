@@ -1,6 +1,6 @@
 # Initial ideas #
 
-* Turret
+* turret
 * autonomous robot
 * wardriving rig
 * pocsag decoder/scanner
@@ -11,3 +11,24 @@
 * drive-by remote sensor collection/checking
 * keep-away bot
 * RFID bruteforcer/skimmer
+* data drop-point
+
+# Current equipment inventory #
+
+Item | Quantity | Owner(s)
+--- | --- | ---
+Raspberry Pi B | 3 | all
+USB wifi adapter | 3 | VL
+Bluetooth serial module | 1 | VL
+Servo (10kg) | 2 | VL
+Servo (<1kg) | 1 | VL
+RTL SDR adapter | 1 | VL
+Zigbee sensor node | 2 | VL
+
+
+# Idea evaluation criteria #
+The following areas are to be considered when formulating project plan.
+* commercial aspect
+* complexity
+* demonstration impact
+* novelty vs. genuine use
