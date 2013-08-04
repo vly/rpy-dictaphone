@@ -22,18 +22,18 @@ try:
                 stdscr.addch(0,0,key)
                 stdscr.refresh()
                 if key == ord('6'):
-                       if current < 15.3:
+                       if current < 17.8:
                                 current += 0.2
                                 p.ChangeDutyCycle(current)
                                 time.sleep(0.001)
                 if key == ord('4'):
-                        if current > 4.4:
+                        if current > 4.3:
                                 current -= 0.2
                                 p.ChangeDutyCycle(current)
                                 time.sleep(0.001)
                 key = ''
 except KeyboardInterrupt:
-        GPIO.cleanup()
+        print("Exiting")
 
 finally:
         GPIO.cleanup()
