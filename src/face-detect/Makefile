@@ -1,10 +1,14 @@
-all: face-detect
+EXE=face-detect
+CC=g++
+CFLAGS=$(shell pkg-config --cflags --libs opencv)
 
-face-detect: main.o
-	g++ main.o -o face-detect `pkg-config --cflags --libs opencv`
+all: $(EXE)
+
+$(EXE): main.o
+	$(CC) main.o -o $(EXE) $(CFLAGS)
 
 main.o: main.cpp
-	g++ -Wall -c main.cpp `pkg-config --cflags --libs opencv`
+	$(CC) -Wall -c main.cpp $(CFLAGS)
 
 clean:
-	rm -rf *o face-detect
+	rm -rf *o $(EXE)
