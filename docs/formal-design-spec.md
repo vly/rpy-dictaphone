@@ -15,9 +15,8 @@ System consists of the following components:
 
 item | quantity | description
 -----|----------|------------
-Raspberry Pi | 2 | first RPi handles the computer vision (CV) and controlling the servo + motion sensor. The second is for processing sound
- and storage.
-RPi camera module | 1 | Using this for target tracking through CV.
+Raspberry Pi | 2 | first RPi handles the computer vision (CV) and controlling the servo + motion sensor. The second is for processing sound and storage
+RPi camera module | 1 | Using this for target tracking through CV
 _USB camera_ | 1 | Used for actual session video recording
 Servos | 2 | pan and tilt of the camera + microphone mount.
 USB servo controller | 1 | External servo controller for movement accuracy
