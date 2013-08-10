@@ -9,9 +9,11 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 
+#define NA_GUI_MODE           true
 #define NA_WINDOW_NAME        "Face detection test"
 #define NA_CASCADE_CLASSIFIER "haarcascade_frontalface_alt.xml"
 #define NA_FRAME_WAIT_TIME    33
+
 
 using namespace cv;
 using namespace std;
@@ -45,8 +47,10 @@ int main(int argc, const char * argv[])
     Mat captureFrame;
     Mat grayscaleFrame;
 
-    // Load window
-    namedWindow(NA_WINDOW_NAME, CV_WINDOW_AUTOSIZE);
+    #if NA_GUI_MODE
+        // Load window
+        namedWindow(NA_WINDOW_NAME, CV_WINDOW_AUTOSIZE);
+    #endif
 
     while(true){
 
@@ -76,19 +80,27 @@ int main(int argc, const char * argv[])
             rectangle(captureFrame, pt1, pt2, cvScalar(0, 255, 0, 0), 1, 8, 0);
         }
 
-        // Display frame in window
-        imshow(NA_WINDOW_NAME, captureFrame);
+        #if NA_GUI_MODE
+            // Display frame in window
+            imshow(NA_WINDOW_NAME, captureFrame);
 
-
-        // Listen for escape key for x milliseconds
-        if(cvWaitKey(NA_FRAME_WAIT_TIME) == 27){
-          break;
-        }
+            // Listen for escape key for x milliseconds
+            if(cvWaitKey(NA_FRAME_WAIT_TIME) == 27){
+              break;
+            }
+        #endif
     }
 
-    // Destroy window
-    cvDestroyWindow(NA_WINDOW_NAME);
+    #if NA_GUI_MODE
+        // Destroy window
+        cvDestroyWindow(NA_WINDOW_NAME);
+    #endif
 
     return 0;
 }
 
+
+#undef NA_GUI_MODE
+#undef NA_WINDOW_NAME
+#undef NA_CASCADE_CLASSIFIER
+#undef NA_FRAME_WAIT_TIME
