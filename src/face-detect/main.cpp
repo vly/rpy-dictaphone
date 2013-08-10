@@ -15,7 +15,6 @@
 #define NA_FRAME_WAIT_TIME    33
 #define NA_FRAME_WIDTH        320
 #define NA_FRAME_HEIGHT       240
-#define NA_FRAMES_PER_SECOND  5
 
 using namespace cv;
 using namespace std;
@@ -37,8 +36,8 @@ int main(int argc, const char * argv[])
     // Setup face detection vars
     double scaleFactor = 1.1;
     int minNeighbors   = 3;
-    int flags          = CV_HAAR_FIND_BIGGEST_OBJECT|HAAR_DO_ROUGH_SEARCH;
-    Size minSize       = Size(30,30);
+    int flags          = CV_HAAR_FIND_BIGGEST_OBJECT|CV_HAAR_DO_ROUGH_SEARCH;
+    Size minSize       = Size(80,80);
 
     vector<Rect> faces;
 
@@ -47,7 +46,6 @@ int main(int argc, const char * argv[])
     captureDevice.open(-1);
     captureDevice.set(CV_CAP_PROP_FRAME_WIDTH, NA_FRAME_WIDTH);
     captureDevice.set(CV_CAP_PROP_FRAME_HEIGHT, NA_FRAME_HEIGHT);
-    captureDevice.set(CV_CAP_PROP_FPS, NA_FRAMES_PER_SECOND);
 
     Mat captureFrame;
     Mat grayscaleFrame;
@@ -111,4 +109,3 @@ int main(int argc, const char * argv[])
 #undef NA_FRAME_WAIT_TIME
 #undef NA_FRAME_WIDTH
 #undef NA_FRAME_HEIGHT
-#undef NA_FRAMES_PER_SECOND
