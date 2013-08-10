@@ -11,7 +11,7 @@
 
 #define NA_GUI_MODE           true
 #define NA_WINDOW_NAME        "Face detection test"
-#define NA_CASCADE_CLASSIFIER "haarcascade_frontalface_alt.xml"
+#define NA_CASCADE_CLASSIFIER "lbpcascade_frontalface.xml"
 #define NA_FRAME_WAIT_TIME    33
 #define NA_FRAME_WIDTH        320
 #define NA_FRAME_HEIGHT       240
