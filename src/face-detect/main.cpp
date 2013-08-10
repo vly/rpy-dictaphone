@@ -37,7 +37,7 @@ int main(int argc, const char * argv[])
     // Setup face detection vars
     double scaleFactor = 1.1;
     int minNeighbors   = 3;
-    int flags          = CV_HAAR_FIND_BIGGEST_OBJECT|CV_HAAR_SCALE_IMAGE;
+    int flags          = CV_HAAR_FIND_BIGGEST_OBJECT|HAAR_DO_ROUGH_SEARCH;
     Size minSize       = Size(30,30);
 
     vector<Rect> faces;
