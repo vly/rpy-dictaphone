@@ -53,6 +53,13 @@ int main(int argc, const char * argv[])
         // Take a frame from the device
         captureDevice >> captureFrame;
 
+        // If the device didn't return a frame we can't continue
+        if(captureFrame.empty()){
+            cout << "No frame captured. Exiting.";
+            cout << endl;
+            break;
+        }
+
         // Convert frame to grayscale
         cvtColor(captureFrame, grayscaleFrame, CV_BGR2GRAY);
 
