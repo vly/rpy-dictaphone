@@ -13,7 +13,9 @@
 #define NA_WINDOW_NAME        "Face detection test"
 #define NA_CASCADE_CLASSIFIER "haarcascade_frontalface_alt.xml"
 #define NA_FRAME_WAIT_TIME    33
-
+#define NA_FRAME_WIDTH        320
+#define NA_FRAME_HEIGHT       240
+#define NA_FRAMES_PER_SECOND  5
 
 using namespace cv;
 using namespace std;
@@ -43,6 +45,9 @@ int main(int argc, const char * argv[])
     // Setup video data vars
     VideoCapture captureDevice;
     captureDevice.open(-1);
+    captureDevice.set(CV_CAP_PROP_FRAME_WIDTH, NA_FRAME_WIDTH);
+    captureDevice.set(CV_CAP_PROP_FRAME_HEIGHT, NA_FRAME_HEIGHT);
+    captureDevice.set(CV_CAP_PROP_FPS, NA_FRAMES_PER_SECOND);
 
     Mat captureFrame;
     Mat grayscaleFrame;
@@ -104,3 +109,6 @@ int main(int argc, const char * argv[])
 #undef NA_WINDOW_NAME
 #undef NA_CASCADE_CLASSIFIER
 #undef NA_FRAME_WAIT_TIME
+#undef NA_FRAME_WIDTH
+#undef NA_FRAME_HEIGHT
+#undef NA_FRAMES_PER_SECOND
