@@ -1,15 +1,28 @@
 # Formal Design Specification
 
-## Introduction
+## Content
+1. [Introduction](#introduction)
+2. [System overview](#system-overview)
+3. [Design Considerations](#design-considerations)
+4. [Goals and Objectives](#goals-and-objectives)
+5. [Assumptions and Dependencies](#assumptions-and-dependencies)
+6. [General Constraints](#general-constraints)
+7. [Development Methodology](#development-methodology)
+8. [Architecture](#Architecture)
+9. [System Design](#system-design)
+10. [Data Design](#data-design)
+11. [Program Design](#program-design)
 
-Our project will attempt to modernize the phonograph, by introducing subject tracking and voice-to-text translation controlled by the Raspberry PI.
+## <a id="introduction"></a>Introduction
+
+Our project attempts to modernize the phonograph, by introducing subject tracking and voice-to-text translation controlled by the Raspberry PI. 
 
 The following are some of the use cases the project is attempting to address and cater for:
 
 * Lecture theatre and tutorial recording and note taking in absence of Echo360 deployment
 * Cost-effective portable recording solution for talks and presentations
 
-## System Overview
+## <a id="system-overview"></a>System Overview
 
 System consists of the following components:
 
@@ -26,7 +39,7 @@ Motion sensor | 1 | To reduce overall power consumption, a motion sensor enables
 External battery pack | 1 | To take advantage of the lightweight nature of the components, an external battery pack enables portability and flexibility to the system
 Wireless card | 1 | For external voice-to-text processing, an internet connection is required
 
-## Design Considerations
+## <a id="design-considerations"></a>Design Considerations
 
 The following are the initial design considerations that factor into the project:
 
@@ -34,34 +47,35 @@ The following are the initial design considerations that factor into the project
 * Storage capability for prolonged usage
 * Modularity of components
 
-### Goals and Objectives
+### <a id="goals-and-objectives"></a>Goals and Objectives
+
+This project aims to provide an easy way to audio record and annotate lectures, talks and other presentations. The platform is to be relatively portable, require minimal setup and start-up time.
+_TBD._
+
+### <a id="assumptions-and-dependencies"></a>Assumptions and Dependencies
 
 _TBD._
 
-### Assumptions and Dependencies
+### <a id="general-constraints"></a>General Constraints
 
 _TBD._
 
-### General Constraints
+### <a id="development-methodology"></a>Development Methodology
 
 _TBD._
 
-### Development Methodology
+## <a id="architecture"></a>Architecture
 
 _TBD._
 
-## Architecture
+### <a id="system-design"></a>System Design
 
 _TBD._
 
-### System Design
+### <a id="data-design"></a>Data Design
 
 _TBD._
 
-### Data Design
-
-_TBD._
-
-### Program Design
+### <a id="program-design"></a>Program Design
 
 _TBD._
