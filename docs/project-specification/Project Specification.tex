@@ -39,6 +39,9 @@
 \SetWatermarkColor[gray]{0.95}
 
 
+% Alias pi name
+\usepackage{xspace}
+\newcommand{\rpi}{\textit{Raspberry Pi\textsuperscript{\textregistered}}}
 
 
 \begin{document}
@@ -53,7 +56,10 @@
 
 \section{Introduction}
 
-...
+Our project will attempt to modernize the phonograph, by using the \rpi\xspace for subject tracking, digital recording and audio processing. A directional microphone will installed on a custom mount that can be programmatically moved in an X and Y direction. An additional camera will be used to detect the subject (e.g. a human face), and adjust the position of the microphone accordingly. The secondary of task of the project is to process the audio recordings through an Internet based voice-to-text service.
+
+The final solution will be a relatively cheap, portable and smart recording device suitable for use in a lecture theatre or classroom. It would be ideal for assiting students in note taking, or for lecturers teaching in learning spaces that havn't been outfitted with full featured recording systems (such as the \textit{Lectopia}\footnote{http://www.rmit.edu.au/teaching/technology/lecturecapture} or \textit{Echo360}\footnote{http://www.rmit.edu.au/teaching/technology/echo360} systems used at \textit{RMIT}).
+
 
 \section{System Overview}
 
