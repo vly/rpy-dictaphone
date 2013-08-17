@@ -68,29 +68,54 @@ The final solution will be a relatively cheap, portable and smart recording devi
 
 \section{System Overview}
 
-This project will use a lot of hardware. Like heaps.
+This is an ambitious project and involves a lot of complex processing and interaction with hardware. To distribute the CPU workload and modularise the solution, the functionality will be spread over two \rpis. This will also have the added benefit of making it easier to work on as a group, because the parts can be developed independently of each other.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.6\textwidth]{graphs/rpi_1.pdf}
+\caption{Connected hardware for computer vision component of project. It includes a power supply, motion sensor, RPi camera board, servo controller and two servos.}
+\label{fig:cvhardware}
+\end{figure}
+
+
+The first \rpi\xspace will be responsible for subject tracking via computer vision. It will detect the subject via an attached camera and communicate directly with a servo controller to move the microphone mount. In an effort to conserve power, this \rpi\xspace will also have a motion sensor connected to one of its General Purpose Input/Output (GPIO) ports. When no motion is detected, it will power down the connected peripherals. Figure \ref{fig:cvhardware} illustrates the connected components for this device.
 
 
 \begin{figure}
-        \centering
-        \begin{subfigure}[b]{0.5\textwidth}
-                \centering
-                \includegraphics[width=\textwidth]{graphs/rpi_1.pdf}
-                \caption{Computer vision}
-                \label{fig:vision}
-        \end{subfigure}%
-        \begin{subfigure}[b]{0.5\textwidth}
-                \centering
-                \includegraphics[width=\textwidth]{graphs/rpi_2.pdf}
-                \caption{Sound recording}
-                \label{fig:sound}
-        \end{subfigure}
-        \caption{Connected hardware setup for project. Each \rpi\xspace has a dedicated task of computer vision or sound recording.}\label{fig:hardware}
+\centering
+\includegraphics[width=0.6\textwidth]{graphs/rpi_2.pdf}
+\caption{Connected hardware for audio recording component of project. It includes a power supply, sound card, shotgun microphone and wireless card.}
+\label{fig:audiohardware}
 \end{figure}
+
+The second \rpi\xspace will be responsible for the audio recording and processing. It will be connected to a shotgun microphone attached for direction recording with minimal noise inteference. An addition USB sound card will also included to support the recording. The intention is to also perform voice-to-text processing through a web service, so a wireless card will also be attached for communication with the Interned. Figure \ref{fig:audiohardware} illustrates the connected components for this device.
+
+Both \rpis\xspace will be networked together via the Ethernet ports for inter-device communication.
+
+For a detailed summary of all involved hardware and its purpose in the project, see Table \ref{table:hardwaretable}. 
+
+
+%\begin{figure}
+%        \centering
+%        \begin{subfigure}[b]{0.5\textwidth}
+%                \centering
+%                \includegraphics[width=\textwidth]{graphs/rpi_1.pdf}
+%                \caption{Computer vision}
+%                \label{fig:vision}
+%        \end{subfigure}%
+%        \begin{subfigure}[b]{0.5\textwidth}
+%                \centering
+%                \includegraphics[width=\textwidth]{graphs/rpi_2.pdf}
+%                \caption{Sound recording}
+%                \label{fig:sound}
+%        \end{subfigure}
+%        \caption{Connected hardware setup for the project. Each \rpi\xspace has a dedicated task of computer vision or sound recording.}\label{fig:hardware}
+%\end{figure}
 
 
 
 \begin{center}
+\begin{table}
 \begin{tabular}{ |l|c|p{6cm}| }
     \hline
     
@@ -118,6 +143,10 @@ This project will use a lot of hardware. Like heaps.
     Wireless card & 1 & The voice-to-text processing will be performed remotely, so an unobtrusive internet connection will be required.\\ \hline
     
 \end{tabular}
+\caption{Summary of hardware}
+\label{table:hardwaretable}
+\end{table}
+
 \end{center}
 
 \section{Design Considerations}
