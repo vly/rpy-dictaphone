@@ -44,6 +44,10 @@
 \newcommand{\rpi}{\textit{Raspberry Pi\textsuperscript{\textregistered}}}
 \newcommand{\rpis}{\textit{Raspberry Pi\textsuperscript{\textregistered}s}}
 
+% Side by side graphics
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
 
 \begin{document}
 
@@ -65,6 +69,26 @@ The final solution will be a relatively cheap, portable and smart recording devi
 \section{System Overview}
 
 This project will use a lot of hardware. Like heaps.
+
+
+\begin{figure}
+        \centering
+        \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{graphs/rpi_1.pdf}
+                \caption{Computer vision}
+                \label{fig:vision}
+        \end{subfigure}%
+        \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{graphs/rpi_2.pdf}
+                \caption{Sound recording}
+                \label{fig:sound}
+        \end{subfigure}
+        \caption{Connected hardware setup for project. Each \rpi\xspace has a dedicated task of computer vision or sound recording.}\label{fig:hardware}
+\end{figure}
+
+
 
 \begin{center}
 \begin{tabular}{ |l|c|p{6cm}| }
