@@ -42,6 +42,7 @@
 % Alias pi name
 \usepackage{xspace}
 \newcommand{\rpi}{\textit{Raspberry Pi\textsuperscript{\textregistered}}}
+\newcommand{\rpis}{\textit{Raspberry Pi\textsuperscript{\textregistered}s}}
 
 
 \begin{document}
@@ -63,11 +64,41 @@ The final solution will be a relatively cheap, portable and smart recording devi
 
 \section{System Overview}
 
-...
+This project will use a lot of hardware. Like heaps.
+
+\begin{center}
+\begin{tabular}{ |l|c|p{6cm}| }
+    \hline
+    
+    Hardware & Quantity & Purpose \\ \hline
+    
+    \rpi & 2 & Due to the inherent complexity of audio and video processing, the solution workload will be split across two \rpis. The first will handle the computer vision and controlling the servos. The second is for processing audio and data storage.\\ \hline
+
+    Camera & 1 & Either a RPi Camera board or USB web cam will be used for subject tracking through computer vision. \\ \hline
+    
+    Servos & 2 & Two servos will be used to control the microphone mount. One servo will maneuver the mount on an X axis, while the other is used for the Y axis. \\ \hline
+        
+    USB servo controller & 1 & This will be used to improve the movement accuracy of the servos \\ \hline
+    
+    USB sound card & 1 & The \rpi\xspace has no in-built audio input jack, so an external sound card will be used to facilitate connecting the microphone. \\ \hline
+    
+    
+    Shotgun microphone & 1 & This microphone will give us targeted audio for recording voice and minimising background noise. \\ \hline
+    
+    
+    Motion sensor & 1 & To conserve battery before and after a recording session, a low-power motion sensor will be used to detect the presence of a subject in the room. The solution will return to "standby mode" if no movement is detected.\\ \hline
+
+    Power supply & 2 & To take advantage of the lightweight nature of the \rpi\xspace and components, an external battery pack will be used to make the solution portable.\\ \hline
+
+
+    Wireless card & 1 & The voice-to-text processing will be performed remotely, so an unobtrusive internet connection will be required.\\ \hline
+    
+\end{tabular}
+\end{center}
 
 \section{Design Considerations}
 
-...
+...Power consumption and "standby mode".
 
 \subsection{Goals and Objectives}
 
