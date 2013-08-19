@@ -49,6 +49,17 @@
 \usepackage{caption}
 \usepackage{subcaption}
 
+% Switch to biblatex
+\usepackage{biblatex}
+\bibliography{computer-vision}
+\bibliography{audio}
+\bibliography{servo}
+
+% Add the bib to the toc
+\DefineBibliographyStrings{english}{
+  bibliography = {Bibliography},
+}
+
 \begin{document}
 
 
@@ -223,10 +234,9 @@ Due to an unfortunate circumstance, our final group didn't form until week four.
 
 
 
-\section{Bibliography}
 
-...
-
+\nocite{*}
+\printbibliography[heading=bibintoc]
 
 
 \end{document}
