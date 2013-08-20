@@ -1,10 +1,15 @@
-rmit-osp
+Raspberry Pi Auto Dictaphone
 ========
+A platform for semi-automated tracking and recording talks, lectures, and presentations.
 
-Operating System Principles Raspberry Pi project
+Resources
+---------
+Project documentation: [docs section](tree/master/docs)
+
+Bibliography: [research wiki page](wiki/Research---Bibliography)
 
 
-Team
+Contributors
 ----
 
 * Neil Ang [s3251533@student.rmit.edu.au](mailto:s3251533@student.rmit.edu.au)
