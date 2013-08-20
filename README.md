@@ -1,12 +1,14 @@
 Raspberry Pi Auto Dictaphone
 ========
-A platform for semi-automated tracking and recording talks, lectures, and presentations.
+A Raspberry Pi-based platform for semi-automated tracking and recording talks, lectures, and presentations. 
 
 Resources
 ---------
-Project documentation: [docs section](tree/master/docs)
+Project documentation: [docs section](../../tree/master/docs)
 
-Bibliography: [research wiki page](wiki/Research---Bibliography)
+List of hardware: [hardware wiki page](../../wiki/Hardware)
+
+Bibliography: [research wiki page](../../wiki/Research---Bibliography)
 
 
 Contributors
