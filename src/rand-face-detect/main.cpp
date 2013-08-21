@@ -60,7 +60,7 @@ int main(int argc, const char * argv[])
     while (true) {
         x = rand_with_tolerance(t, x);
         y = rand_with_tolerance(t, y);
-        printf("x:%d y:%d\n", x, y);
+        printf("%d,%d\n", x, y);
         sleep(s);
     }
 
