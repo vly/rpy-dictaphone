@@ -60,6 +60,13 @@
   bibliography = {Bibliography},
 }
 
+%For process listing
+\usepackage{dirtree}
+%\usepackage{qtree}
+
+\usepackage{multicol}
+
+
 \begin{document}
 
 
@@ -185,19 +192,83 @@ This project aims to provide an easy way to audio record and annotate lectures, 
 
 \section{Architecture}
 
-...
+... hardware?
 
 \subsection{System Design}
 
-...
+... OS?
 
 \subsection{Data Design}
 
-...
+... audio recording format?
 
 \subsection{Program Design}
 
+There will be a custom main program running on each \rpi, one will act as a \textit{server} and the other as a \textit{client}. These program will spawn and manage sub-processes or threads to be responsible for individual tasks.
+
+Figure \ref{fig:processes} is a high level summary of the components that make up each main program.
+
+\begin{figure}
+\begin{multicols}{2}
+\dirtree{%
+.1 server.
+.3 pir-monitor.
+.3 face-detect.
+.3 servo-ctrl.
+.3 comm.
+}\columnbreak
+\dirtree{%
+.1 client.
+.3 voice-ctrl.
+.3 text-to-speech.
+.3 comm.
+}
+\end{multicols}
+\caption{A modularised representation of each programs sub-processes.}\label{fig:processes}
+\end{figure}
+
+\subsubsection{server and client}
+
+
+The \textit{server} will have three state based modes, which will inform how its sub-processes behave. It's states will be "standby", "seeking" and "active". The "standby" mode will halt any unnecessary power usage, the "seeking" mode will inform the processes to seek out a target, and the "active" mode is used for normal operation. 
+The \textit{client} will also be state based, but only use "standby" and "active". Its state is updated by the \textit{server} program.
+
+
+\subsubsection{pir-monitor}
+
+The \textit{pir-monitor} is responsible for recording motion detection in the room. It listens to a passive infrared sensor (or PIR-sensor) connected to the GPIO pins. Whenever it detects movement in the room, the process will pipe out the current timestamp to a shared memory location. The \textit{server} will periodically check the timestamp for recency, and use this information to assist in choosing the next system state.
+
+
+\subsubsection{face-detect}
+
+The \textit{face-detect} is responsible for controlling the connected camera hardware and looking for faces in captured images. It will continually request an image from the camera, and process the image to determine where the face is. The coordinates of a face will be sent to the \textit{servo-ctrl} for updating its position.
+
+% TODO add graph here
+
+\subsubsection{servo-ctrl}
+
+
 ...
+
+
+
+\subsubsection{voice-ctrl}
+
+...
+
+
+
+\subsubsection{text-to-speech}
+
+...
+
+
+\subsubsection{comm}
+
+Both the \textit{client} and \textit{server} will communicate with each other via a message queue implemented over TCP or UDP. The communication will be managed by a \textit{comm} sub-process.
+
+
+
 
 \subsubsection{Detailed Module Design}
 
