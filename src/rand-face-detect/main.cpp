@@ -20,7 +20,7 @@
 
 int rand_num()
 {
-    return rand() % 100 + 1;
+    return (rand() % 200 + 1) - 100;
 }
 
 int rand_with_tolerance(int t, int l)
@@ -34,8 +34,8 @@ int rand_with_tolerance(int t, int l)
 
 int main(int argc, const char * argv[])
 {
-    int x = rand_num();
-    int y = rand_num();
+    int x = 0;
+    int y = 0;
 
     int t = NA_DEFAULT_TOLERANCE;
     int s = NA_DEFAULT_WAIT;
