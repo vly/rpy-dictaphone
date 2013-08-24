@@ -247,26 +247,24 @@ The \textit{face-detect} is responsible for controlling the connected camera har
 
 \subsubsection{servo-ctrl}
 
+The \textit{servo-ctrl} is responsible for orienting the camera and microphone in the right direction. It will receive instructions from the face detect processes and adjust its positioning to try and centre the camera. The \textit{servo-ctrl} will be able to adjust the servos 180$^\circ$ on an X and Y axis.
 
-...
-
-
+% TODO To illustration of servo hardware here
 
 \subsubsection{voice-ctrl}
 
-...
+The \textit{voice-ctrl} is responsible for handling the microphone hardware. It will start and stop the voice recording and handle saving the sound recordings to hard disk. Ideally it will recognise gaps in audio patterns and save the data in "chunks" of speech for easier processing. 
 
 
 
 \subsubsection{text-to-speech}
 
-...
+The \textit{text-to-speech} process will monitor for new recording files and handle transmit them to the Internet for conversion. Once the audio recordings have been translated, it will stitch the audio files together and build a running transcript.
 
 
 \subsubsection{comm}
 
 Both the \textit{client} and \textit{server} will communicate with each other via a message queue implemented over TCP or UDP. The communication will be managed by a \textit{comm} sub-process.
-
 
 
 
