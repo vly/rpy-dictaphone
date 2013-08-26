@@ -73,6 +73,12 @@
 % Better table height
 \usepackage{tabu}
 
+% The appendix
+\usepackage{appendix}
+
+% Code highlighting
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily}
 
 \begin{document}
 
@@ -90,6 +96,7 @@ Our project will attempt to modernize the phonograph, by using the \rpi\xspace f
 
 The final solution will be a relatively cheap, portable and smart recording device suitable for use in a lecture theatre or classroom. It would be ideal for assisting students in note taking, or for lecturers teaching in learning spaces that haven't been outfitted with full featured recording systems (such as the \textit{Lectopia}\footnote{http://www.rmit.edu.au/teaching/technology/lecturecapture} or \textit{Echo360}\footnote{http://www.rmit.edu.au/teaching/technology/echo360} systems used at \textit{RMIT}).
 
+% TODO: include references to the learning objectives in this section.
 
 \section{System Overview}
 
@@ -269,7 +276,7 @@ In the event that the group finishes the project early we can optionally explore
 
 \subsection{System Design}
 
-... OS?
+... OS? Prototyped in Python. Programmed in C++.
 
 \subsection{Data Design}
 
@@ -363,6 +370,9 @@ There are multiple hardware dependant components to be built for the project and
 
 \section{Roles and Responsibilities}
 
+% Criterion 5 Team Roles  - Roles and responsibilities of each team member. A simple breakdown of primary and secondary tasks for each person.
+
+
 Due to an unfortunate circumstance, our final group didn't form until week four. As a result there is cross-overs in our teams individual strengths. The roles have been divided with some shared responsibilities for delivering the final solution. All three group members will be writing software and experiment with hardware.
 
 
@@ -375,6 +385,49 @@ Due to an unfortunate circumstance, our final group didn't form until week four.
 
 \subsection{Neil Ang}
 \textit{Neil} has strong programming background and a particular interest in intelligent system design. He will be responsible for implementing the object tracking and network communication between multiple \rpis. He will also take on the responsible for the technical writing, and help the other team members with documenting the project. 
+
+
+\begin{appendices}
+\chapter{Reflections of the Raspberry Pi Cross-Compiler build}
+
+\subsection*{Did only one person build the image or did each member of the team do it?}
+
+Each member individually completed the cross-compiler task, but only one member was chosen to demonstrate it in the laboratory.
+
+\subsection*{If more than one did it, did team members do it independently or did they do it 
+collaboratively?}
+
+Every member completed it individually. There was no need to complete it collaboratively as the provided instructions were straightforward.
+
+\subsection*{Did they have any problems? If so how did they overcome them? What were 
+the fixes?}
+
+Following the instructions precisely meant there were no issues with the cross-compile. However, following the instructions for setting up the .inputrc resulted in two members unable to input the 'c' key on their keyboard.
+
+An improved version of the .inputrc script for backwards searching was found on Stack Overflow\footnote{http://stackoverflow.com/questions/1030182/how-do-i-change-bash-history-completion-to-complete-whats-already-on-the-line}:
+
+\begin{lstlisting}[frame=single]
+"\e[A":history-search-backward
+"\e[B":history-search-forward
+\end{lstlisting}
+
+\subsection*{Do they understand what the recipe scripts did? Why was a cross compiler 
+necessary?}
+
+Val had prior knowledge of cross-compiling and understood the scripts. Alfred and Neil followed the commands successfully, but did not learn anything about how it worked from the exercise.
+
+The cross-compiling was necessary to build an image that would be runnable on the \rpi\xspace hardware.
+
+\subsection*{Why did the script use uClib and not glibc? What are the trade-offs?}
+
+No idea. We didn't investigate this.
+
+\subsection*{Did using this recipe help you gain confidence in using the UNIX command 
+line? What man page entries did you use? }
+
+Not really, and no man pages were looked up. We all already had a basic understanding of using the command line. Although the point of the exercise may have been to improve our comfort with the terminal, running the set of commands verbatim from the lab sheet was not very effective with our group.
+
+\end{appendices}
 
 
 
