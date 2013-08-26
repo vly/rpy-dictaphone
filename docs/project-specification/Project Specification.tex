@@ -66,6 +66,13 @@
 
 \usepackage{multicol}
 
+% Stop tables being repositioned
+\usepackage{float}
+\restylefloat{table}
+
+% Better table height
+\usepackage{tabu}
+
 
 \begin{document}
 
@@ -134,33 +141,31 @@ For a detailed summary of all involved hardware and its purpose in the project, 
 
 \begin{center}
 \begin{table}
-\begin{tabular}{ |l|c|p{6cm}| }
-    \hline
-    
-    Hardware & Quantity & Purpose \\ \hline
-    
-    \rpi & 2 & Due to the inherent complexity of audio and video processing, the solution workload will be split across two \rpis. The first will handle the computer vision and controlling the servos. The second is for processing audio and data storage.\\ \hline
+{\tabulinesep=2mm
+\begin{tabu}{ lcp{7cm} }
 
-    Camera & 1 & Either a RPi Camera board or USB web cam will be used for subject tracking through computer vision. \\ \hline
+    \textbf{Hardware} & \textbf{Qty} & \textbf{Purpose} \\ \hline
     
-    Servos & 2 & Two servos will be used to control the microphone mount. One servo will manoeuvre the mount on an X axis, while the other is used for the Y axis. \\ \hline
+    \rpi & 2 & Due to the inherent complexity of audio and video processing, the solution workload will be split across two \rpis. The first will handle the computer vision and controlling the servos. The second is for processing audio and data storage.\\ 
+
+    \textit{Camera} & 1 & Either a RPi Camera board or USB web cam will be used for subject tracking through computer vision. \\ 
+    
+   \textit{Servos} & 2 & Two servos will be used to control the microphone mount. One servo will manoeuvre the mount on an X axis, while the other is used for the Y axis. \\ 
         
-    USB servo controller & 1 & This will be used to improve the movement accuracy of the servos \\ \hline
+    \textit{USB servo controller} & 1 & This will be used to improve the movement accuracy of the servos \\ 
     
-    USB sound card & 1 & The \rpi\xspace has no in-built audio input jack, so an external sound card will be used to facilitate connecting the microphone. \\ \hline
+    \textit{USB sound card} & 1 & The \rpi\xspace has no in-built audio input jack, so an external sound card will be used to facilitate connecting the microphone. \\ 
     
+    \textit{Shotgun microphone} & 1 & This microphone will give us targeted audio for recording voice and minimising background noise. \\ 
     
-    Shotgun microphone & 1 & This microphone will give us targeted audio for recording voice and minimising background noise. \\ \hline
-    
-    
-    Motion sensor & 1 & To conserve battery before and after a recording session, a low-power motion sensor will be used to detect the presence of a subject in the room. The solution will return to "standby mode" if no movement is detected.\\ \hline
+    \textit{Motion sensor} & 1 & To conserve battery before and after a recording session, a low-power motion sensor will be used to detect the presence of a subject in the room. The solution will return to "standby mode" if no movement is detected.\\ 
 
-    Power supply & 2 & To take advantage of the lightweight nature of the \rpi\xspace and components, an external battery pack will be used to make the solution portable.\\ \hline
+    \textit{Power supply} & 2 & To take advantage of the lightweight nature of the \rpi\xspace and components, an external battery pack will be used to make the solution portable.\\ 
 
 
-    Wireless card & 1 & The voice-to-text processing will be performed remotely, so an unobtrusive internet connection will be required.\\ \hline
+    \textit{Wireless card} & 1 & The voice-to-text processing will be performed remotely, so an unobtrusive internet connection will be required.\\ \hline
     
-\end{tabular}
+\end{tabu} }
 \caption{Summary of hardware}
 \label{table:hardwaretable}
 \end{table}
@@ -188,7 +193,75 @@ This project aims to provide an easy way to audio record and annotate lectures, 
 
 \subsection{Development Methodology}
 
-...
+The project will constructed over 3 main stages in isolated parts by all group members. 
+
+
+\subsubsection{Stage 1}
+
+The first stage will attempt to solve the hardest issues of face recognition and physical movement. We will also need to demo our cross-compiler and develop the project specification.
+
+\begin{table}[H]
+\begin{tabular}{|l|c|c|}
+    \hline
+    \textbf{Objective} & \textbf{Members} & \textbf{Week} \\ \hline
+    
+    Lab demo & All & 5 \\ \hline
+    OpenCV tracking & Alfred, Neil & 4, 5, 6 \\ \hline
+    Servo movement & Val & 4, 5, 6 \\ \hline
+    Project Specification & Neil & 6 \\ \hline
+
+\end{tabular}
+\end{table}
+
+\subsubsection{Stage 2}
+
+Stage two will also encapsulate the mid-semester break. We will combine what was built in the first stage and start work on implementing the features of the second \rpi.
+
+\begin{center}
+\begin{table}[H]
+\begin{tabular}{|l|c|c|}
+    \hline
+    \textbf{Objective} & \textbf{Members} & \textbf{Week} \\ \hline
+    
+    Servo Mount & Val & 7 \\ \hline
+    Audio recording & Val & 8 \\ \hline
+    Pi device comms & Alfred & 7 \\ \hline
+    Server complete & Alfred & 8 \\ \hline
+    PIR monitor & Neil & 7 \\ \hline
+    Integrated Face tracking /w Servo & Neil & 8 \\ \hline
+
+
+\end{tabular}
+\end{table}
+\end{center}
+
+
+\subsubsection{Stage 3}
+
+Final stage will involve putting all the finished pieces together. We will also need to deliver our presentation and portfolio in this stage.
+
+
+\begin{center}
+\begin{table}[H]
+\begin{tabular}{|l|c|c|}
+    \hline
+    \textbf{Objective} & \textbf{Members} & \textbf{Week} \\ \hline
+
+    Data storage & Neil & 9 \\ \hline    
+    Voice-to-text & Val & 9 \\ \hline    
+    Client complete & Alfred & 9 \\ \hline    
+    Demo & All & 10 \\ \hline    
+    Portfolio & All & 12 \\ \hline    
+
+\end{tabular}
+\end{table}
+\end{center}
+
+\subsubsection{Stage 4}
+
+In the event that the group finishes the project early we can optionally explore power improvements to the project. This would include but is not limited to: benchmarking and tracking power usage with the hardware; re-designing all the hardware to powered by battery; integrating an in-progress battery indicator into the project.
+
+
 
 \section{Architecture}
 
