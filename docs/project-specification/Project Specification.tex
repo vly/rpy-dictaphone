@@ -33,10 +33,10 @@
 
 
 % Set watermark while in development
-%\usepackage{draftwatermark}
-%\SetWatermarkText{DRAFT}
-%\SetWatermarkScale{5}
-%\SetWatermarkColor[gray]{0.95}
+\usepackage{draftwatermark}
+\SetWatermarkText{DRAFT}
+\SetWatermarkScale{5}
+\SetWatermarkColor[gray]{0.95}
 
 
 % Alias pi name
@@ -185,14 +185,16 @@ For a detailed summary of all involved hardware and its purpose in the project, 
 
 \section{Design Considerations}
 
-One of our goals is to design this as a portable solution. For this to occur we will need to factor in power consumption. Powering the solution by battery is not difficult, but we will need to intelligently invent ways to reduce resource usage to increase battery performance. This will include powering hardware on and off when not in use and reducing CPU usage to a minimum. 
+We want the system to run efficiently, but early experiments have suggested that the face detection will be very CPU intensive. We've decided that Python is acceptable for prototyping components, but for optimal performance we will need to port all our software to C and C++ implementations.
 
-{\color{red} Storage capability for prolonged usage. Modularity of components.}
+Another one of our goals is to design this as a portable solution. For this to occur we will need to factor in power consumption. Powering the solution by battery is not difficult, but we will need to intelligently invent ways to reduce resource usage to increase battery performance. This will include powering hardware on and off when not in use and reducing CPU usage to a minimum. Although we will endeavour to design the project to be power conservative, we will only explore  battery power if we have time remaining at the end of the project. 
+
+{\color{red} Storage capability for prolonged usage. Modularity of components. }
 
 
 \subsection{Goals and Objectives}
 
-This project aims to provide an easy way to audio record and annotate lectures, talks and other presentations. {\color{red}The platform is to be relatively portable, require minimal setup and start-up time...}
+This project aims to provide an easy way to audio record and annotate lectures, talks and other presentations. {\color{red}The platform is to be relatively portable, require minimal setup and start-up time... perhaps learning objectives here too}
 
 \subsection{Assumptions and Dependencies}
 
@@ -200,7 +202,7 @@ This project aims to provide an easy way to audio record and annotate lectures, 
 
 \subsection{General Constraints}
 
-{\color{red}...}
+{\color{red}...add research into depth tracking... hardware constraints... time constraints...}
 
 \subsection{Development Methodology}
 
@@ -418,9 +420,7 @@ An improved version of the .inputrc script for backwards searching was found on 
 \subsection*{Do they understand what the recipe scripts did? Why was a cross compiler 
 necessary?}
 
-Val had prior knowledge of cross-compiling and understood the scripts. Alfred and Neil followed the commands successfully, but did not learn anything about how it worked from the exercise.
-
-The cross-compiling was necessary to build an image that would be runnable on the \rpi\xspace hardware.
+Val had prior knowledge of cross-compiling and understood the scripts. The cross-compiling was necessary to build an image that would be runnable on the \rpi\xspace hardware.
 
 \subsection*{Why did the script use uClib and not glibc? What are the trade-offs?}
 
