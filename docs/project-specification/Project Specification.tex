@@ -315,11 +315,20 @@ In the event that the group finishes the project early we can optionally explore
 
 \section{Architecture}
 
-{\color{red}... hardware?}
+{\color{red}... general intro}
 
 \subsection{System Design}
 
-{\color{red}... OS? Prototyped in Python. Programmed in C++.}
+The project hardware consists of two \rpis working in parallel as a complete system. Communication between the two \rpi\xspace units is done through a central messaging system, allowing for modularity of project components.
+
+The pan and tilt motion of the project is provided by two servos connected to an USB \textit{Pololu Maestro} servo controller. {\color{red} Communication is achieved through the virtual serial port over USB.}
+
+
+As the \rpi units don't have built-in microphone input ports, sound recording is to be enabled through an USB sound card. Initial tests show a requirement for this sound card to be physically connected away from the \rpi\xspace device as the circuit design is generating notable line noise.
+
+Power is delivered by a single powered USB hub that is also connecting the first \rpi\xspace to the USB camera and external servo controller. An additional 5V of power will be delivered by an external 4xAA battery pack for movement of the servos.
+
+In order to reduce overall power consumption of the system, a passive infrared (PIR) proximity sensor is being utilised to detect motion in line-of-sight of the onboard \rpi\xspace camera. 
 
 \subsection{Data Design}
 
