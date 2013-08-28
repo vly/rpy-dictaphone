@@ -25,6 +25,7 @@ int rand_num()
 
 int rand_with_tolerance(int t, int l)
 {
+    setvbuf(stdout, NULL, _IONBF, 0);
     int i;
     do {
         i = rand_num();
