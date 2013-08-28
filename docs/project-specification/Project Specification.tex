@@ -176,41 +176,40 @@ Another one of our goals is to design this as a portable solution. For this to o
 
 This project aims to provide an easy way to audio record and annotate lectures, talks and other presentations. However we are also attempting to meet all learning objectives of the assignment as well.
 
-{\color{red}The platform is to be relatively portable, require minimal setup and start-up time... perhaps learning objectives here too}
-
-
-\subsubsection{Learning Objective 1}
-
+\begin{description}
+   
+  \item[Personal goals] \hfill \\
+      Design a solution that is to be relatively portable, requires minimal setup and start-up time. 
+      
+  \item[Learning objective 1] \hfill \\
 %\textit{Design, develop, test, and debug a complex system-level program on a resource constrained device using appropriate development environments, debuggers, unit testing tools, and version control tools.}
 %\\ \\
-
-{\color{red} TODO: Add info about the design and develop environment.}
+  {\color{red} TODO: Add info about the design and develop environment.}
 
 The \rpi\xspace is a resource constrained device, so our objective is to ensure that our system runs efficiently with the hardware available. We will achieve this by running performance tests for all software components and introducing clever ways (e.g. using the motion sensor) to reduce CPU and conserve power. {\color{red} TODO: add the debugger we will use.}
 
 All source code and project documentation for this project is version controlled through \textit{git}, and hosted on a private\footnote{Access to this repository is available upon request.} \textit{GitHub} repository along with our project wiki and development logs.
 
-\subsubsection{Learning Objective 2}
-
+  \item[Learning objective 2] \hfill \\
 %\textit{Assess how computing resources are used by the application software and managed by the system software. Analyse the inherent trade-offs between hardware constraints and system software.}
 %\\ \\
-
 The system will be built on a bare-bones linux distribution and designed so that each sub-components of the main software application will take responsibility for interfacing with only one hardware feature (e.g. the \textit{comms} will be the only process that can access the ethernet port, and the \textit{face-detect} process will be the only one that can access the camera). Building the solution this way, with no other programs competing for resources is how we will effectively manage the hardware.
 
 {\color{red} TODO: how will we analyse the trade offs between hardware/software?}
 
 
-\subsubsection{Learning Objective 3}
-
-%\textit{Construct appropriate diagrams and textual descriptions to communicate a system level program design and how it integrates one or more of the following key OS concepts: a. kernel and hardware interaction; b. processes and interprocess communication; c. concurrency and synchronisation; d. pre-emptive and non-preemptive scheduling; e. memory hierarchy, management, and cost-performance trade-offs; f. file system design and implementation; and/or g. security and privacy.}
+  \item[Learning objective 3] \hfill \\
+  %\textit{Construct appropriate diagrams and textual descriptions to communicate a system level program design and how it integrates one or more of the following key OS concepts: a. kernel and hardware interaction; b. processes and interprocess communication; c. concurrency and synchronisation; d. pre-emptive and non-preemptive scheduling; e. memory hierarchy, management, and cost-performance trade-offs; f. file system design and implementation; and/or g. security and privacy.}
 %// // 
 This will be covered in the final portfolio through diagrams of the system design.
 
-\subsubsection{Learning Objective 4}
-
+  \item[Learning objective 4] \hfill \\
 %\textit{Describe the full range of considerations of effective and efficient teamwork.}
-
 The team has been given primary roles which make use of their best skills. However, to increase each group members personal learning in areas they are not already accomplished in, we've allowed for some overlap in the roles. For example, Val who has expertise in Unix/Hardware, will also attempt to prototype some of the hardware interfaces in Python. Neil, who doesn't have much hardware or C++ experience, will then port the Python scripts to C++. The primary responsibilities for the roles will still lie with designated group member, but everyone will have the opportunity to try something they haven't done before.
+
+\end{description}
+
+
 
 
 \subsection{Assumptions and Dependencies}
