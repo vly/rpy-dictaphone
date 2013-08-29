@@ -380,8 +380,14 @@ The \textit{text-to-speech} process will monitor for new recording files and han
 
 \subsubsection{comm}
 
-Both the \textit{client} and \textit{server} will communicate with each other via a message queue implemented over TCP or UDP. The communication will be managed by a \textit{comm} sub-process.
+Both the \textit{client} and \textit{server} will communicate with each other via a message queue implemented over TCP or UDP. The communication will be managed by a \textit{comm} sub-process. Figure \ref{fig:comm} is a high level diagram of how the units will communicate.
 
+\begin{figure}
+\centering
+\includegraphics[width=1.0\textwidth]{graphs/comm.pdf}
+\caption{High level illustration of inter-device communication.}
+\label{fig:comm}
+\end{figure}
 
 
 \section{Testing Issues}
