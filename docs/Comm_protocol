@@ -1,0 +1,30 @@
+The Protocol of Pi-Comm:
+
+This protocol is represent as string buffer, and shall be consisted in tow parts:
+  1. Message head
+  2. Message body
+  
+The Message head shall be consisted as follow:
+  1. Message ID
+  2. Message Size (sizeof(message head) + sizeof(message body)
+  3. Message package num (in case that there hava meesage too long to send at one time)
+  
+Example:
+  struct message_head {
+      int m_id;
+      int size;
+      int p_id;
+  };
+  
+For Face Detection Message:
+  1. Detect Start  :   M_ID = 1
+        Message body = null;
+  2. Detect End   :   M_ID = 2
+        Message body = null;
+  3. Face Detected :  M_ID = 3
+        Message body = [position]
+  4. Tracing : M_ID = 4
+        Message body = [position]
+  5. Lose Target : M_ID 5
+        Message body = null
+  
