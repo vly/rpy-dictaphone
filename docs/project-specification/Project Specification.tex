@@ -316,15 +316,13 @@ In order to reduce overall power consumption of the system, a passive infrared (
 
 \subsection{Data Design}
 
-It is undecided if we will implement the program through threads or sub-processes. Either way we will need to devise a solution for inter-process communication. For inter-device communication we will implement a message queue protocol over TCP or UDP.
+It is undecided if we will implement the program through threads or sub-processes. Either way we will need to devise a solution for inter-process communication. {\color{red}For inter-device communication we will implement a message queue protocol over TCP or UDP.}
 
 {\color{red} TODO: should we add something about storing audio??}
 
 \subsection{Program Design}
 
-There will be a custom main program running on each \rpi, one will act as a \textit{server} and the other as a \textit{client}. These program will spawn and manage sub-processes or threads to be responsible for individual tasks.
-
-Figure \ref{fig:processes} is a high level summary of the components that make up each main program.
+There will be a custom main program running on each \rpi. The one on the computer vision device will act like a \textit{server}, and the audio recording device will behave like a \textit{client}. These program will spawn and manage sub-processes or threads to be responsible for individual tasks. For simplicity they will just be referred to as "sub-processes" in the below descriptions. Figure \ref{fig:processes} is a high level summary of the components that make up each main program.
 
 \begin{figure}
 \begin{multicols}{2}
@@ -348,26 +346,25 @@ Figure \ref{fig:processes} is a high level summary of the components that make u
 \subsubsection{server and client}
 
 
-The \textit{server} will have three state based modes, which will inform how its sub-processes behave. It's states will be "standby", "seeking" and "active". The "standby" mode will halt any unnecessary power usage, the "seeking" mode will inform the processes to seek out a target, and the "active" mode is used for normal operation. 
-The \textit{client} will also be state based, but only use "standby" and "active". Its state is updated by the \textit{server} program.
+The \textit{server} will have three state based modes, which will inform how its sub-processes behave. It's states will be "standby", "seeking" and "active". The "standby" mode will halt any unnecessary power usage, the "seeking" mode will inform the processes to seek out a target, and the "active" mode will be used for normal operation. 
+
+The \textit{client} will also be state based, but only use "standby" and "active". Its state will be set and updated by the \textit{server} program.
 
 
 \subsubsection{pir-monitor}
 
-The \textit{pir-monitor} is responsible for recording motion detection in the room. It listens to a passive infrared sensor (or PIR-sensor) connected to the GPIO pins. Whenever it detects movement in the room, the process will pipe out the current timestamp to a shared memory location. The \textit{server} will periodically check the timestamp for recency, and use this information to assist in choosing the next system state.
+The \textit{pir-monitor} will be responsible for recording motion detection in the room. It will listen to a passive infrared sensor (or PIR-sensor) connected to the GPIO pins on the device. Whenever it detects movement in the room, the sub-process will pipe out the current timestamp to a shared memory location. The \textit{server} will periodically check the timestamp for recency, and use this information to assist in choosing the next system state.
 
 
 \subsubsection{face-detect}
 
-The \textit{face-detect} is responsible for controlling the connected camera hardware and looking for faces in captured images. It will continually request an image from the camera, and process the image to determine where the face is. The coordinates of a face will be sent to the \textit{servo-ctrl} for updating its position.
+The \textit{face-detect} is responsible for controlling the connected camera hardware and looking for faces in captured images. It will continually request an image from the camera and process the image to determine where a face is located. The coordinates of a face will be communicated with the \textit{servo-ctrl} for updating its position.
 
-% TODO add graph here
 
 \subsubsection{servo-ctrl}
 
-The \textit{servo-ctrl} is responsible for orienting the camera and microphone in the right direction. It will receive instructions from the face detect processes and adjust its positioning to try and centre the camera. The \textit{servo-ctrl} will be able to adjust the servos 180$^\circ$ on an X and Y axis.
+The \textit{servo-ctrl} is responsible for orienting the microphone and camera in the right direction. It will receive instructions from the \textit{face-detect} sub-process and adjust its positioning to try and centre the camera. The \textit{servo-ctrl} will be able to adjust the servos 180$^\circ$ on an X and Y axis.
 
-% TODO To illustration of servo hardware here
 
 \subsubsection{voice-ctrl}
 
@@ -377,12 +374,12 @@ The \textit{voice-ctrl} is responsible for handling the microphone hardware. It 
 
 \subsubsection{text-to-speech}
 
-The \textit{text-to-speech} process will monitor for new recording files and handle transmit them to the Internet for conversion. Once the audio recordings have been translated, it will stitch the audio files together and build a running transcript.
+The \textit{text-to-speech} sub-process will monitor for new recording files and transmit them to the Internet for conversion. Once the audio recordings have been translated, it will concatenate the audio files together and add the running transcript.
 
 
 \subsubsection{comm}
 
-Both the \textit{client} and \textit{server} will communicate with each other via a message queue implemented over TCP or UDP. The communication will be managed by a \textit{comm} sub-process. Figure \ref{fig:comm} is a high level diagram of how the units will communicate.
+Both the \textit{client} and \textit{server} will communicate with each other via a message queue implemented over TCP or UDP. The communication will be managed by a \textit{comm} sub-process on both devices. Figure \ref{fig:comm} is a high level diagram of how the communication will occur.
 
 \begin{figure}
 \centering
@@ -394,20 +391,20 @@ Both the \textit{client} and \textit{server} will communicate with each other vi
 
 \section{Testing Issues}
 
-There are multiple hardware dependant components to be built for the project and limited hardware ownership within the group. The project can be built in parts, however they will need to be brought together to ensure everything works in unison. 
+There will be multiple hardware dependant components to be built for the project and limited hardware ownership within the group. The project can be built in parts, however they will need to be brought together to test everything works in unison.
 
 \subsection{Types of Testing to be conducted}
 
-{\color{red} 
+We will need to regularly run hardware tests to ensure that we are using all the system resources efficiently.
 
-We will regularly test the CPU intensive parts of the system and trial tuning them for ?? Run tests for the sound quality? Hardware tests to ensure parts are online?
+We also need to run test on the audio quality being captured. We have already found that even with the direction microphone, interference can be caused from the hardware circuitry. 
 
-}
+{\color{red} TODO: Should we add something more specific here? }
 
 
 \subsection{Performance Bounds}
 
-{\color{red} ... ??? }
+{\color{red} TODO: Not sure if we want to including this heading.  }
 
 
 
@@ -417,18 +414,18 @@ We will regularly test the CPU intensive parts of the system and trial tuning th
 % Criterion 5 Team Roles  - Roles and responsibilities of each team member. A simple breakdown of primary and secondary tasks for each person.
 
 
-Due to an unfortunate circumstance, our final group didn't form until week four. As a result there is cross-overs in our teams individual strengths. The roles have been divided with some shared responsibilities for delivering the final solution. All three group members will be writing software and experiment with hardware.
+Due to an unfortunate circumstance, our final group didn't form until week four. As a result there is cross-overs in our teams individual strengths. The roles have been divided with some shared responsibilities for delivering the final solution. Although at different levels, all three group members will be writing software, documenting and experimenting with hardware.
 
 
 \subsection{Val Lyashov}
-\textit{Val} has been working with computer components since he was 16. He will take on the role of designing the hardware solution and providing the operating environment. He will also be responsible for drafting communication interfaces to the hardware in Python, which will later be ported to C by the other members.
+\textit{Val} has been working with computer components since he was 16. He will take on the role of designing the hardware solution and providing the operating environment. He will also be responsible for drafting some software interfaces to the hardware in Python, which will later be ported to C/C++ by the other members.
 
 
 \subsection{"Alfred" Yang Yuan}
-\textit{Alfred} is an experienced programmer who has professionally worked with C++ for over 3 years. He will be responsible for the final software architecture and optimisation of the software layer. His role will also involve improving the scripts written by the other team members to be multi-threaded and run efficiently with the hardware.
+\textit{Alfred} is an experienced programmer who has professionally worked with C++ for over 3 years. He will be responsible for the final software architecture and optimisation of the software layer. His role will also involve improving the code written by the other team members to be multi-threaded and run efficiently with the hardware.
 
 \subsection{Neil Ang}
-\textit{Neil} has strong programming background and a particular interest in intelligent system design. He will be responsible for implementing the object tracking and network communication between multiple \rpis. He will also take on the responsible for the technical writing, and help the other team members with documenting the project. 
+\textit{Neil} has strong programming background and a particular interest in intelligent system design. He will be responsible for implementing the subject tracking and writing some C/C++ interfaces to the hardware. He will also take on the responsible for the technical writing and leadership of the group. 
 
 
 \begin{appendices}
@@ -441,14 +438,14 @@ Each member individually completed the cross-compiler task, but only one member 
 \subsection*{If more than one did it, did team members do it independently or did they do it 
 collaboratively?}
 
-Every member completed it individually. There was no need to complete it collaboratively as the provided instructions were straightforward.
+Every member completed it individually. The provided instructions were fairly straightforward so there was no need to work on it collaboratively.
 
 \subsection*{Did they have any problems? If so how did they overcome them? What were 
 the fixes?}
 
-Following the instructions precisely meant there were no issues with the cross-compile. However, following the instructions for setting up the .inputrc resulted in two members unable to input the 'c' key on their keyboard.
+Since we followed the instructions precisely there were no issues with the cross-compile. However, the instructions for setting up the .inputrc resulted in two members unable to press the 'c' key on their keyboard.
 
-An improved version of the .inputrc script for backwards searching was found on Stack Overflow\footnote{http://stackoverflow.com/questions/1030182/how-do-i-change-bash-history-completion-to-complete-whats-already-on-the-line}:
+An improved version of the .inputrc script for backwards searching was later found on Stack Overflow\footnote{http://stackoverflow.com/questions/1030182/how-do-i-change-bash-history-completion-to-complete-whats-already-on-the-line}:
 
 \begin{lstlisting}[frame=single]
 "\e[A":history-search-backward
@@ -458,20 +455,18 @@ An improved version of the .inputrc script for backwards searching was found on 
 \subsection*{Do they understand what the recipe scripts did? Why was a cross compiler 
 necessary?}
 
-Val had prior knowledge of cross-compiling and understood the scripts. The cross-compiling was necessary to build an image that would be runnable on the \rpi\xspace hardware.
+Val had prior knowledge of cross-compiling and understood the scripts the best. The cross-compiling was necessary to build an image that would be runnable on the \rpi\xspace hardware. {\color{red} TODO: Val, do you want to add to this? }
 
 \subsection*{Why did the script use uClib and not glibc? What are the trade-offs?}
 
-No idea. We didn't investigate this.
+No idea. We didn't really investigate this. {\color{red} TODO: Val, do you want to add to this? }
 
 \subsection*{Did using this recipe help you gain confidence in using the UNIX command 
 line? What man page entries did you use? }
 
-Not really, and no man pages were looked up. We all already had a basic understanding of using the command line. Although the point of the exercise may have been to improve our comfort with the terminal, running the set of commands verbatim from the lab sheet was not very effective with our group.
+Each member already had a basic understanding of unix, so we were already confident with using the command line. We didn't find the need to look up any man pages to complete the task. 
 
 \end{appendices}
-
-
 
 
 \nocite{*}
