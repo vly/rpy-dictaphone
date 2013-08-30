@@ -103,12 +103,12 @@ The final solution will be a relatively cheap, portable and smart recording devi
 
 \section{System Overview}
 
-This is an ambitious project and involves a lot of complex processing and interaction with hardware. To distribute the CPU workload and modularise the solution, the functionality will be spread over two \rpis. This will also have the added benefit of making it easier to work on as a group, because the components can be worked on independently of each other.
+This is an ambitious project that involves complex processing and interaction with hardware. To distribute the CPU workload and modularise the solution, the functionality will be spread over two \rpis. This will have the added benefit of making it easier to work on as a group, as the components can be worked on independently of each other.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.6\textwidth]{graphs/rpi_1.pdf}
-\caption{Connected hardware for computer vision component of project. It includes a power supply, motion sensor, RPi camera board, servo controller and two servos.}
+\caption{Connected hardware for the computer vision component of the project. It includes a power supply, motion sensor, RPi camera board, servo controller and two servos.}
 \label{fig:cvhardware}
 \end{figure}
 
@@ -119,11 +119,11 @@ The first \rpi\xspace will be responsible for subject tracking using computer vi
 \begin{figure}
 \centering
 \includegraphics[width=0.6\textwidth]{graphs/rpi_2.pdf}
-\caption{Connected hardware for audio recording component of project. It includes a power supply, sound card, shotgun microphone and wireless card.}
+\caption{Connected hardware for audio recording component of the project. It includes a power supply, sound card, shotgun microphone and wireless card.}
 \label{fig:audiohardware}
 \end{figure}
 
-The second \rpi\xspace will be responsible for the audio recording and processing. It will have a shotgun (or directional) microphone connected to it via an USB sound card.  As audio is recorded it perform voice-to-text processing through a web service. A USB wireless card will be attached to support connecting to the Internet. Figure \ref{fig:audiohardware} illustrates the connected components for this device.
+The second \rpi\xspace will be responsible for the audio recording and processing. It will have a shotgun (or directional) microphone connected to it via a USB sound card.  As audio is recorded it performs voice-to-text processing through a web service. A USB wireless card will be attached to support connection to the Internet. Figure \ref{fig:audiohardware} illustrates the connected components for this device.
 
 Both \rpis\xspace will also be networked together via their ethernet ports for inter-device communication. For a detailed summary of all involved hardware and its purpose in the project, see Table \ref{table:hardwaretable}. 
 
@@ -141,18 +141,18 @@ Both \rpis\xspace will also be networked together via their ethernet ports for i
     
    \textit{Servos} & 2 & Two servos will be used to control the microphone mount. One servo will manoeuvre the mount on an X axis, while the other is used for the Y axis. \\ 
         
-    \textit{USB servo controller} & 1 & This will be used to improve the movement accuracy of the servos \\ 
+    \textit{USB servo controller} & 1 & This will be used to improve the movement accuracy of the servos. \\ 
     
     \textit{USB sound card} & 1 & The \rpi\xspace has no in-built audio input jack, so an external sound card will be used to facilitate connecting the microphone. \\ 
     
-    \textit{Shotgun microphone} & 1 & This microphone will give us targeted audio for recording voice and minimising background noise. \\ 
+    \textit{Shotgun microphone} & 1 & This microphone will provide targeted audio for recording voice and minimising background noise. \\ 
     
     \textit{Motion sensor} & 1 & To conserve power before and after a recording session, a motion sensor will be used to detect the presence of a subject in the room. The system will enter a "standby mode" if no movement is detected.\\ 
 
     \textit{Power supply} & 2 & To take advantage of the lightweight nature of the \rpi\xspace and components, an external battery pack would be an ideal supply to keep the system portable.\\ 
 
 
-    \textit{Wireless card} & 1 & The voice-to-text processing will be performed remotely, so an unobtrusive internet connection will be required.\\ \hline
+    \textit{Wireless card} & 1 & The voice-to-text processing will be performed remotely, hence an unobtrusive Internet connection will be required.\\ \hline
     
 \end{tabu} }
 \caption{Summary of hardware}
@@ -163,16 +163,16 @@ Both \rpis\xspace will also be networked together via their ethernet ports for i
 
 \section{Design Considerations}
 
-Early experiments have indicated that face detection and audio processing will be very CPU intensive. To ensure the system runs smoothly, we will need to optimise the system as much as possible. For example, although using Python would be acceptable for prototyping scripts, the final implementation of the software will be re-written in C/C++ for for optimal performance.
+Early experiments have indicated that face detection and audio processing will be very CPU intensive. To ensure the system runs smoothly, we will need to optimise the system as much as possible. For example, although using Python would be acceptable for prototyping scripts, the final implementation of the software will be re-written in C/C++ for optimal performance.
 
 As this is a fairly complex project, we will also need to find ways to modularise the hardware and software components. This is so they can be developed in parallel by different group members, as well as making it easier to redesign components of the system if any problems arise.
 
-Finally, a physical design consideration will be to build a sturdy, easy to assemble, portable system. Ideally we will try to construct a batter powered low consuming system. Powering the solution by battery will not difficult, but we will need to intelligently invent ways to reduce resource usage to increase battery performance. This will include powering hardware on and off when not in use and keeping CPU usage to a minimum on both devices. Although we will endeavour to design the project to be power conservative, we will only explore  battery power if we have time remaining at the end of the project. 
+Finally, a physical design consideration will be to build a sturdy, easy to assemble and portable system. Ideally we will try to construct a battery powered, low consuming system. Powering the solution by battery will not be difficult, however, we will need to invent intelligent ways to reduce resource usage, therefore increasing battery performance. This will include powering hardware on and off when not in use and keeping CPU usage to a minimum on both devices. Although we will endeavour to design the project to be power conservative, we will only explore  battery power if we have time remaining at the end of the project. 
 
 
 \subsection{Goals and Objectives}
 
-This project aims to provide an easy way to audio record and annotate lectures, talks and other presentations. As students, it is something we would like to use ourselves. However we are also attempting to meet all learning objectives of the assignment as well.
+This project aims to provide an easy way to audio record and annotate lectures and other presentations. As students, it is a solution we would use ourselves, however, we are also attempting to meet all learning objectives of the assignment.
 
 \begin{description}
    
@@ -182,14 +182,14 @@ This project aims to provide an easy way to audio record and annotate lectures, 
   \item[Learning objective 1] \hfill \\
 %\textit{Design, develop, test, and debug a complex system-level program on a resource constrained device using appropriate development environments, debuggers, unit testing tools, and version control tools.}
 %\\ \\
-The \rpi\xspace is a resource constrained device, so for this objective will ensure that our system runs efficiently with the hardware available. We will achieve this by running performance tests for all software components and introducing clever ways (e.g. using the motion sensor) to reduce CPU and conserve power. 
+The \rpi\xspace is a resource constrained device, so for this objective we will ensure that our system runs efficiently with the hardware available. We will achieve this by running performance tests for all software components and introducing clever ways to reduce CPU usage and conserve power (e.g. using the motion sensor).
 
 All source code and project documentation for this project will be version controlled through \textit{git}, and hosted on a private\footnote{Access to this repository is available upon request.} \textit{GitHub} repository along with our project wiki and development logs.
 
   \item[Learning objective 2] \hfill \\
 %\textit{Assess how computing resources are used by the application software and managed by the system software. Analyse the inherent trade-offs between hardware constraints and system software.}
 %\\ \\
-The system will be built on a bare-bones linux distribution and designed so that each sub-components of the main software application will be responsible for interfacing with only one hardware feature (e.g. the \textit{comms} code will be the only process/thread that can access the ethernet port, and the \textit{face-detect} process/thread will be the only code to access the camera). Building the solution in this manner, with no other programs competing for resources is how we will effectively manage the hardware.
+The system will be built on a bare-bones linux distribution and designed so that each sub-component of the main software application will be responsible for interfacing with only one hardware feature (e.g. the \textit{comms} code will be the only process/thread that can access the ethernet port, and the \textit{face-detect} process/thread will be the only code to access the camera). Building the solution in this manner, with no other programs competing for resources is how we will effectively manage the hardware.
 
   \item[Learning objective 3] \hfill \\
   %\textit{Construct appropriate diagrams and textual descriptions to communicate a system level program design and how it integrates one or more of the following key OS concepts: a. kernel and hardware interaction; b. processes and interprocess communication; c. concurrency and synchronisation; d. pre-emptive and non-preemptive scheduling; e. memory hierarchy, management, and cost-performance trade-offs; f. file system design and implementation; and/or g. security and privacy.}
@@ -198,7 +198,7 @@ We will cover this in detail in the final portfolio through diagrams and descrip
 
   \item[Learning objective 4] \hfill \\
 %\textit{Describe the full range of considerations of effective and efficient teamwork.}
-As a team we have assigned primary roles which make best use of our individual skills. However, to increase each group members personal learning in areas they are not already accomplished in, we've allowed for some overlap in the roles. For example, Val who has expertise in Unix/Hardware, will also attempt to prototype some of the hardware interfaces in Python. Neil, who doesn't have much hardware or C/C++ experience, will then port the Python scripts to C/C++. The primary responsibilities for the roles will still lie with designated group member, but everyone will have the opportunity to try something they haven't worked on before.
+As a team we have assigned primary roles which make best use of our individual skills. However, to increase each group members personal learning in areas they are not already accomplished in, we have allowed for some overlap in the roles. For example, Val who has expertise in Unix and hardware, will also attempt to prototype some of the hardware interfaces in Python. Neil, who does not have much hardware or C/C++ experience, will then port the Python scripts to C/C++. The primary responsibilities for the roles will still lie with designated group members, but everyone will have the opportunity to try something they have not worked on before.
 
 \end{description}
 
@@ -207,23 +207,23 @@ As a team we have assigned primary roles which make best use of our individual s
 
 \subsection{Assumptions and Dependencies}
 
-Due to time constraints, we will be dependant on a 3rd party framework for subject detection. We've already done some preliminary research and experimented with OpenCV\footnote{http://opencv.org/} for facial recognition.
+Due to time constraints, we will be dependent on a third party framework for subject detection. To date we have completed some preliminary research and experimented with OpenCV\footnote{http://opencv.org/} for facial recognition.
 
-When recording an audio session through our product, we have also made the assumption that the system will be able to be placed front-on to the subject, and the recording environment will be reasonably lit.
+When recording an audio session through our product, we have also made the assumption that the system will be placed front-on to the subject, and the recording environment will be reasonably lit.
 
 
 \subsection{General Constraints}
 
-A major constraint of this project it the processing power of the \rpi. Preliminary investigations suggested that depth sensing would be a more accurate subject tracking technique, but the \rpi\xspace would not have the processing power required for skeletal mapping. We have opted to use simpler face detection instead, but its effectiveness will be limited by the light in the room, the direction the subject is facing and any obstruction of the facial features.
+A major constraint of this project is the processing power of the \rpi. Preliminary investigations suggested that depth sensing would be a more accurate subject tracking technique, however the \rpi\xspace would not have the processing power required for skeletal mapping. We have opted to use simpler face detection instead. However its effectiveness will be limited by the light in the room, the direction the subject is facing and any obstruction of facial features.
 
-As we are building moving parts into the project, we will also be constrained by the total weight of the hardware. There is a physical limit to the servos torque and we have to ensure we don't exceed the weight limit in our mount design.
+As we are building moving parts into the project, we will also be constrained by the total weight of the hardware. There is a physical limit to the servos torque and we have to ensure we do not exceed the weight limit in our mount design.
 
-Finally, the biggest constraint of the project is time. The project is very ambitious, with a lot of individual things that could not turn out as planned. Adapting to these issues will become increasingly limiting as we approach the delivery date.
+Finally, the biggest constraint of the project is time. The project is very ambitious, with many individual items that could not turn out as planned. Adapting to these issues will become increasingly limiting as we approach the delivery date.
 
 
 \subsection{Development Methodology}
 
-The project will constructed over 3 main stages in isolated parts by all group members. 
+The project will be constructed over three main stages, in isolated parts by all group members. 
 
 
 \subsubsection{Stage 1}
@@ -238,7 +238,7 @@ The first stage will attempt to solve the hardest issues of face recognition and
     Lab demo & All & 5 \\ \hline
     OpenCV tracking & Alfred, Neil & 4, 5, 6 \\ \hline
     Servo movement & Val & 4, 5, 6 \\ \hline
-    Project Specification & Neil & 6 \\ \hline
+    Project specification & Neil & 6 \\ \hline
 
 \end{tabular}
 \end{table}
@@ -253,12 +253,12 @@ Stage two will also encapsulate the mid-semester break. We will combine what was
     \hline
     \textbf{Objective} & \textbf{Members} & \textbf{Week} \\ \hline
     
-    Servo Mount & Val & 7 \\ \hline
+    Servo mount & Val & 7 \\ \hline
     Audio recording & Val & 8 \\ \hline
     Pi device comms & Alfred & 7 \\ \hline
     Server complete & Alfred & 8 \\ \hline
     PIR monitor & Neil & 7 \\ \hline
-    Integrated Face tracking /w Servo & Neil & 8 \\ \hline
+    Integrated face tracking /w servo & Neil & 8 \\ \hline
 
 
 \end{tabular}
@@ -268,7 +268,7 @@ Stage two will also encapsulate the mid-semester break. We will combine what was
 
 \subsubsection{Stage 3}
 
-Final stage will involve putting all the finished pieces together. We will also need to deliver our presentation and portfolio in this stage.
+The final stage will involve putting all the finished pieces together. We will also need to deliver our presentation and portfolio in this stage.
 
 
 \begin{center}
@@ -289,13 +289,13 @@ Final stage will involve putting all the finished pieces together. We will also 
 
 \subsubsection{Stage 4}
 
-In the event that the group finishes the project early we can optionally explore power improvements to the project. This would include benchmarking and tracking power usage with the hardware, re-designing all the hardware to powered by battery, and integrating an in-progress battery indicator into the project.
+In the event that the group finishes the project early we can optionally explore power improvements to the project. This would include benchmarking and tracking power usage with the hardware, re-designing all the hardware to be powered by battery, and integrating an in-progress battery indicator into the project.
 
 
 
 \section{Architecture}
 
-The construction of the system will be complex due to the number things we need to achieve. These include a technical design with compatible hardware, a stripped back operating system, an efficient software layer, and a physical design that is portable.
+The construction of the system will be complex due to the number of items to be achieved. These include a technical design with compatible hardware, a stripped back operating system, an efficient software layer, and a physical design that is portable.
 
 \subsection{System Design}
 
@@ -308,12 +308,12 @@ The construction of the system will be complex due to the number things we need 
 
 
 
-The project hardware will consist of two \rpis\xspace working in parallel as a complete system. Communication between the two \rpi\xspace devices will be done through a central messaging system, enhancing modularity of project components.
+The project hardware will consist of two \rpis\xspace working in parallel as a complete system. Communication between the two \rpi\xspace devices will be undertaken through a central messaging system, which will enhance modularity of the project components.
 
-The pan and tilt motion of the project will be provided by two servos connected to an USB \textit{Pololu Maestro} servo controller. The benefit of an external hardware controller is much greater accuracy and reduced latency of servo responses. Communication is achieved through the virtual serial port over the USB, utilising \textit{Pololu's} proprietary communications protocol\footnote{http://www.pololu.com/docs/0J40/5.c}. The external controller requires a 5V rail to power servo movements. Early experimentation showed the \rpis\xspace on-board 5V is unreliable for burst usage, causing the device to restart. Figure \ref{fig:initbb} for a high level illustrations of how the servo hardware is wired to the \rpi.
+The pan and tilt motion of the project will be provided by two servos connected to a USB \textit{Pololu Maestro} servo controller. The benefit of an external hardware controller is much greater accuracy and reduced latency of servo responses. Communication is achieved through the virtual serial port over the USB, utilising \textit{Pololu's} proprietary communications protocol\footnote{http://www.pololu.com/docs/0J40/5.c}. The external controller requires a 5V rail to power servo movements. Early experimentation showed the \rpis\xspace on-board 5V is unreliable for burst usage, causing the device to restart. Figure \ref{fig:initbb} provides a high level illustration of how the servo hardware is wired to the \rpi.
 
 
-As the \rpi\xspace devices don't have built-in microphone input ports, sound recording will be enabled through an USB sound card. Initial tests show a requirement for this sound card to be physically connected away from the \rpi\xspace as the circuit design generates notable line noise.
+As the \rpi\xspace devices do not have built-in microphone input ports, sound recording will be enabled through a USB sound card. Initial tests show a requirement for this sound card to be physically connected away from the \rpi, as the circuit design generates notable line noise.
 
 Power will be delivered by a single powered USB hub that is also connecting the first \rpi\xspace to the USB camera and external servo controller. An additional 5V of power will be delivered by an external 4xAA battery pack for movement of the servos.
 
@@ -321,14 +321,14 @@ In order to reduce overall power consumption of the system, a passive infrared (
 
 \subsection{Data Design}
 
-It is undecided if we will implement the program through threads or sub-processes. Either way we will need to devise a solution for inter-process communication. For inter-device communication we will implement a message queue protocol over TCP, utilising the \rpis\xspace native RJ45 connector.
+It is undecided whether the program will be implemented through threads or sub-processes. Regardless of the method used, we will need to devise a solution for inter-process communication. For inter-device communication we will implement a message queue protocol over TCP, utilising the \rpis\xspace native RJ45 connector.
 
-One notable issue that is still to be addressed is the efficient storage of audio data from recording sessions. The group has already started researching fast encoding algorithms and formats to reduce data offloading requirements and increases the operational time of the end-device. Possible solutions explored to date include external hardware mp3 encoders as well as fast FLAC encoding software solutions.
+One notable issue that is still to be addressed is the efficient storage of audio data from recording sessions. The group has already started researching fast encoding algorithms and formats to reduce data offloading requirements and increase the operational time of the end-device. Possible solutions explored to date include external hardware mp3 encoders as well as fast FLAC encoding software solutions.
 
 
 \subsection{Program Design}
 
-There will be a custom main program running on each \rpi. The one on the computer vision device will act like a \textit{server}, and the audio recording device will behave like a \textit{client}. These program will spawn and manage sub-processes or threads to be responsible for individual tasks. For simplicity they will just be referred to as "sub-processes" in the below descriptions. Figure \ref{fig:processes} is a high level summary of the components that make up each main program.
+There will be a custom main program running on each \rpi. The program on the computer vision device will act like a \textit{server}, and the audio recording device will behave like a \textit{client}. These programs will spawn and manage sub-processes or threads to be responsible for individual tasks. For simplicity they will just be referred to as "sub-processes" in the below descriptions. Figure \ref{fig:processes} is a high level summary of the components that make up each main program.
 
 \begin{figure}
 \begin{multicols}{2}
@@ -354,8 +354,7 @@ There will be a custom main program running on each \rpi. The one on the compute
 
 The \textit{server} will have three state based modes, which will inform how its sub-processes behave. It's states will be "standby", "seeking" and "active". The "standby" mode will halt any unnecessary power usage, the "seeking" mode will inform the processes to seek out a target, and the "active" mode will be used for normal operation. 
 
-The \textit{client} will also be state based, but only use "standby" and "active". Its state will be set and updated by the \textit{server} program.
-
+The \textit{client} will also be state based, but only use "standby" and "active" modes. It's state will be set and updated by the \textit{server} program.
 
 \subsubsection{pir-monitor}
 
@@ -397,15 +396,15 @@ Both the \textit{client} and \textit{server} will communicate with each other vi
 
 \section{Testing Issues}
 
-There will be multiple hardware dependant components to be built for the project and limited hardware ownership within the group. The project can be built in parts, however they will need to be brought together to test everything works in unison.
+There will be multiple hardware dependent components to be built for the project and limited hardware ownership within the group. The project can be built in parts, however they will need to be brought together to test everything works in unison.
 
-\subsection{Types of Testing to be conducted}
+\subsection{Types of Testing to be Conducted}
 
 We will need to regularly run hardware tests to ensure that we are using all the system resources efficiently.
 
-We also need to run test on the audio quality being captured. We have already found that even with the direction microphone, interference can be caused from the hardware circuitry. 
+We also need to run tests on the audio quality being captured. We have already found that even with the direction microphone, interference can be caused from the hardware circuitry. 
 
-Additional tests still being explored from our initial brainstorming session include:
+Additional tests yet to be explored from our initial brainstorming session include:
 
 \begin{enumerate}
   \item \textit{Power consumption:} a multimeter has been acquired to begin benchmarking power consumption of the \rpi\xspace at various stages of operation.
@@ -422,22 +421,22 @@ Additional tests still being explored from our initial brainstorming session inc
 % Criterion 5 Team Roles  - Roles and responsibilities of each team member. A simple breakdown of primary and secondary tasks for each person.
 
 
-Due to an unfortunate circumstance, our final group didn't form until week four. As a result there is cross-overs in our teams individual strengths. The roles have been divided with some shared responsibilities for delivering the final solution. Although at different levels, all three group members will be writing software, documenting and experimenting with hardware.
+Due to an unfortunate circumstance, our final group did not form until week four. As a result, there are cross-overs in our teams individual strengths. The roles have been divided with some shared responsibilities for delivering the final solution. Although at different levels, all three group members will be writing software, documenting and experimenting with hardware.
 
 
 \subsection{Val Lyashov}
-\textit{Val} has been working with computer components since he was 16. He will take on the role of designing the hardware solution and providing the operating environment. He will also be responsible for drafting some software interfaces to the hardware in Python, which will later be ported to C/C++ by the other members.
+\textit{Val} has been working with computer components for many years. He will take on the role of designing the hardware solution and providing the operating environment. He will also be responsible for drafting some software interfaces to the hardware in Python, which will later be ported to C/C++ by the other members.
 
 
 \subsection{"Alfred" Yang Yuan}
 \textit{Alfred} is an experienced programmer who has professionally worked with C++ for over 3 years. He will be responsible for the final software architecture and optimisation of the software layer. His role will also involve improving the code written by the other team members to be multi-threaded and run efficiently with the hardware.
 
 \subsection{Neil Ang}
-\textit{Neil} has strong programming background and a particular interest in intelligent system design. He will be responsible for implementing the subject tracking and writing some C/C++ interfaces to the hardware. He will also take on the responsible for the technical writing and leadership of the group. 
+\textit{Neil} has a strong programming background and a particular interest in intelligent system design. He will be responsible for implementing the subject tracking and writing some C/C++ interfaces to the hardware. He will also take on responsibility for the technical writing and leadership of the group. 
 
 
 \begin{appendices}
-\chapter{Reflections of the Raspberry Pi Cross-Compiler build}
+\chapter{Reflections of the Raspberry Pi Cross-Compiler Build}
 
 \subsection*{Did only one person build the image or did each member of the team do it?}
 
@@ -451,7 +450,7 @@ Every member completed it individually. The provided instructions were fairly st
 \subsection*{Did they have any problems? If so how did they overcome them? What were 
 the fixes?}
 
-Since we followed the instructions precisely there were no issues with the cross-compile. However, the instructions for setting up the .inputrc resulted in two members unable to press the 'c' key on their keyboard.
+Since we followed the instructions precisely there were no issues with the cross-compile. However, the instructions for setting up the .inputrc resulted in two members unable to press the `c' key on their keyboard.
 
 An improved version of the .inputrc script for backwards searching was later found on Stack Overflow\footnote{http://stackoverflow.com/questions/1030182/how-do-i-change-bash-history-completion-to-complete-whats-already-on-the-line}:
 
