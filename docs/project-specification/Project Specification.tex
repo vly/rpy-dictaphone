@@ -33,10 +33,10 @@
 
 
 % Set watermark while in development
-\usepackage{draftwatermark}
-\SetWatermarkText{DRAFT}
-\SetWatermarkScale{5}
-\SetWatermarkColor[gray]{0.95}
+%\usepackage{draftwatermark}
+%\SetWatermarkText{DRAFT}
+%\SetWatermarkScale{5}
+%\SetWatermarkColor[gray]{0.95}
 
 
 % Alias pi name
@@ -299,13 +299,18 @@ The construction of the system will be complex due to the number things we need 
 
 \subsection{System Design}
 
+\begin{figure}
+\centering
+\includegraphics[width=1.0\textwidth]{graphs/init_bb.pdf}
+\caption{Wiring design for servo controller and PIR-sensor.}
+\label{fig:initbb}
+\end{figure}
 
-{\color{red} TODO: insert Val's hardware diagram here}
 
 
 The project hardware will consist of two \rpis\xspace working in parallel as a complete system. Communication between the two \rpi\xspace devices will be done through a central messaging system, enhancing modularity of project components.
 
-The pan and tilt motion of the project will be provided by two servos connected to an USB \textit{Pololu Maestro} servo controller. {\color{red} Communication is achieved through the virtual serial port over USB ??}
+The pan and tilt motion of the project will be provided by two servos connected to an USB \textit{Pololu Maestro} servo controller. The benefit of an external hardware controller is much greater accuracy and reduced latency of servo responses. Communication is achieved through the virtual serial port over the USB, utilising \textit{Pololu's} proprietary communications protocol\footnote{http://www.pololu.com/docs/0J40/5.c}. The external controller requires a 5V rail to power servo movements. Early experimentation showed the \rpis\xspace on-board 5V is unreliable for burst usage, causing the device to restart. Figure \ref{fig:initbb} for a high level illustrations of how the servo hardware is wired to the \rpi.
 
 
 As the \rpi\xspace devices don't have built-in microphone input ports, sound recording will be enabled through an USB sound card. Initial tests show a requirement for this sound card to be physically connected away from the \rpi\xspace as the circuit design generates notable line noise.
@@ -316,9 +321,10 @@ In order to reduce overall power consumption of the system, a passive infrared (
 
 \subsection{Data Design}
 
-It is undecided if we will implement the program through threads or sub-processes. Either way we will need to devise a solution for inter-process communication. {\color{red}For inter-device communication we will implement a message queue protocol over TCP or UDP.}
+It is undecided if we will implement the program through threads or sub-processes. Either way we will need to devise a solution for inter-process communication. For inter-device communication we will implement a message queue protocol over TCP, utilising the \rpis\xspace native RJ45 connector.
 
-{\color{red} TODO: should we add something about storing audio??}
+One notable issue that is still to be addressed is the efficient storage of audio data from recording sessions. The group has already started researching fast encoding algorithms and formats to reduce data offloading requirements and increases the operational time of the end-device. Possible solutions explored to date include external hardware mp3 encoders as well as fast FLAC encoding software solutions.
+
 
 \subsection{Program Design}
 
@@ -399,12 +405,14 @@ We will need to regularly run hardware tests to ensure that we are using all the
 
 We also need to run test on the audio quality being captured. We have already found that even with the direction microphone, interference can be caused from the hardware circuitry. 
 
-{\color{red} TODO: Should we add something more specific here? }
+Additional tests still being explored from our initial brainstorming session include:
 
+\begin{enumerate}
+  \item \textit{Power consumption:} a multimeter has been acquired to begin benchmarking power consumption of the \rpi\xspace at various stages of operation.
+  \item \textit{Computer vision target tracking:} as a way to simulate field testing, the team is exploring using lecture theatre video captures (available through channels such as OpenCourseWare, YouTube, etc.) to identify any issues that may arise from environmental factors. For example, poor lighting conditions.
 
-\subsection{Performance Bounds}
+\end{enumerate}
 
-{\color{red} TODO: Not sure if we want to including this heading.  }
 
 
 
@@ -455,11 +463,11 @@ An improved version of the .inputrc script for backwards searching was later fou
 \subsection*{Do they understand what the recipe scripts did? Why was a cross compiler 
 necessary?}
 
-Val had prior knowledge of cross-compiling and understood the scripts the best. The cross-compiling was necessary to build an image that would be runnable on the \rpi\xspace hardware. {\color{red} TODO: Val, do you want to add to this? }
+Val had prior knowledge of cross-compiling and understood the scripts the best. The cross-compiling was necessary to build an image that would be runnable on the \rpi\xspace hardware. 
 
 \subsection*{Why did the script use uClib and not glibc? What are the trade-offs?}
 
-No idea. We didn't really investigate this. {\color{red} TODO: Val, do you want to add to this? }
+No sure. We didn't spend much time investigating this.
 
 \subsection*{Did using this recipe help you gain confidence in using the UNIX command 
 line? What man page entries did you use? }
