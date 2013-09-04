@@ -6,7 +6,7 @@
 #include <string>
 using std::string;
 
-#define TEST 1
+#define TEST 0
 
 enum message_id
 {
@@ -30,7 +30,7 @@ struct message_head
 struct message_body
 {
 	int mb_len;
-	char* mb_data;
+	char mb_data[1];
 };
 
 struct message
@@ -51,9 +51,11 @@ public:
 	Message();
 	Message(const Message& other);
 	Message& operator=(const Message& rhs);
+	Message(void* data, int size);
 
 public:
 	void  initMessage(int id, string message_data);
 	int   messageLength() const;
 	void* messageData() const;
+	char* messageBodyData() const;
 };

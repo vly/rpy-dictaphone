@@ -24,7 +24,7 @@ Message::Message(const Message& other)
 	_impl->head = new message_head();
 	_impl->body = (message_body*)malloc(sizeof(message_body));
 	
-	memcpy(_impl, other._impl, sizeof(message));
+	memcpy(_impl, other._impl, other.messageLength());
 }
 
 Message& Message::operator=(const Message& rhs)
@@ -35,10 +35,19 @@ Message& Message::operator=(const Message& rhs)
 		_impl->head = new message_head();
 		_impl->body = (message_body*)malloc(sizeof(message_body));
 	
-		memcpy(_impl, rhs._impl, sizeof(message));
+		memcpy(_impl, rhs._impl, rhs.messageLength());
 	}
 
 	return *this;
+}
+
+Message::Message(void* data, int size)
+{
+	_impl = new message();
+	_impl->head = new message_head();
+	_impl->body = (message_body*)malloc(size - sizeof(message_head));
+
+	memcpy(_impl, data, size);	
 }
 
 void Message::initMessage(int id, string message_data)
@@ -50,8 +59,8 @@ void Message::initMessage(int id, string message_data)
 	_impl->head->mh_total_package = 1;
 	_impl->head->mh_pack_num = 0;
 
-	_impl->body->mb_data = (char*)malloc(
-		sizeof(char) * (message_data.size() + 1));
+	_impl->body = (message_body*)malloc(sizeof(int) + 
+			sizeof(char) * (message_data.size() + 1));
 	_impl->body->mb_len = message_data.size();
 	memcpy(_impl->body->mb_data, message_data.c_str(), message_data.size());
 	*(_impl->body->mb_data + message_data.size()) = 0;
@@ -70,6 +79,11 @@ void* Message::messageData() const
 	return (void*)(_impl->head);
 }
 
+char* Message::messageBodyData() const
+{
+	return _impl->body->mb_data;
+}
+
 #if TEST
 int main(int argc, char** argv)
 {
@@ -77,11 +91,16 @@ int main(int argc, char** argv)
 	m.initMessage(M_START, "Alfred yang");
 
 	cout << m.messageLength() << endl;
-//	cout << (char*)(m.messageData()) << endl;
-
 	cout << "Message ID: " << m._impl->head->mh_id << endl
 	     << "Message Size: " << m._impl->head->mh_size << endl
 	     << "Message Data: " << m._impl->body->mb_data << endl;
+
+	Message m1 = m;
+	cout << m1.messageLength() << endl;
+	cout << "Message ID: " << m1._impl->head->mh_id << endl
+	     << "Message Size: " << m1._impl->head->mh_size << endl
+	     << "Message Data: " << m1._impl->body->mb_data << endl;
+	
 	
 	return 0;
 }
