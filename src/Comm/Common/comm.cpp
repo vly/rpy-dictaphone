@@ -56,7 +56,7 @@ Message Comm::readMessage()
 	int count = 0;
 	count = read(client_socket, buffer, sizeof(buffer) - 1);
 	buffer[count] = 0;
-	Message m(buffer, count);
+	Message m = Message::createMessage(buffer);
 
 	query.pushMessage(m);
 	return m;

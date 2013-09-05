@@ -58,4 +58,6 @@ public:
 	int   messageLength() const;
 	void* messageData() const;
 	char* messageBodyData() const;
+	
+	static Message createMessage(void* data);
 };
