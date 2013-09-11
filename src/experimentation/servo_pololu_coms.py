@@ -15,34 +15,34 @@ class Servos():
             out += self.device.read(rsize)
         return out
 
-    // returns high/low rep of int value
+    # returns high/low rep of int value
     def get_highlow(self, value):
         return [(value & 0x7F), ((140 >> 7) & 0x7F)]
 
-    // returns int rep of the high/low value 
+    # returns int rep of the high/low value
     def conv_highlow(self, value):
         return struct.unpack('H', value)[0]
 
-    // easing
+    # easing
     def set_acceleration(self, servo, value):
         return bytes([0x89,servo] + self.get_highlow(value))
 
-    // max speed for set_acceleration
+    # max speed for set_acceleration
     def set_speed(self, servo, value):
-        return bytes([0x87,servo] + self.get_highlow(value))    
+        return bytes([0x87,servo] + self.get_highlow(value))
 
-    // move to neutral
+    # move to neutral
     def go_home():
-        return bytes(0xA2) 
+        return bytes(0xA2)
 
-    // move to point <value>
+    # move to point <value>
     def set_pos(self, servo, value):
         if value < 254 and value >= 0:
-            return bytes([0xFF,servo, value]) 
+            return bytes([0xFF,servo, value])
 
     def set_pos_percent(self, servo, value):
         if value <=100 and value >=0:
-            return bytes([0xFF,servo, int(value * 2.54)]) 
+            return bytes([0xFF,servo, int(value * 2.54)])
 
     def get_pos(self, servo):
         self.device.write(bytes([0x90, servo]))
