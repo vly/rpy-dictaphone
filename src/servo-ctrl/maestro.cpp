@@ -9,7 +9,6 @@
 #include "maestro.h"
 
 int Maestro::goHome(unsigned char channel) {
-    log("Go Home");
     unsigned char command[] = {0xA2, channel};
     if(write(_fd, command, sizeof(command)) == -1) {
         perror("error writing");

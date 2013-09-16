@@ -10,11 +10,18 @@
 #include "maestro.h"
 #include <time.h>
 
+#ifdef __APPLE__
+#define NA_DEVICE "/dev/cu.usbmodem00065291"
+#else
+#define NA_DEVICE "/dev/serial/by-path/platform-bcm2708_usb-usb-0:1.2.2:1.0"
+#endif
+
 using namespace std;
 
 void busyWait(Maestro *maestro, unsigned char channel){
     while(maestro->isMoving(channel)){
         usleep(100000);
+        cout << "now at " << maestro->getPosition(channel) << endl;
     }
 }
 
@@ -22,19 +29,23 @@ int main(int argc, const char * argv[])
 {
 
     try {
-        Maestro maestro("/dev/cu.usbmodem00065291");
-
-        cout << "Moving to 8048" << endl;
-        maestro.setPosition(0, 8048);
-        busyWait(&maestro, 0);
-        cout << "Position is: " << maestro.getPosition(0) << endl;
+        Maestro maestro(NA_DEVICE);
         
-        cout << "Going home" << endl;
+        maestro.setPosition(0, 3968);
+        busyWait(&maestro, 0);
+        maestro.setPosition(0, 9216);
+        busyWait(&maestro, 0);
         maestro.goHome(0);
-        busyWait(&maestro, 0);
-        
-        cout << "Position is: " << maestro.getPosition(0) << endl;
+        busyWait(&maestro, 1);
 
+        maestro.setPosition(1, 6912);
+        busyWait(&maestro, 1);
+        maestro.setPosition(1, 9984);
+        busyWait(&maestro, 1);
+        maestro.goHome(1);
+        
+        cout << "Done" << endl;
+        
     } catch (std::exception& e) {
         cout << e.what() << endl;
     }
