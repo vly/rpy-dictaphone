@@ -7,9 +7,10 @@
 //
 
 #include "maestro.h"
+#define NA_STEP_VALUE 200
 
-int Maestro::goHome(unsigned char channel) {
-    unsigned char command[] = {0xA2, channel};
+int Maestro::goHome(Servo * servo) {
+    unsigned char command[] = {0xA2, servo->getChannel()};
     if(write(_fd, command, sizeof(command)) == -1) {
         perror("error writing");
         return -1;
@@ -17,9 +18,9 @@ int Maestro::goHome(unsigned char channel) {
     return 0;
 }
 
-int Maestro::getPosition(unsigned char channel) {
+int Maestro::getPosition(Servo * servo) {
     
-    unsigned char command[] = {0x90, channel};
+    unsigned char command[] = {0x90, servo->getChannel()};
     if(write(_fd, command, sizeof(command)) == -1) {
         perror("error writing");
         return -1;
@@ -34,9 +35,12 @@ int Maestro::getPosition(unsigned char channel) {
     return response[0] + 256*response[1];
 }
 
-int Maestro::setPosition(unsigned char channel, unsigned short target) {
+int Maestro::setPosition(Servo * servo, unsigned short target) {
     
-    unsigned char command[] = {0x84, channel, static_cast<unsigned char>(target & 0x7F), static_cast<unsigned char>(target >> 7 & 0x7F)};
+    if (target > servo->getMax()) { target = servo->getMax(); }
+    if (target < servo->getMin()) { target = servo->getMin(); }
+
+    unsigned char command[] = {0x84, servo->getChannel(), static_cast<unsigned char>(target & 0x7F), static_cast<unsigned char>(target >> 7 & 0x7F)};
 
     if (write(_fd, command, sizeof(command)) == -1) {
         perror("error writing");
@@ -46,9 +50,18 @@ int Maestro::setPosition(unsigned char channel, unsigned short target) {
     return 0;
 }
 
-bool Maestro::isMoving(unsigned char channel){
+int Maestro::stepUp(Servo* servo) {
+    return setPosition(servo, getPosition(servo)+NA_STEP_VALUE);
+}
+
+int Maestro::stepDown(Servo* servo) {
+    return setPosition(servo, getPosition(servo)-NA_STEP_VALUE);
+}
+
+
+bool Maestro::isMoving(Servo * servo){
     
-    unsigned char command[] = {0x93, channel};
+    unsigned char command[] = {0x93, servo->getChannel()};
     if(write(_fd, command, sizeof(command)) == -1) {
         perror("error writing");
         return -1;
@@ -66,3 +79,5 @@ bool Maestro::isMoving(unsigned char channel){
 void Maestro::log(std::string s) {
     std::cout << s << std::endl;
 }
+
+#undef NA_STEP_VALUE

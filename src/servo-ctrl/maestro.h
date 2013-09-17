@@ -26,6 +26,28 @@ struct MaestroException : public std::exception
     const char* what() const throw() { return s.c_str(); }
 };
 
+#ifndef __servo__
+#define __servo__
+
+class Servo {
+    
+private:
+    unsigned char _channel;
+    unsigned int  _min;
+    unsigned int  _max;
+    
+public:
+    Servo(unsigned char c, unsigned int mn, unsigned int mx) :_channel(c), _min(mn), _max(mx){}
+    
+    unsigned char getChannel() { return _channel; }
+    unsigned int  getMin() { return _min; }
+    unsigned int  getMax() { return _max; }
+    
+};
+
+#endif /* defined(__servo__) */
+
+
 // Maestro
 class Maestro {
 
@@ -44,11 +66,14 @@ public:
     }
     ~Maestro() { close(_fd); }
     
-    int goHome(unsigned char);
-    int getPosition(unsigned char);
-    int setPosition(unsigned char, unsigned short);
-    bool isMoving(unsigned char);
+    int goHome(Servo*);
+    int getPosition(Servo*);
+    int setPosition(Servo*, unsigned short);
+    int stepUp(Servo*);
+    int stepDown(Servo*);
 
+    bool isMoving(Servo*);
+    
     void log(std::string);
 
 };
