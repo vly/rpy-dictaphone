@@ -19,9 +19,15 @@
 using namespace std;
 
 void busyWait(Maestro *maestro, unsigned char channel){
+    int pos = maestro->getPosition(channel);
     while(maestro->isMoving(channel)){
         usleep(100000);
-        cout << "now at " << maestro->getPosition(channel) << endl;
+        if(maestro->getPosition(channel) == pos){
+            break;
+        }
+        else {
+            pos = maestro->getPosition(channel);
+        }
     }
 }
 
