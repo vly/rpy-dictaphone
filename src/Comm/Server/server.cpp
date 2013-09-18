@@ -12,6 +12,7 @@
 #include "face_detect.h"
 
 Server::Server()
+	: isRunning(true)
 {
 
 }
@@ -45,13 +46,16 @@ bool Server::setUpService()
         listen(server_socket, 10);   
 		
 	startServer();
+	createThreads();
 
 	// TODO: pir ...
 
 	// face_detection
-	face_detect fd = face_detect::GetInstance();
-	fd.setUpService();
-//	fd.startMainLoop();
+	face_detect* fd = face_detect::GetInstance();
+	fd->setUpService();
+	fd->startMainLoop();
+
+	return true;
 }
 
 void Server::startMainLoop()
@@ -59,12 +63,13 @@ void Server::startMainLoop()
 	while(isRunning)
 	{
 		startPirDetect();
+		sleep(10);
 	}
 }
 
 void Server::stopMainLoop()
 {
-
+	isRunning = false;
 }
 
 void Server::receiveMessage(const Message& m)

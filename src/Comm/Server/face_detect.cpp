@@ -6,6 +6,7 @@
 #include <pthread.h>
 #include "face_detect.h"
 #include "message.h"
+#include <stdio.h>
 using std::string;	using std::cout;
 using std::endl;	using std::vector;
 using std::cerr;
@@ -20,13 +21,14 @@ pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 		std::cerr << x << std::endl;	\
 		exit(EXIT_FAILURE);		\
 	}
-	
+
 face_detect::face_detect()
 	: strWindowName("Face detection test")
 	, strCascadeClassifier("lbpcascade_frontalface.xml")
 	, nFrameWaitTime(33)
 	, nFrameWidth(320)
 	, nFrameHeight(240)
+	, isRunning(true)
 {
 
 }
@@ -45,12 +47,15 @@ bool face_detect::setUpService()
 	fd->pImage = NULL;
 	fd->threadRunning = true;
 	fd->bDetected = false;
+
+	return true;
 }
 
 void face_detect::startMainLoop()
 {
 	isRunning = true;
-	pthread_create(&face_main_thread, NULL, faceCaptureFunction, (void*)this);
+	pthread_create(&face_main_thread, NULL, faceCaptureFunction, (void*)_instance);
+	//	faceCaptureFunction((void*)this);
 }
 
 void face_detect::stopMainLoop()
@@ -58,13 +63,13 @@ void face_detect::stopMainLoop()
 	isRunning = false;
 	fd->threadRunning = false;
 }
-	
+		
 void face_detect::receiveMessage(const Message& m)
 {
 	// TODO: handle the message ...
 }
-	
-void face_detect::loadCascadeClassifier(const string& strPath,CascadeClassifier* pc)
+		
+void face_detect::loadCascadeClassifier(const char* strPath,CascadeClassifier* pc)
 {
 	FAILURE_CHECK(pc, "Conldn't load classifier");
 	if(!pc->load(strPath))
@@ -72,9 +77,8 @@ void face_detect::loadCascadeClassifier(const string& strPath,CascadeClassifier*
 		std::cerr << "Conldn't load classifier" << endl;
 		exit(EXIT_FAILURE);
 	}
-
 }
-	
+		
 CvCapture* face_detect::createCaptureFrameCamera(int nCaptureIndex)
 {
 	CvCapture* p = cvCaptureFromCAM(nCaptureIndex);
@@ -88,10 +92,10 @@ CvCapture* face_detect::createCaptureFrameCamera(int nCaptureIndex)
 	cvSetCaptureProperty(p, CV_CAP_PROP_FRAME_WIDTH, nFrameWidth);
 	cvSetCaptureProperty(p, CV_CAP_PROP_FRAME_HEIGHT, nFrameHeight);
 	cvSetCaptureProperty(p, CV_CAP_PROP_FPS, 5);
-	
+		
 	return p;
 }
-	
+		
 IplImage* face_detect::captureFrame(CvCapture* pCapture)
 {
 	IplImage* p = cvQueryFrame(pCapture);
@@ -99,7 +103,7 @@ IplImage* face_detect::captureFrame(CvCapture* pCapture)
 
 	return p;
 }
-	
+		
 CvRect detectFaceInImage(IplImage* inputImg, CascadeClassifier* cascade)
 {
 	// Smallest face size
@@ -153,7 +157,6 @@ CvRect detectFaceInImage(IplImage* inputImg, CascadeClassifier* cascade)
 	cvReleaseMemStorage(&storage);
 
 	return rc;
-
 }
 
 void* faceCaptureFunction(void* arg)
@@ -163,7 +166,7 @@ void* faceCaptureFunction(void* arg)
 	
 	CvCapture* pCapture = fdc->createCaptureFrameCamera();
 
-	cvNamedWindow(fdc->getWindowName().c_str(), CV_WINDOW_AUTOSIZE);
+	cvNamedWindow(fdc->getWindowName(), CV_WINDOW_AUTOSIZE);
 
 	IplImage* src =  cvQueryFrame(pCapture);
 	IplImage* bck1 = cvCreateImage(cvGetSize(src), src->depth, src->nChannels);
@@ -196,14 +199,21 @@ void* faceCaptureFunction(void* arg)
 			CvPoint p1 = cvPoint(rc.x, rc.y);
 			CvPoint p2 = cvPoint(rc.x + rc.width, rc.y + rc.height);
 			cvRectangle(pImg, p1, p2, CV_RGB(0, 255, 0), 5, 8);
+			char buffer[100];
+			memset(buffer, 0, 100);
+			sprintf(buffer, "detected: x=%d, y=%d, width=%d, height=%d",
+				rc.x, rc.y, rc.width, rc.height);
+			Message* m = new Message();
+			m->initMessage(0, buffer);
+			fdc->postMessage(m);
 		}
 
 		cvResize(src, bck1, CV_INTER_LINEAR);
 
-		cvShowImage(fdc->getWindowName().c_str(), bck1);
+		cvShowImage(fdc->getWindowName(), bck1);
 
-//		if(cvWaitKey(fdc->getFrameWaitTime()) == 27)
-//			isRunning = false;
+		if(cvWaitKey(fdc->getFrameWaitTime()) == 27)
+			fdc->stopMainLoop();
 
 		sleep(1);
 	}
@@ -211,7 +221,7 @@ void* faceCaptureFunction(void* arg)
 	// release
 	cvReleaseImage(&bck1);
 	cvReleaseCapture(&pCapture);
-	cvDestroyWindow(fdc->getWindowName().c_str());
+	cvDestroyWindow(fdc->getWindowName());
 
 	return NULL;
 }
@@ -256,7 +266,7 @@ bool face_detect::isMainThreadRunning() const
 	return isRunning;
 }
 
-const string& face_detect::getWindowName() const
+const char* face_detect::getWindowName() const
 {
 	return strWindowName;
 }

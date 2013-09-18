@@ -18,11 +18,11 @@ class face_detect
 	: public Singleton<face_detect>
 	, public base_service
 {
-	const string strWindowName;
-	const string strCascadeClassifier;
-	const int    nFrameWaitTime;
-	const int    nFrameWidth;
-	const int    nFrameHeight;
+	const char* strWindowName;
+	const char* strCascadeClassifier;
+	const int   nFrameWaitTime;
+	const int   nFrameWidth;
+	const int   nFrameHeight;
 
 	bool isRunning;
 
@@ -34,7 +34,7 @@ public:
 
 public:
 	bool isMainThreadRunning() const;
-	const string& getWindowName() const;
+	const char* getWindowName() const;
 	face_detect_arg* getDetectArg();
 	const int getFrameWaitTime() const;
 	const int getFrameWidth() const;
@@ -53,7 +53,7 @@ public:
 	virtual void receiveMessage(const Message& m);
 
 public:
-	void loadCascadeClassifier(const string& strPath,CascadeClassifier* pc);
+	void loadCascadeClassifier(const char* strPath,CascadeClassifier* pc);
 	CvCapture* createCaptureFrameCamera(int nCaptureIndex = -1);
 	IplImage* captureFrame(CvCapture* pCapture);
 

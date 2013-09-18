@@ -17,12 +17,12 @@ public:
 	virtual void startMainLoop() = 0;
 	virtual void stopMainLoop() = 0;
 	
-	virtual void postMessage(const Message& m)
+	virtual void postMessage(Message* m)
 	{
-		MessageQuery::GetInstance().pushMessage(m);
+		MessageQuery::GetInstance()->pushMessage(m);
 	}
 
 	virtual void receiveMessage(const Message& m) = 0;
 };
 
-#endif __BASE_SERVICE_H__
+#endif //__BASE_SERVICE_H__

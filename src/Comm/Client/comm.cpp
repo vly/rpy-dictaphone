@@ -48,6 +48,7 @@ bool Comm::isThreadRunning(int thread_index)
 int  Comm::sendMessage(const Message& m)
 {
 	write(client_socket,  m.messageData(), m.messageLength());
+	return 0;
 }
 
 Message Comm::readMessage()
@@ -86,6 +87,7 @@ void* writeThread(void* arg)
 		//s->query.pushMessage(m);
 		s->sendMessage(m);
 	}
+	return NULL;
 }
 
 void* readThread(void* arg)
@@ -101,6 +103,7 @@ void* readThread(void* arg)
 
 		printf("%s\n", m.messageBodyData());
 	}
+	return NULL;
 }
 
 #if TEST

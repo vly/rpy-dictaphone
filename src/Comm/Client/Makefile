@@ -1,9 +1,10 @@
 CC=g++
 CFLAGS=-c -Wall -g
-LDFLAGS = $(shell pkg-config --cflags --libs opencv)
-SOURCES=main_server.cpp face_detect.cpp message.cpp message_query.cpp comm.cpp server.cpp
+//LDFLAGS = $(shell pkg-config --cflags --libs opencv)
+LDFLAGS = -lpthread
+SOURCES=main_client.cpp message.cpp message_query.cpp comm.cpp client.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=osp_server
+EXECUTABLE=osp_client
 
 all:$(SOURCES) $(EXECUTABLE)
 	
