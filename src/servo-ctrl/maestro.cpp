@@ -18,6 +18,27 @@ int Maestro::goHome(Servo * servo) {
     return 0;
 }
 
+int Maestro::getError(Servo * servo) {
+    
+    unsigned char command[] = {0x93, servo->getChannel()};
+    if(write(_fd, command, sizeof(command)) == -1) {
+        perror("error writing");
+        return -1;
+    }
+    
+    unsigned char response[2];
+    if(read(_fd,response,2) != 2)  {
+        perror("error reading");
+        return -1;
+    }
+    
+    if(response[0] == 0x00) {
+        return response[0] + 256*response[1];
+    }
+    
+    return 0;
+}
+
 int Maestro::getPosition(Servo * servo) {
     
     unsigned char command[] = {0x90, servo->getChannel()};
