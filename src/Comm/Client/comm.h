@@ -27,7 +27,7 @@ protected:
 	int thread_ids[THREAD_NUM];
 	bool thread_running[THREAD_NUM];
 public:
-	MessageQuery query;
+	MessageQuery* query;
 public:
 	Comm();
 	~Comm();
@@ -35,8 +35,8 @@ public:
 	void createThreads();
 	bool isThreadRunning(int thread_index);
 
-	int sendMessage(const Message& m);
-	Message readMessage();
+	int sendMessage(Message* m);
+	Message* readMessage();
 };
 
 void* writeThread(void* arg);

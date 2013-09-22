@@ -12,21 +12,9 @@
 #define HOSTNAME "127.0.0.1"
 
 Client::Client()
+	: isRunning(true)
 {
-        memset(&serv_addr, 0, sizeof(struct sockaddr_in));
-        if((client_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-        {   
-                printf("\n Error: Could not create socket \n");
-        }   
 
-        serv_addr.sin_family = AF_INET;
-        serv_addr.sin_port = htons(9999);
-
-        if(inet_pton(AF_INET, HOSTNAME, &serv_addr.sin_addr) <= 0)
-        {   
-                printf("\n Error: Connect Failed \n");
-                exit(1);
-        }   
 }
 
 Client::~Client()
@@ -41,4 +29,46 @@ void Client::connectToServer()
                 printf("\n Error: Connect Failed\n");
                 exit(1);
         } 
+}
+	
+bool Client::setUpService()
+{
+	// Communication
+        memset(&serv_addr, 0, sizeof(struct sockaddr_in));
+        if((client_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+        {   
+                printf("\n Error: Could not create socket \n");
+        }   
+
+        serv_addr.sin_family = AF_INET;
+        serv_addr.sin_port = htons(9999);
+
+        if(inet_pton(AF_INET, HOSTNAME, &serv_addr.sin_addr) <= 0)
+        {   
+                printf("\n Error: Connect Failed \n");
+                exit(1);
+	}
+
+	connectToServer();
+	createThreads();
+
+	// TODO: Voice Recode
+}
+
+void Client::startMainLoop()
+{
+	while(isRunning)
+	{
+		
+	}
+}
+
+void Client::stopMainLoop()
+{
+	isRunning = false;
+}
+
+void Client::receiveMessage(const Message& m)
+{
+
 }

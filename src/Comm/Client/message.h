@@ -3,6 +3,9 @@
  * Create by Alfred Yang
  * 03-09-2013
  */
+#ifndef __MESSAGE_H__
+#define __MESSAGE_H__
+
 #include <string>
 using std::string;
 
@@ -52,6 +55,7 @@ public:
 	Message(const Message& other);
 	Message& operator=(const Message& rhs);
 	Message(void* data, int size);
+	~Message();
 
 public:
 	void  initMessage(int id, string message_data);
@@ -59,5 +63,7 @@ public:
 	void* messageData() const;
 	char* messageBodyData() const;
 	
-	static Message createMessage(void* data);
+	static Message* createMessage(void* data);
 };
+
+#endif //__MESSAGE_H__

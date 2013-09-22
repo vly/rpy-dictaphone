@@ -51,9 +51,9 @@ bool Server::setUpService()
 	// TODO: pir ...
 
 	// face_detection
-	face_detect* fd = face_detect::GetInstance();
-	fd->setUpService();
-	fd->startMainLoop();
+	//face_detect* fd = face_detect::GetInstance();
+	//fd->setUpService();
+	//fd->startMainLoop();
 
 	return true;
 }

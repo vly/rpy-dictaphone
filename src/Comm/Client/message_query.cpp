@@ -19,7 +19,7 @@ MessageQuery::~MessageQuery()
 	pthread_cond_destroy(&_con);
 }
 
-void MessageQuery::pushMessage(const Message& m)
+void MessageQuery::pushMessage(Message* m)
 {
 	pthread_mutex_lock(&_mutex);
 	_query.push_back(m);
@@ -27,13 +27,13 @@ void MessageQuery::pushMessage(const Message& m)
 	pthread_mutex_unlock(&_mutex);
 }
 
-Message MessageQuery::popMessage()
+Message* MessageQuery::popMessage()
 {
 	pthread_mutex_lock(&_mutex);
 	while(_query.empty())
 		pthread_cond_wait(&_con, &_mutex);
 
-	Message reVal = _query.front();
+	Message* reVal = _query.front();
 	_query.pop_front();
 	pthread_mutex_unlock(&_mutex);
 	return reVal;

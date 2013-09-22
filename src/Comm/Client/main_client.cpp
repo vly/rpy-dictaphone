@@ -4,8 +4,8 @@
 int main(int argc, char** argv)
 {
 	Client* c = new Client();
-	c->connectToServer();
-	c->createThreads();
+	c->setUpService();
+	c->startMainLoop();
 	delete c;
 	
 	return 0;

@@ -10,7 +10,6 @@ using std::string;	using std::cout;
 using std::endl;
 #endif
 
-
 Message::Message()
 {
 	_impl = new message();
@@ -41,21 +40,28 @@ Message& Message::operator=(const Message& rhs)
 	return *this;
 }
 
-Message Message::createMessage(void* data)
+Message::~Message()
 {
-	Message m;
+	delete _impl->head;
+	delete _impl->body;
+	delete _impl;
+}
+
+Message* Message::createMessage(void* data)
+{
+	Message* m = new Message();
 
 	int* p = (int*)data;
 
-	m._impl->head->mh_id = *(p + 0);
-	m._impl->head->mh_size = *(p + 1);
-	m._impl->head->mh_total_package = *(p + 2);
-	m._impl->head->mh_pack_num = *(p + 3);
+	m->_impl->head->mh_id = *(p + 0);
+	m->_impl->head->mh_size = *(p + 1);
+	m->_impl->head->mh_total_package = *(p + 2);
+	m->_impl->head->mh_pack_num = *(p + 3);
 	char* c = (char*)((p + 4) + 1);
 	int len = strlen(c);
-	m._impl->body = (message_body*)malloc(sizeof(char) * (len + 1) + sizeof(int));
-	m._impl->body->mb_len = *(p + 4);	
-	memcpy(m._impl->body->mb_data, c, len);
+	m->_impl->body = (message_body*)malloc(sizeof(char) * (len + 1) + sizeof(int));
+	m->_impl->body->mb_len = *(p + 4);	
+	memcpy(m->_impl->body->mb_data, c, len);
 	
 	return m;	
 }
