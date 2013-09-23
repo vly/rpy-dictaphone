@@ -65,7 +65,7 @@ Message* Comm::readMessage()
 	query->pushMessage(m);
 	return m;
 }
-	
+
 void* writeThread(void* arg)
 {
 	printf("write thread start\n");

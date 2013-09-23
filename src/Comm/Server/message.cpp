@@ -55,8 +55,8 @@ Message* Message::createMessage(void* data)
 
 	m->_impl->head->mh_id = *(p + 0);
 	m->_impl->head->mh_size = *(p + 1);
-	m->_impl->head->mh_total_package = *(p + 2);
-	m->_impl->head->mh_pack_num = *(p + 3);
+	m->_impl->head->mh_handle_proxy = *(p + 2);
+	m->_impl->head->mh_reserve = *(p + 3);
 	char* c = (char*)((p + 4) + 1);
 	int len = strlen(c);
 	m->_impl->body = (message_body*)malloc(sizeof(char) * (len + 1) + sizeof(int));
@@ -72,8 +72,8 @@ void Message::initMessage(int id, string message_data)
 
 	// from this project, the message lenth shall never over 1024
 	// that is to say, one package for one message
-	_impl->head->mh_total_package = 1;
-	_impl->head->mh_pack_num = 0;
+	_impl->head->mh_handle_proxy = 1;
+	_impl->head->mh_reserve = 0;
 
 	_impl->body = (message_body*)malloc(sizeof(int) + 
 			sizeof(char) * (message_data.size() + 1));
@@ -106,6 +106,27 @@ void* Message::messageData() const
 char* Message::messageBodyData() const
 {
 	return _impl->body->mb_data;
+}
+	
+int  Message::getMessageHandleProxy(int id)
+{
+	int reVal = -1;
+	switch (id)
+	{
+		case M_START: 
+		case M_END: 
+		case M_DETECTED: 
+		case M_UNDETECTED: 
+		case M_PIR_DETECTED: 
+		case M_PIR_UN_DETECTED: 
+			reVal = proxy_server;
+			break;
+		case M_BEGIN_AUDIO_RECORDING: 
+		case M_END_AUDIO_RECORDING: 
+			reVal = proxy_client;
+			break;
+	}
+	return reVal;
 }
 
 #if TEST

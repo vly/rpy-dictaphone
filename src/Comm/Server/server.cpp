@@ -76,3 +76,13 @@ void Server::receiveMessage(const Message& m)
 {
 	// TODO: Handle messages ...
 }
+	
+void Server::dispatchMessage(Message* m)
+{
+	if(m->_impl->head->mh_handle_proxy == proxy_server)
+	{
+		
+	}
+	else 
+		this->sendMessage(m);
+}

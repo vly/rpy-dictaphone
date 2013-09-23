@@ -20,14 +20,26 @@ enum message_id
 	M_UNDETECTED,
 
 	// other function, shall have different base	
+	M_PIR_DETECTED = 100, 
+	M_PIR_UN_DETECTED,
+
+	// other function, 
+	M_BEGIN_AUDIO_RECORDING = 200,
+	M_END_AUDIO_RECORDING,
+};
+
+enum message_handle_proxy
+{
+	proxy_server,
+	proxy_client,
 };
 
 struct message_head
 {
 	int mh_id;
 	int mh_size;
-	int mh_total_package;
-	int mh_pack_num;
+	int mh_handle_proxy;
+	int mh_reserve;
 };
 
 struct message_body
@@ -42,9 +54,11 @@ struct message
 	message_body* body;
 };
 
+class Client;
 
 class Message
 {
+	friend class Client;	
 #if TEST
 public:
 #endif
@@ -62,7 +76,8 @@ public:
 	int   messageLength() const;
 	void* messageData() const;
 	char* messageBodyData() const;
-	
+	int   getMessageHandleProxy(int id);
+
 	static Message* createMessage(void* data);
 };
 

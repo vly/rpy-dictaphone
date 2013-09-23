@@ -65,7 +65,7 @@ Message* Comm::readMessage()
 	query->pushMessage(m);
 	return m;
 }
-	
+
 void* writeThread(void* arg)
 {
 	printf("write thread start\n");
@@ -77,10 +77,7 @@ void* writeThread(void* arg)
 		//printf("write thread running\n");
 		//Message m = s->query.popMessage();
 		memset(buffer, 0, BUFFER_SIZE);
-#if 0		
-		Message* m = MessageQuery::GetInstance()->popMessage();
-#endif
-#if 1	
+#if 0	
 		int id = 0;	
 
 		char data[BUFFER_SIZE] = {0};
@@ -90,6 +87,8 @@ void* writeThread(void* arg)
 		Message* m = new Message();
 		m->initMessage(id, data);
 #endif
+		
+		Message* m = MessageQuery::GetInstance()->popMessage();
 		//s->query.pushMessage(m);
 		s->sendMessage(m);
 		delete m;
@@ -108,7 +107,7 @@ void* readThread(void* arg)
 		//Message m = s->query.popMessage();
 		Message* m = s->readMessage();
 
-		//printf("%s\n", m->messageBodyData());
+		printf("%s\n", m->messageBodyData());
 		//free(m);
 	}
 	return NULL;

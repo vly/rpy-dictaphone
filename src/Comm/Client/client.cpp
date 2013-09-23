@@ -72,3 +72,13 @@ void Client::receiveMessage(const Message& m)
 {
 
 }
+
+void Client::dispatchMessage(Message* m)
+{
+	if(m->_impl->head->mh_handle_proxy == proxy_client)
+	{
+
+	}
+	else
+		this->sendMessage(m);
+}
