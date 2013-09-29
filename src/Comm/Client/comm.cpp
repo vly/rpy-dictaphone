@@ -61,8 +61,7 @@ Message* Comm::readMessage()
 	count = read(client_socket, buffer, sizeof(buffer) - 1);
 	buffer[count] = 0;
 	Message* m = Message::createMessage(buffer);
-
-	query->pushMessage(m);
+	//query->pushMessage(m);
 	return m;
 }
 
@@ -106,9 +105,9 @@ void* readThread(void* arg)
 		//printf("read thread running\n");
 		//Message m = s->query.popMessage();
 		Message* m = s->readMessage();
-
 		printf("%s\n", m->messageBodyData());
-		//free(m);
+		if(s->dispatchMessage(m))
+			delete(m);
 	}
 	return NULL;
 }

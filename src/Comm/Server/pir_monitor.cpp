@@ -75,7 +75,7 @@ void pir_monitor::startMainLoop()
 			}
 
 			time(&last_sensor);
-#if 0
+#if 1
 			// message to start Recording
 			char buffer[100];
 			memset(buffer, 0, 100);
@@ -95,7 +95,7 @@ void pir_monitor::startMainLoop()
 			{
 				face_detect::GetInstance()->stopMainLoop();
 				// message to stop Recording
-#if 0
+#if 1
 				char buffer[100];
 				memset(buffer, 0, 100);
 				sprintf(buffer, "detected: %d\n", (int)new_sensor);

@@ -47,8 +47,8 @@ bool Server::setUpService()
 	bind(server_socket, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
         listen(server_socket, 10);   
 		
-	//startServer();
-	//createThreads();
+	startServer();
+	createThreads();
 
 	// TODO: pir ...
 	pir_monitor::GetInstance()->setUpService(); 

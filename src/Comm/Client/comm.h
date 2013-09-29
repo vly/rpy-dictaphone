@@ -37,7 +37,7 @@ public:
 
 	int sendMessage(Message* m);
 	Message* readMessage();
-	virtual void dispatchMessage(Message* m) = 0;
+	virtual bool dispatchMessage(Message* m) = 0;
 };
 
 void* writeThread(void* arg);

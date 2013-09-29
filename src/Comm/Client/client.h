@@ -14,9 +14,12 @@ class Client : public Comm
 	     , public Singleton<Client>
 	     , public base_service
 {
-	bool isRunning;
+	pthread_t input_thread;
+	bool isRecording;
 
 public:
+	bool isRunning;
+
 	Client();
 	~Client();
 
@@ -24,8 +27,12 @@ public:
 	virtual void startMainLoop();
 	virtual void stopMainLoop();
 	virtual void receiveMessage(const Message& m);
-	virtual void dispatchMessage(Message* m);
+	virtual bool dispatchMessage(Message* m);
 
 private:
 	void connectToServer();
+	int sendCommand(char *);
+	void startAudioRecording();
+	void stopAudioRecording();
+
 };
