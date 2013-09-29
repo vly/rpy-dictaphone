@@ -22,7 +22,7 @@ public:
 	virtual void startMainLoop();
 	virtual void stopMainLoop();
 	virtual void receiveMessage(const Message& m);
-	virtual void dispatchMessage(Message* m);
+	virtual bool dispatchMessage(Message* m);
 	
 private:
 	void startPirDetect();

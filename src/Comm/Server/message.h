@@ -30,7 +30,7 @@ enum message_id
 
 enum message_handle_proxy
 {
-	proxy_server,
+	proxy_server = 0,
 	proxy_client,
 };
 

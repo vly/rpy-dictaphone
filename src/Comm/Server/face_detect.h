@@ -21,8 +21,6 @@ class face_detect
 	const char* strWindowName;
 	const char* strCascadeClassifier;
 	const int   nFrameWaitTime;
-	const int   nFrameWidth;
-	const int   nFrameHeight;
 
 	bool isRunning;
 
@@ -31,6 +29,8 @@ class face_detect
 public:
 	pthread_t face_main_thread;
 	pthread_t face_detect_thread;
+	const int   nFrameWidth;
+	const int   nFrameHeight;
 
 public:
 	bool isMainThreadRunning() const;

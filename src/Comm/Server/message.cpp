@@ -62,6 +62,7 @@ Message* Message::createMessage(void* data)
 	m->_impl->body = (message_body*)malloc(sizeof(char) * (len + 1) + sizeof(int));
 	m->_impl->body->mb_len = *(p + 4);	
 	memcpy(m->_impl->body->mb_data, c, len);
+	m->_impl->body->mb_data[len] = 0;
 	
 	return m;	
 }
@@ -72,7 +73,7 @@ void Message::initMessage(int id, string message_data)
 
 	// from this project, the message lenth shall never over 1024
 	// that is to say, one package for one message
-	_impl->head->mh_handle_proxy = 1;
+	_impl->head->mh_handle_proxy = getMessageHandleProxy(id);
 	_impl->head->mh_reserve = 0;
 
 	_impl->body = (message_body*)malloc(sizeof(int) + 
