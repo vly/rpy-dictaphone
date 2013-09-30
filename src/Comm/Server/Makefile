@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-c -Wall -g 
 LDFLAGS = $(shell pkg-config --cflags --libs opencv) 
-LDFLAGS_EX = -lbcm2835 
+LDFLAGS_EX = -lbcm2835 -lpthread
 SOURCES=main_server.cpp face_detect.cpp message.cpp message_query.cpp comm.cpp server.cpp pir_monitor.cpp maestro.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=osp_server
