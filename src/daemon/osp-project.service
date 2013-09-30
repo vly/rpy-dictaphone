@@ -1,0 +1,15 @@
+[Unit]
+Description=OSP Project daemon
+After=syslog.target network.target
+
+[Service]
+Type=simple
+User=osp
+Group=osp
+WorkingDirectory=/tmp
+ExecStart=/usr/local/bin/osp_server
+PIDFile=osp_server.pid
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
