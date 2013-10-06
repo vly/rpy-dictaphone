@@ -78,10 +78,38 @@
 
 \section{Introduction}
 
-\textcolor{red}{Can we use same as before?}
+Live presentations audio recording is a well known problem for organisers, speakers and attendees alike. While there are significant amount of solutions available, factors such as cost, complexity and portability often limit widespread adoption. While existing services such as Echo360 and Lectopia work very well in recoding in a lecture theatre environment, ad-hoc deployment in smaller venues can be costly and logistically difficult to achieve.
+ 
+In this project we present a cost-effective, light-weight presentation recording solution that requires little setup time. Designed with flexibility and rapid ad-hoc deployment as the guiding imperatives, the solution presents a good alternative for both personal and organisational use.
 
 
 \section{Goals and Objectives}
+
+
+The focus of the project has been to deliver an easy-to-use, fast to setup, and cost-effective solution to live presentation recording. The following table provides an overview of the core goals and projective we have strived towards over the course of the product development. The priority figure is the value on a scale of 1 to 5 (low to high respectively) that the design team have placed on the goal/objective (particularly during the initial prototype phase).
+
+
+\begin{center}
+\begin{table}
+\begin{tabular}{|l|p{6cm}|c|}
+    \hline
+    \textbf{Goal / Objective} & \textbf{Description} & \textbf{Priority} \\ \hline
+    Cost-effectiveness & One of the main factors that determines the viability of the end-product is the overall cost effectiveness. The aim is to provide a sub-\$200 product in a self-assembly state. & 5  \\ \hline
+    
+    Ease of use & The product has to be easy to use and operate by end-users. This includes setup, operation, troubleshooting stages of use. Some technical knowledge would be a required for the current form of the product. & 4  \\ \hline
+    
+    Semi-portability & As the project aims to primarily cater for ad-hoc recording scenarios, portability plays an important part of the overall system design. This takes form in complexity of assembly, size and weight of the finished product, the power usage and requirement, as well as the storage capacity of the recording functionality.& 3  \\ \hline
+
+    Off-the-shelf hardware & To make the final product accessible to the largest share of prospective audience, the availability of compontents that make up the product becomes critical for the commercialisation of the project.& 2   \\ \hline
+
+    Modularity & Partially related to the off-the-shelf hardware objective, modularity of components and accessories would ensure greater usage and types of operating environments the product can be deployed in.& 3  \\ \hline
+
+
+
+\end{tabular}
+\end{table}
+\end{center}
+
 \section{Feedback and Self-Reflection}
 \subsection{Self Assessment}
 \subsection{Summary of Prototype Demonstration}
@@ -96,6 +124,23 @@
 
 
 \subsection{Description of how each learning objective is addressed}
+
+
+Over the course of the project development, this team have made significant leaps in their knowledge of computer-hardware interfacing, operating system level functionality and application optimisation in a resource constrained environment. This section highlights how various learning objectives of the OSP course have been met.
+ 
+\subsubsection{Learning Objective 1}
+Over the course of the project, all of the ongoing development code has been managed through Github to ensure team members were always using the latest stable code when working on their assigned tasks.
+
+With the face detection (computer vision) generating major CPU load when running on the Raspberry Pi, the team has gone through a significant amount of iterations of the functionality in order to achieve real-time response to the enviroment.
+
+
+For efficiency during the initial development stages, most hardware interface interaction (e.g. servo controller, PIR sensor etc.) were prototyped using the Python programming language, and later ported into C when performance optimisation was required.
+
+
+Debugging and performance has been used extensively over the course of the project for both hardware and software components. For Python, Pudb was the debugger of choice. For C/C++ Instruments and LLDB/GDB were utilised. On the hardware side, servo controller built-in error-checking was utilised for all communication to ensure hardware errors were caught and dealt with.
+ 
+
+
 \section{Assumptions and Dependencies}
 \section{General Constraints}
 \section{Development Methodology}
