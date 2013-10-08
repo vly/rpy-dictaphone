@@ -182,6 +182,87 @@ If another group member was assigned to take over a task (e.g. handing over code
 \subsection{System Design including configuration}
 \subsection{Data Design}
 \subsection{Program Design}
+
+
+The software architecture for this project is basically a C/S (Client and Service) pattern. The server and client are connecting with Linux socket, using UDP protocol. The project has been divided into separated components, and after we build demo program for each part, we calculate the CPU usage, and than distribute the component into server and client.In terms of components, they adopt messages to communicating with each other. That is to say, each component only cares about their own jobs, which improves the hoisin and independency for the system.
+
+\textcolor{red}{TODO: Add communication digram here}
+
+
+\subsubsection{Architecture Decisions}
+
+\begin{center}
+\begin{table}
+\begin{tabular}{|p{0.3\textwidth}|p{0.2\textwidth}|p{0.5\textwidth}|}
+    \hline
+    \textbf{Aspects} & \textbf{Options} & \textbf{Decisions} \\ \hline
+    
+     Communication & 1. TCP \newline 2. UDP & 1. This is a small project that we only measure two PI communications, so the package loses shall happen in low possibility. \newline  2. In terms of complexity of communication, we do not need the message queue manages whether the message is delivered or not. \newline \textit{Option 2 adopted.} \\ \hline
+
+     Performance & 1. Idle \newline 2. Multiple threads & 1. There are brunches of components needs to wait communication messages to take next step. If we use idle function, it shall increase the queries between each component, dropping the system's cohesion. \newline  2. The worst case for face detection algorithm shall take a long time on detecting, dropping the system’s performance dramatically. \newline \textit{Option 2 adopted.} \\ \hline
+
+     Library & 1. Open CV \newline 2. PI face detection library & 1. Easy to debug on the laptop. \newline  2. Open CV library supports the USB camera, which can easily located on servo. \newline \textit{Option 1 adopted.} \\ \hline
+     
+     Thread Communication & 1. Pipeline \newline 2. Sharing memory & 1. Sharing memory provides better performance on communication. \newline  2. There are too many components that need to communication, if we use pipeline, it shall increase the complex for the project and decrease the maintenance. \newline \textit{Option 2 adopted.} \\ \hline
+     
+     Memory & 1. Instance every copy \newline 2. Copy on write & 1. All components may assess the message data. if every component create an instance, there shall be a lot memory waste for brunches of different instance for same object. \newline  2. Copy on write provides more performance; because it shall not spend too much time on copying the data form one object to another. \newline \textit{Option 2 adopted.} \\ \hline
+
+     Message scheduling & 1. FCFS \newline 2. More complex algorithms & 1. FCFS is easy to implement and maintain. \newline  2. This is an easy project, and every message may have same priority. \newline \textit{Option 1 adopted.} \\ \hline
+
+\end{tabular}
+\end{table}
+\end{center}
+
+
+\textcolor{red}{TODO: Add sequence digram here}
+
+\subsubsection{Sharing memory for threads communication}
+
+All the threads have their own stack, but they shall share the heap memory. So we build all the service in heap memory. (use malloc) In addition,  in order for easy accessing from different threads, we allocate a pointer in static memory block that point to the heap. 
+
+The code of Singleton is shown as below:
+
+\textcolor{red}{TODO: INSERT CODE}
+
+
+\subsubsection{Memory Scheduling}
+
+The most different part for the message definition is that the length of the message does not know before it construct. However, we cannot create a big buffer because of the memory limited for the PI. As a result of that, I use a strategy only define 1 char array, and use malloc to increase the length dynamically.The code of dynamical message length is shown as below:
+
+\textcolor{red}{TODO: INSERT CODE}
+
+
+\subsubsection{Copy on write}
+
+PI has little memory size, so it is impossible to reallco memory for passing large frame data buffer that come from face detection frame. More specify, it turn to be waste of memory coping more than one instance of any kind of instance in the project. In order to reduce the usage of memory, we adopt the Copy on write strategy. This strategy only makes a copy when there is some modification on the object, and the most of time they shall only create a new pointer point to the original address.The trade-off for this strategy is that it is no thread-safe, because more than one thread want to access the object when about to change the original data. However, in our project, all the processes, such as face detection and messages, are read-only process, which means that we do not have to consider race condition when we use this approach. The code of message is shown as below:
+
+
+\textcolor{red}{TODO: INSERT CODE}
+
+\subsubsection{Message serialization}
+
+As the communication between server and client, we encode the message data into an array that uses '\textbackslash0' at the end. And the message array can also be encoded into message.The code of message serialization is shown as below:
+
+\textcolor{red}{TODO: INSERT CODE}
+
+
+\subsubsection{Message queue class}
+
+The message queue acts as the communication component in the system. All other components push message to the message queue and the dispatch messages to appropriate component. The most important functionality for message queue should be synchronization. That is to say, only one thread can push or pop message at the same time in order to prevent race condition. More specific, the message queue use conditional valuable to control the race condition. The core code of message queue is shown as below:
+
+\textcolor{red}{TODO: INSERT CODE}
+
+
+\subsubsection{FCFS strategy}
+
+The code shows that we use the simplest strategy to scheduling the message, which means that when there is a message push into the message queue, the dispatching thread shall read the first message in the message queue send to the appropriate component to serve it. In addition, the dispatch thread shall be hinge up and wait when there are no messages in message queue.The message shall be dispatched messages using design pattern: chain of responsibility. The process base on the message ID, which have been introduced in message protocol part. The dispatch component shall query message id and push the message to the serve components.The core code of client message dispatching is shown as below:
+
+\textcolor{red}{TODO: INSERT CODE}
+
+
+
+
+
 \subsubsection{Software Design}
 
 \subsubsection{Source code or patches for all original work.}
