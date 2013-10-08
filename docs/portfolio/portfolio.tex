@@ -60,7 +60,17 @@
 
 % Code highlighting
 \usepackage{listings}
-\lstset{basicstyle=\ttfamily}
+
+\lstset{
+    language=C++,
+    basicstyle=\small\sffamily,
+    numbers=left,
+    numberstyle=\tiny,
+    frame=tb,
+    columns=fullflexible,
+    showstringspaces=false
+}
+
 
 % For marking what's left to do
 \usepackage{color}
@@ -268,9 +278,31 @@ The code shows that we use the simplest strategy to scheduling the message, whic
 \subsubsection{Source code or patches for all original work.}
 
 
-Source code for simulating face detection. \textcolor{red}{TODO: move this under testing heading?}
+\subsubsection{Server}
 
-\begin{lstlisting}[frame=single]
+\include{server-source}
+
+%
+%\begin{lstlisting}[caption=rand-face-detect.cpp,language=C++]
+%\end{lstlisting}
+%
+%\begin{lstlisting}[caption=rand-face-detect.cpp,language=C++]
+%\end{lstlisting}
+%
+%\begin{lstlisting}[caption=rand-face-detect.cpp,language=C++]
+%\end{lstlisting}
+%
+%\begin{lstlisting}[caption=rand-face-detect.cpp,language=C++]
+%\end{lstlisting}
+
+
+
+\section{Testing Issues}
+\subsection{Testing Done}
+
+\textcolor{red}{Source code for simulating face detection.}
+
+\begin{lstlisting}[caption=rand-face-detect.cpp,language=C++]
 #include <iostream>
 #include <cstdlib>
 #include <unistd.h>
@@ -317,8 +349,7 @@ int main(int argc, const char * argv[])
             s = MAX(s, 0);
         }
         else if (strcmp(argv[i], "-h") == 0) {
-            std::cout << "Usage: -t <tolerance>
-             -s <seconds>" << std::endl;
+            std::cout << "Usage: -t <tolerance> -s <seconds>" << std::endl;
             return EXIT_SUCCESS;
         }
 
@@ -336,9 +367,6 @@ int main(int argc, const char * argv[])
 \end{lstlisting}
 
 
-
-\section{Testing Issues}
-\subsection{Testing Done}
 \subsection{Performance Bounds}
 \subsection{Performance Experiments}
 

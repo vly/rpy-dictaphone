@@ -1,0 +1,1459 @@
+\begin{lstlisting}[caption=basic-service.h,language=C++]
+#ifndef __BASE_SERVICE_H__
+#define __BASE_SERVICE_H__
+
+#include "message.h"
+#include "message_query.h"
+
+class base_service {
+public:
+
+  virtual bool setUpService()  = 0;
+  virtual void startMainLoop() = 0;
+  virtual void stopMainLoop()  = 0;
+
+  virtual void postMessage(Message *m)
+  {
+    MessageQuery::GetInstance()->pushMessage(m);
+  }
+
+  virtual void receiveMessage(const Message& m) = 0;
+};
+
+#endif
+\end{lstlisting}
+
+
+
+
+
+\begin{lstlisting}[caption=comm.h,language=C++]
+#define LISTEN_THREAD 0
+#define WRITE_THREAD  1
+#define READ_THREAD   2
+#define THREAD_NUM    3
+
+#include <pthread.h>
+#include "message_query.h"
+#include "message.h"
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <string.h>
+#include <time.h>
+#include <unistd.h>
+
+class Comm {
+protected:
+
+  struct sockaddr_in serv_addr;
+  int server_socket;
+  int client_socket;
+
+  pthread_t threads[THREAD_NUM];
+  int  thread_ids[THREAD_NUM];
+  bool thread_running[THREAD_NUM];
+
+public:
+
+  MessageQuery *query;
+
+public:
+
+  Comm();
+  ~Comm();
+
+  void         createThreads();
+  bool         isThreadRunning(int thread_index);
+
+  int          sendMessage(Message *m);
+  Message    * readMessage();
+  virtual bool dispatchMessage(Message *m) = 0;
+};
+
+void         * writeThread(void *arg);
+void         * readThread(void *arg);
+
+\end{lstlisting}
+
+
+
+
+
+
+
+\begin{lstlisting}[caption=comm.cpp,language=C++]
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <string.h>
+#include <time.h>
+#include <unistd.h>
+
+#define BUFFER_SIZE 1024
+
+#include <iostream>
+using std::cout;        using std::endl;
+
+#include "comm.h"
+
+Comm::Comm()
+{
+  query = MessageQuery::GetInstance();
+  memset(thread_running, 1, THREAD_NUM);
+}
+
+Comm::~Comm()
+{}
+
+void Comm::createThreads()
+{
+  thread_ids[WRITE_THREAD] = pthread_create(&threads[WRITE_THREAD],
+                                            NULL,
+                                            writeThread,
+                                            this);
+
+  thread_ids[READ_THREAD] = pthread_create(&threads[READ_THREAD],
+                                           NULL,
+                                           readThread,
+                                           this);
+}
+
+bool Comm::isThreadRunning(int thread_index)
+{
+  return thread_running[thread_index];
+}
+
+int Comm::sendMessage(Message *m)
+{
+  void *p = m->messageData();
+
+  write(client_socket, p, m->messageLength());
+  free(p);
+  return 0;
+}
+
+Message * Comm::readMessage()
+{
+  char buffer[BUFFER_SIZE] = { 0 };
+  int  count               = 0;
+
+  count         = read(client_socket, buffer, sizeof(buffer) - 1);
+  buffer[count] = 0;
+  Message *m = Message::createMessage(buffer);
+  return m;
+}
+
+void* writeThread(void *arg)
+{
+  printf("write thread start\n");
+
+  Comm *s = (Comm *)arg;
+  char  buffer[BUFFER_SIZE];
+
+  while (s->isThreadRunning(WRITE_THREAD))
+  {
+    memset(buffer, 0, BUFFER_SIZE);
+
+    Message *m = MessageQuery::GetInstance()->popMessage();
+    s->sendMessage(m);
+    delete m;
+  }
+  return NULL;
+}
+
+void* readThread(void *arg)
+{
+  printf("read thread start\n");
+
+  Comm *s = (Comm *)arg;
+
+  while (s->isThreadRunning(READ_THREAD))
+  {
+    Message *m = s->readMessage();
+
+    printf("%s\n", m->messageBodyData());
+
+    if (s->dispatchMessage(m)) delete m;
+  }
+  return NULL;
+}
+\end{lstlisting}
+
+
+
+
+
+\begin{lstlisting}[caption=face-detect.h,language=C++]
+#include "singleton.h"
+#include "base_service.h"
+#include <string>
+#include <opencv2/opencv.hpp>
+using std::string;
+using namespace cv;
+
+struct face_detect_arg;
+class Message;
+
+class face_detect
+  : public Singleton<face_detect>
+    , public base_service {
+  const char *strWindowName;
+  const char *strCascadeClassifier;
+  const int   nFrameWaitTime;
+
+  bool isRunning;
+
+  face_detect_arg *fd;
+
+public:
+
+  pthread_t face_main_thread;
+  pthread_t face_detect_thread;
+  const int nFrameWidth;
+  const int nFrameHeight;
+
+public:
+
+  bool             isMainThreadRunning() const;
+  const char     * getWindowName() const;
+  face_detect_arg* getDetectArg();
+  const int        getFrameWaitTime() const;
+  const int        getFrameWidth() const;
+  const int        getFrameHeight() const;
+
+  pthread_t        getMainThread() const;
+  pthread_t        getDetectThread() const;
+
+public:
+
+  face_detect();
+  ~face_detect();
+
+  virtual bool setUpService();
+  virtual void startMainLoop();
+  virtual void stopMainLoop();
+  virtual void receiveMessage(const Message& m);
+
+public:
+
+  void       loadCascadeClassifier(const char        *strPath,
+                                   CascadeClassifier *pc);
+  CvCapture* createCaptureFrameCamera(int nCaptureIndex = -1);
+  IplImage * captureFrame(CvCapture *pCapture);
+};
+
+struct face_detect_arg
+{
+  CascadeClassifier *pCvHaar;
+  IplImage          *pImage;
+  bool               bDetected;
+  CvRect             rc;
+  bool               threadRunning;
+};
+
+void * faceCaptureFunction(void *arg);
+void * faceDetectFunction(void *arg);
+CvRect detectFaceInImage(IplImage          *inputImg,
+                         CascadeClassifier *cascade);
+
+\end{lstlisting}
+
+
+
+
+
+
+
+
+\begin{lstlisting}[caption=face-detect.cpp,language=C++]
+#include <opencv2/opencv.hpp>
+#include <string>
+#include <iostream>
+#include <vector>
+#include <assert.h>
+#include <pthread.h>
+#include "face_detect.h"
+#include "message.h"
+#include "maestro.h"
+#include <stdio.h>
+using std::string;      using std::cout;
+using std::endl;        using std::vector;
+using std::cerr;
+using namespace cv;
+
+#define NA_FACE_MOVE_THRESHOLD 400
+#define GUI_MODE 0
+
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+#define FAILURE_CHECK(p, x)      \
+  assert(p);                     \
+  if (p == NULL)                 \
+  {                              \
+    std::cerr << x << std::endl; \
+    exit(EXIT_FAILURE);          \
+  }
+
+face_detect::face_detect()
+  : strWindowName("Face detection test")
+    , strCascadeClassifier("lbpcascade_frontalface.xml")
+    , nFrameWaitTime(33)
+    , nFrameWidth(320)
+    , nFrameHeight(240)
+    , isRunning(false)
+{}
+
+face_detect::~face_detect()
+{}
+
+bool face_detect::setUpService()
+{
+  fd          = (face_detect_arg *)malloc(sizeof(face_detect_arg));
+  fd->pCvHaar = new CascadeClassifier();
+  loadCascadeClassifier(strCascadeClassifier, fd->pCvHaar);
+
+  fd->pImage        = NULL;
+  fd->threadRunning = true;
+  fd->bDetected     = false;
+
+  return true;
+}
+
+void face_detect::startMainLoop()
+{
+  isRunning = true;
+  pthread_create(&face_main_thread, NULL, faceCaptureFunction, (void *)_instance);
+
+  //	faceCaptureFunction((void*)this);
+}
+
+void face_detect::stopMainLoop()
+{
+  isRunning         = false;
+  fd->threadRunning = false;
+}
+
+void face_detect::receiveMessage(const Message& m)
+{
+  // TODO: handle the message ...
+}
+
+void face_detect::loadCascadeClassifier(const char        *strPath,
+                                        CascadeClassifier *pc)
+{
+  FAILURE_CHECK(pc, "Conldn't load classifier");
+
+  if (!pc->load(strPath))
+  {
+    std::cerr << "Conldn't load classifier" << endl;
+    exit(EXIT_FAILURE);
+  }
+}
+
+CvCapture * face_detect::createCaptureFrameCamera(int nCaptureIndex)
+{
+  CvCapture *p = cvCaptureFromCAM(nCaptureIndex);
+
+  FAILURE_CHECK(p, "Init Capture Failed");
+
+  if (!cvGrabFrame(p))
+  {
+    std::cerr << "Conldn't GrabFrame" << std::endl;
+    exit(EXIT_FAILURE);
+  }
+
+  cvSetCaptureProperty(p, CV_CAP_PROP_FRAME_WIDTH,  nFrameWidth);
+  cvSetCaptureProperty(p, CV_CAP_PROP_FRAME_HEIGHT, nFrameHeight);
+  cvSetCaptureProperty(p, CV_CAP_PROP_FPS,          5);
+
+  return p;
+}
+
+IplImage * face_detect::captureFrame(CvCapture *pCapture)
+{
+  IplImage *p = cvQueryFrame(pCapture);
+
+  FAILURE_CHECK(p, "Error: cvQueryFrame failed");
+
+  return p;
+}
+
+CvRect detectFaceInImage(IplImage *inputImg, CascadeClassifier *cascade)
+{
+
+  CvSize minFeatureSize = cvSize(80, 80);
+
+  int flags = CV_HAAR_FIND_BIGGEST_OBJECT | CV_HAAR_DO_ROUGH_SEARCH;
+
+  float search_scale_factor = 1.1f;
+
+  IplImage *detectImg = inputImg;
+
+  if (detectImg->nChannels > 1)
+  {
+    CvSize size       = cvSize(detectImg->width, detectImg->height);
+    IplImage *greyImg = cvCreateImage(size, IPL_DEPTH_8U, 1);
+    cvCvtColor(detectImg, greyImg, CV_BGR2GRAY);
+    detectImg = greyImg;
+  }
+
+  vector<Rect> rects;
+  cascade->detectMultiScale(detectImg,
+                            rects,
+                            search_scale_factor,
+                            3,
+                            flags,
+                            minFeatureSize);
+
+  int nFaces = rects.size();
+
+  CvRect rc = cvRect(-1, -1, -1, -1);
+
+  if (nFaces > 0)
+  {
+    rc = cvRect(rects[0].x, rects[0].y, rects[0].width, rects[0].height);
+  }
+
+  if (detectImg->nChannels > 1) cvReleaseImage(&detectImg);
+
+  return rc;
+}
+
+double euclideanDistance(CvPoint pt1, CvPoint pt2) {
+  double x = pt1.x - pt2.x;
+  double y = pt1.y - pt2.y;
+  double dist;
+
+  dist = pow(x, 2) + pow(y, 2);
+  return dist;
+}
+
+void* faceCaptureFunction(void *arg)
+{
+  face_detect *fdc    = (face_detect *)arg;
+  face_detect_arg *fd = fdc->getDetectArg();
+
+  CvCapture *pCapture = fdc->createCaptureFrameCamera();
+
+  IplImage *src =  cvQueryFrame(pCapture);
+
+  pthread_create(&(fdc->face_detect_thread), NULL, faceDetectFunction,
+                 (void *)fd);
+
+  float screenDivisions = 2.6;
+
+  Point rightPt2  = Point(fdc->nFrameWidth / screenDivisions,
+                          fdc->nFrameHeight - 1);
+  Point leftPt1   = Point(fdc->nFrameWidth - (fdc->nFrameWidth / screenDivisions),
+                          0);
+  Point topPt2    = Point(fdc->nFrameWidth - 1,
+                          fdc->nFrameHeight / screenDivisions);
+  Point bottomPt1 =
+    Point(0, fdc->nFrameHeight - (fdc->nFrameHeight / screenDivisions));
+
+  Maestro *maestro = Maestro::GetInstance();
+  maestro->goHome(maestro->horizontalServo);
+  maestro->goHome(maestro->verticalServo);
+      usleep(1);
+
+  CvPoint lastFace;
+  lastFace.x = fdc->nFrameWidth / 2.0;
+  lastFace.y = fdc->nFrameHeight / 2.0;
+
+  CvRect rc;
+  bool   bDetected = false;
+
+  while (fdc->isMainThreadRunning())
+  {
+    IplImage *pImg = cvQueryFrame(pCapture);
+
+    if (!pImg)
+    {
+      std::cerr << "Query Frame Failed" << endl;
+      usleep(1000);
+      continue;
+    }
+
+    assert(pImg);
+    pthread_mutex_lock(&mutex);
+    fd->pImage = pImg;
+    bDetected  = fd->bDetected;
+    rc         = fd->rc;
+    pthread_mutex_unlock(&mutex);
+
+    CvPoint facePoint;
+    facePoint.x = 0;
+    facePoint.y = 0;
+
+    if (bDetected)
+    {
+      CvPoint p1 = cvPoint(rc.x, rc.y);
+      CvPoint p2 = cvPoint(rc.x + rc.width, rc.y + rc.height);
+      cvRectangle(pImg, p1, p2, CV_RGB(0, 255, 0), 5, 8);
+
+      facePoint.x = rc.x + (rc.width / 2.0f);
+      facePoint.y = rc.y + (rc.height / 2.0f);
+
+        printf("Face Detected\n");
+    }
+
+    if ((facePoint.x > 0) && (facePoint.y > 0)) {
+      double dist = euclideanDistance(facePoint, lastFace);
+
+      if ((dist > 0) && (dist < NA_FACE_MOVE_THRESHOLD))
+      {
+        printf("send rotate command\n");
+
+        if (facePoint.x < rightPt2.x) maestro->stepUp(maestro->horizontalServo);
+        else if (facePoint.x > leftPt1.x) maestro->stepDown(
+            maestro->horizontalServo);
+
+        if (facePoint.y < topPt2.y) maestro->stepUp(maestro->verticalServo);
+
+        else if (facePoint.y > bottomPt1.y) maestro->stepDown(
+            maestro->verticalServo);
+      }
+
+      lastFace.x = facePoint.x;
+      lastFace.y = facePoint.y;
+    }
+
+    if (cvWaitKey(fdc->getFrameWaitTime()) == 27) fdc->stopMainLoop();
+
+    usleep(1);
+  }
+
+  cvReleaseCapture(&pCapture);
+  return NULL;
+}
+
+void* faceDetectFunction(void *arg)
+{
+  face_detect_arg *fd = (face_detect_arg *)arg;
+
+  while (fd->threadRunning)
+  {
+    if (fd->pImage == NULL)
+    {
+      continue;
+    }
+
+    pthread_mutex_lock(&mutex);
+    IplImage *pImg = fd->pImage;
+    pthread_mutex_unlock(&mutex);
+
+    CvRect rc = detectFaceInImage(pImg, fd->pCvHaar);
+
+    if (rc.x != -1)
+    {
+      pthread_mutex_lock(&mutex);
+      fd->bDetected = true;
+      fd->rc        = rc;
+      pthread_mutex_unlock(&mutex);
+    }
+    else
+    {
+      pthread_mutex_lock(&mutex);
+      fd->bDetected = false;
+      pthread_mutex_unlock(&mutex);
+    }
+  }
+
+  return NULL;
+}
+
+bool face_detect::isMainThreadRunning() const
+{
+  return isRunning;
+}
+
+const char * face_detect::getWindowName() const
+{
+  return strWindowName;
+}
+
+face_detect_arg * face_detect::getDetectArg()
+{
+  return fd;
+}
+
+pthread_t face_detect::getMainThread() const
+{
+  return face_main_thread;
+}
+
+pthread_t face_detect::getDetectThread() const
+{
+  return face_detect_thread;
+}
+
+const int face_detect::getFrameWaitTime() const
+{
+  return nFrameWaitTime;
+}
+
+const int face_detect::getFrameWidth() const
+{
+  return nFrameWidth;
+}
+
+const int face_detect::getFrameHeight() const
+{
+  return nFrameHeight;
+}
+
+\end{lstlisting}
+
+
+
+
+
+\begin{lstlisting}[caption=maestro.h,language=C++]
+#ifndef __maestro__
+#define __maestro__
+
+#include <iostream>
+#include <string>
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <termios.h>
+
+#include "singleton.h"
+#include "base_service.h"
+
+// Source:
+// http://stackoverflow.com/questions/134569/c-exception-throwing-stdstring
+struct MaestroException : public std::exception
+{
+  std::string s;
+  MaestroException(std::string ss) : s(ss) {}
+
+  ~MaestroException() throw() {}
+
+  const char* what() const throw() {
+    return s.c_str();
+  }
+};
+
+#ifndef __servo__
+# define __servo__
+
+class Servo {
+private:
+
+  unsigned char  _channel;
+  unsigned int   _min;
+  unsigned int   _max;
+  unsigned short _pos;
+  unsigned short _home;
+
+public:
+
+  Servo(unsigned char c, unsigned int mn, unsigned int mx,
+        unsigned int hm) : _channel(c), _min(mn), _max(mx), _home(hm) {}
+
+  unsigned char getChannel() {
+    return _channel;
+  }
+
+  unsigned short getHome() {
+    return _home;
+  }
+
+  unsigned short getMin() {
+    return _min;
+  }
+
+  unsigned short getMax() {
+    return _max;
+  }
+
+  unsigned short getPos() {
+    return _pos;
+  }
+
+  void setPos(unsigned short p) {
+    _pos = p;
+  }
+};
+
+#endif /* defined(__servo__) */
+
+#ifdef __APPLE__
+# define NA_DEVICE "/dev/cu.usbmodem00065291"
+#else
+# define NA_DEVICE "/dev/ttyACM0"
+#endif // ifdef __APPLE__
+
+class Maestro
+  : public Singleton<Maestro>
+    , public base_service {
+private:
+
+  const char *_device;
+  int         _fd;
+
+public:
+
+  Servo *horizontalServo;
+  Servo *verticalServo;
+
+public:
+
+  Maestro() : _device(NA_DEVICE) {}
+
+  ~Maestro() {
+    close(_fd);
+  }
+
+  int          getError(Servo *servo);
+  int          goHome(Servo *);
+  int          getPosition(Servo *);
+  int          setPosition(Servo    *,
+                           unsigned short);
+  int          stepUp(Servo *);
+  int          stepDown(Servo *);
+
+  virtual bool setUpService();
+  virtual void startMainLoop();
+  virtual void stopMainLoop();
+  virtual void receiveMessage(const Message& m);
+
+private:
+
+  void openDevice();
+};
+
+#endif // ifndef __maestro__
+
+\end{lstlisting}
+
+
+
+
+
+\begin{lstlisting}[caption=maestro.cpp,language=C++]
+#include "maestro.h"
+#define NA_STEP_VALUE 150
+
+int Maestro::goHome(Servo *servo) {
+  unsigned char command[] = { 0xA2, servo->getChannel() };
+
+  if (write(_fd, command, sizeof(command)) == -1) {
+    perror("error writing");
+    return -1;
+  }
+
+  servo->setPos(servo->getHome());
+
+  return 0;
+}
+
+int Maestro::getPosition(Servo *servo) {
+  return (int)servo->getPos();
+}
+
+int Maestro::setPosition(Servo *servo, unsigned short target) {
+  if (target > servo->getMax()) target = servo->getMax();
+
+  if (target < servo->getMin()) target = servo->getMin();
+  unsigned char command[] =
+  { 0x84, servo->getChannel(), static_cast<unsigned char>(target & 0x7F),
+    static_cast<unsigned char>(target >> 7 & 0x7F) };
+
+  if (write(_fd, command, sizeof(command)) == -1) {
+    perror("error writing");
+    return -1;
+  }
+
+  servo->setPos(target);
+  return 0;
+}
+
+int Maestro::stepUp(Servo *servo) {
+  return setPosition(servo, getPosition(servo) + NA_STEP_VALUE);
+}
+
+int Maestro::stepDown(Servo *servo) {
+  return setPosition(servo, getPosition(servo) - NA_STEP_VALUE);
+}
+
+#define KEYCONTROL 0
+
+#if KEYCONTROL
+# include <termios.h>
+# include <unistd.h>
+#endif // if KEYCONTROL
+
+void Maestro::openDevice()
+{
+  _fd = open(_device, O_RDWR | O_NOCTTY);
+
+  if (_fd == -1) {
+    perror(_device);
+    throw MaestroException("Invalid Device");
+  }
+}
+
+bool Maestro::setUpService()
+{
+  openDevice();
+  horizontalServo = new Servo(0, 3968, 9216, 6104);
+  verticalServo   = new Servo(1, 3968, 9216, 8220);
+
+  this->goHome(horizontalServo);
+  this->goHome(verticalServo);
+}
+
+void Maestro::startMainLoop()
+{}
+
+void Maestro::stopMainLoop()
+{}
+
+void Maestro::receiveMessage(const Message& m)
+{}
+
+#undef NA_STEP_VALUE
+\end{lstlisting}
+
+
+
+
+
+\begin{lstlisting}[caption=main-server.cpp,language=C++]
+#include "server.h"
+
+int main(int argc, char **argv)
+{
+  Server *s = Server::GetInstance();
+
+  s->setUpService();
+  s->startMainLoop();
+
+  return 0;
+}
+\end{lstlisting}
+
+
+
+
+
+\begin{lstlisting}[caption=message.h,language=C++]
+#ifndef __MESSAGE_H__
+#define __MESSAGE_H__
+
+#include <string>
+using std::string;
+
+#define TEST 0
+
+enum message_id
+{
+  M_START = 0,
+  M_END,
+  M_DETECTED,
+  M_UNDETECTED,
+
+  M_PIR_DETECTED = 100,
+  M_PIR_UN_DETECTED,
+
+  M_BEGIN_AUDIO_RECORDING = 200,
+  M_END_AUDIO_RECORDING,
+};
+
+enum message_handle_proxy
+{
+  proxy_server = 0,
+  proxy_client,
+};
+
+struct message_head
+{
+  int mh_id;
+  int mh_size;
+  int mh_handle_proxy;
+  int mh_reserve;
+};
+
+struct message_body
+{
+  int  mb_len;
+  char mb_data[1];
+};
+
+struct message
+{
+  message_head *head;
+  message_body *body;
+};
+
+class Server;
+
+class Message {
+  friend class Server;
+#if TEST
+
+public:
+
+#endif // if TEST
+  message *_impl;
+
+public:
+
+  Message();
+  Message(const Message& other);
+  Message& operator=(const Message& rhs);
+  Message(void *data, int size);
+  ~Message();
+
+public:
+
+  void            initMessage(int    id,
+                              string message_data);
+  int             messageLength() const;
+  void          * messageData() const;
+  char          * messageBodyData() const;
+  int             getMessageHandleProxy(int id);
+
+  static Message* createMessage(void *data);
+};
+
+#endif
+
+\end{lstlisting}
+
+
+
+
+
+\begin{lstlisting}[caption=message.cpp,language=C++]
+#include "message.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+Message::Message()
+{
+  _impl       = new message();
+  _impl->head = new message_head();
+  _impl->body = (message_body *)malloc(sizeof(message_body));
+}
+
+Message::Message(const Message& other)
+{
+  _impl       = new message();
+  _impl->head = new message_head();
+  _impl->body = (message_body *)malloc(sizeof(message_body));
+
+    memcpy(_impl, other._impl, sizeof(message));
+}
+
+Message& Message::operator=(const Message& rhs)
+{
+  if (&rhs != this)
+  {
+    _impl       = new message();
+    _impl->head = new message_head();
+    _impl->body = (message_body *)malloc(sizeof(message_body));
+
+    memcpy(_impl, rhs._impl, sizeof(message));
+  }
+
+  return *this;
+}
+
+Message::~Message()
+{
+  delete _impl->head;
+  delete _impl->body;
+  delete _impl;
+}
+
+Message * Message::createMessage(void *data)
+{
+  Message *m = new Message();
+
+  int *p = (int *)data;
+
+  m->_impl->head->mh_id           = *(p + 0);
+  m->_impl->head->mh_size         = *(p + 1);
+  m->_impl->head->mh_handle_proxy = *(p + 2);
+  m->_impl->head->mh_reserve      = *(p + 3);
+  char *c   = (char *)((p + 4) + 1);
+  int   len = strlen(c);
+  m->_impl->body         = (message_body *)malloc(
+    sizeof(char) * (len + 1) + sizeof(int));
+  m->_impl->body->mb_len = *(p + 4);
+    memcpy(m->_impl->body->mb_data, c, len);
+  m->_impl->body->mb_data[len] = 0;
+
+  return m;
+}
+
+void Message::initMessage(int id, string message_data)
+{
+  _impl->head->mh_id = id;
+
+  _impl->head->mh_handle_proxy = getMessageHandleProxy(id);
+  _impl->head->mh_reserve      = 0;
+
+  _impl->body = (message_body *)malloc(sizeof(int) +
+                                       sizeof(char) * (message_data.size() + 1));
+  _impl->body->mb_len = message_data.size();
+    memcpy(_impl->body->mb_data, message_data.c_str(), message_data.size());
+  *(_impl->body->mb_data + message_data.size()) = 0;
+
+  _impl->head->mh_size = sizeof(message_head) + sizeof(int)
+                         + sizeof(char) * (message_data.size() + 1);
+}
+
+int Message::messageLength() const
+{
+  return _impl->head->mh_size;
+}
+
+void * Message::messageData() const
+{
+  void *p = malloc(messageLength());
+
+  memset(p, 0, messageLength());
+  memcpy(p, _impl->head, sizeof(message_head));
+  int *pi = ((int *)p + 4);
+  *pi = _impl->body->mb_len;
+  char *c = (char *)(pi + 1);
+  memcpy(c, _impl->body->mb_data, _impl->body->mb_len);
+  c[_impl->body->mb_len] = 0;
+  return p;
+}
+
+char * Message::messageBodyData() const
+{
+  return _impl->body->mb_data;
+}
+
+int Message::getMessageHandleProxy(int id)
+{
+  int reVal = -1;
+
+  switch (id)
+  {
+  case M_START:
+  case M_END:
+  case M_DETECTED:
+  case M_UNDETECTED:
+  case M_PIR_DETECTED:
+  case M_PIR_UN_DETECTED:
+    reVal = proxy_server;
+    break;
+
+  case M_BEGIN_AUDIO_RECORDING:
+  case M_END_AUDIO_RECORDING:
+    reVal = proxy_client;
+    break;
+  }
+  return reVal;
+}
+\end{lstlisting}
+
+
+
+
+
+\begin{lstlisting}[caption=message-query.cpp,language=C++]
+#ifndef __MESSAGE_QUERY_H__
+#define __MESSAGE_QUERY_H__
+
+#include <list>
+#include <pthread.h>
+#include "singleton.h"
+using std::list;
+
+class Message;
+
+class MessageQuery : public Singleton<MessageQuery>{
+  list<Message *> _query;
+
+  pthread_mutex_t _mutex;
+  pthread_cond_t  _con;
+
+public:
+
+  MessageQuery();
+  ~MessageQuery();
+
+  void     pushMessage(Message *m);
+  Message* popMessage();
+
+};
+
+#endif
+
+\end{lstlisting}
+
+
+
+
+
+\begin{lstlisting}[caption=message-query.cpp,language=C++]
+#include "message_query.h"
+#include "message.h"
+
+MessageQuery::MessageQuery()
+{
+  pthread_mutex_init(&_mutex, NULL);
+  pthread_cond_init(&_con, NULL);
+}
+
+MessageQuery::~MessageQuery()
+{
+  pthread_mutex_destroy(&_mutex);
+  pthread_cond_destroy(&_con);
+}
+
+void MessageQuery::pushMessage(Message *m)
+{
+  pthread_mutex_lock(&_mutex);
+  _query.push_back(m);
+  pthread_cond_signal(&_con);
+  pthread_mutex_unlock(&_mutex);
+}
+
+Message * MessageQuery::popMessage()
+{
+  pthread_mutex_lock(&_mutex);
+
+  while (_query.empty()) pthread_cond_wait(&_con, &_mutex);
+
+  Message *reVal = _query.front();
+  _query.pop_front();
+  pthread_mutex_unlock(&_mutex);
+  return reVal;
+}
+\end{lstlisting}
+
+
+
+
+
+
+\begin{lstlisting}[caption=pir-monitor.h,language=C++]
+#ifndef __PIR_MONITOR_H__
+#define __PIR_MONITOR_H__
+
+#include "singleton.h"
+#include "base_service.h"
+#include <time.h>
+
+class pir_monitor
+  : public Singleton<pir_monitor>
+    , public base_service {
+  bool   isRunning;
+  time_t last_sensor;
+
+public:
+
+  pir_monitor();
+  ~pir_monitor();
+
+  virtual bool setUpService();
+  virtual void startMainLoop();
+  virtual void stopMainLoop();
+  virtual void receiveMessage(const Message& m);
+};
+
+#endif
+\end{lstlisting}
+
+
+
+
+
+
+\begin{lstlisting}[caption=pir-monitor.cpp,language=C++]
+#include "pir_monitor.h"
+#include "face_detect.h"
+#include <bcm2835.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+
+#define NA_PIN RPI_GPIO_P1_07
+#define NA_POLL_DELAY 33
+#define NA_PIN_STILL_VALUE 1
+
+pir_monitor::pir_monitor()
+{}
+
+pir_monitor::~pir_monitor()
+{
+  bcm2835_close();
+}
+
+bool pir_monitor::setUpService()
+{
+  bool reVal = true;
+
+  if (!bcm2835_init()) {
+    printf("Can't access hardware, did you use sudo?\n");
+    exit(EXIT_FAILURE);
+    reVal = false;
+  }
+
+  bcm2835_gpio_fsel(NA_PIN, BCM2835_GPIO_FSEL_INPT);
+
+  bcm2835_gpio_set_pud(NA_PIN, BCM2835_GPIO_PUD_UP);
+
+  return reVal;
+}
+
+void pir_monitor::stopMainLoop()
+{
+  isRunning = false;
+}
+
+void pir_monitor::startMainLoop()
+{
+  uint8_t value = NA_PIN_STILL_VALUE;
+
+  time(&last_sensor);
+  isRunning = true;
+
+  while (isRunning)
+  {
+    value = bcm2835_gpio_lev(NA_PIN);
+
+    if (value != NA_PIN_STILL_VALUE)
+    {
+        printf("dectect movement\n");
+      face_detect *fd = face_detect::GetInstance();
+
+      if (!fd->isMainThreadRunning())
+      {
+        printf("begin face detection");
+        fd->startMainLoop();
+      }
+
+      time(&last_sensor);
+
+      // Message to start Recording
+      char buffer[100];
+      memset(buffer, 0, 100);
+      sprintf(buffer, "detected: %d\n", (int)last_sensor);
+      Message *m = new Message();
+      m->initMessage(M_BEGIN_AUDIO_RECORDING, buffer);
+      this->postMessage(m);
+    }
+    else
+    {
+      time_t new_sensor;
+      time(&new_sensor);
+
+      if (difftime(new_sensor, last_sensor) > 30)
+      {
+        face_detect::GetInstance()->stopMainLoop();
+
+        // Message to stop Recording
+        char buffer[100];
+        memset(buffer, 0, 100);
+        sprintf(buffer, "detected: %d\n", (int)new_sensor);
+        Message *m = new Message();
+        m->initMessage(M_END_AUDIO_RECORDING, buffer);
+        this->postMessage(m);
+      }
+    }
+
+    delay(NA_POLL_DELAY);
+  }
+
+}
+
+void pir_monitor::receiveMessage(const Message& m)
+{
+}
+
+#undef NA_PIN
+#undef NA_POLL_DELAY
+#undef NA_PIN_STILL_VALUE
+
+\end{lstlisting}
+
+
+
+
+
+
+\begin{lstlisting}[caption=server.h,language=C++]
+#include "comm.h"
+#include "singleton.h"
+#include "base_service.h"
+
+class Server : public Comm
+               , public Singleton<Server>
+               , public base_service {
+  bool isRunning;
+
+public:
+
+  Server();
+  ~Server();
+
+  virtual bool setUpService();
+  virtual void startMainLoop();
+  virtual void stopMainLoop();
+  virtual void receiveMessage(const Message& m);
+  virtual bool dispatchMessage(Message *m);
+
+private:
+
+  void startPirDetect();
+  void startServer();
+};
+
+\end{lstlisting}
+
+
+
+
+
+
+\begin{lstlisting}[caption=server.cpp,language=C++]
+#include "server.h"
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <string.h>
+#include <time.h>
+#include <unistd.h>
+
+#include "face_detect.h"
+#include "pir_monitor.h"
+#include "maestro.h"
+
+Server::Server()
+  : isRunning(true)
+{}
+
+Server::~Server()
+{}
+
+void Server::startPirDetect()
+{
+  pir_monitor::GetInstance()->startMainLoop();
+}
+
+void Server::startServer()
+{
+  client_socket = accept(server_socket, (struct sockaddr *)NULL, NULL);
+}
+
+bool Server::setUpService()
+{
+  server_socket = socket(AF_INET, SOCK_STREAM, 0);
+  memset(&serv_addr, 0, sizeof(struct sockaddr_in));
+
+  serv_addr.sin_family      = AF_INET;
+  serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+  serv_addr.sin_port        = htons(9999);
+
+  bind(server_socket, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
+  listen(server_socket, 10);
+
+  startServer();
+  createThreads();
+
+  pir_monitor::GetInstance()->setUpService();
+
+  face_detect::GetInstance()->setUpService();
+
+  Maestro::GetInstance()->setUpService();
+
+  return true;
+}
+
+void Server::startMainLoop()
+{
+  while (isRunning)
+  {
+    startPirDetect();
+    usleep(10);
+  }
+}
+
+void Server::stopMainLoop()
+{
+  isRunning = false;
+}
+
+void Server::receiveMessage(const Message& m)
+{
+}
+
+bool Server::dispatchMessage(Message *m)
+{
+  bool bHandle = false;
+
+  if (m->_impl->head->mh_handle_proxy == proxy_server)
+  {
+    bHandle = true;
+  }
+  else this->sendMessage(m);
+
+  return bHandle;
+}
+
+\end{lstlisting}
+
+
+
+
+
+
+\begin{lstlisting}[caption=singleton.h,language=C++]
+#ifndef __SINGLETON_H__
+#define __SINGLETON_H__
+
+template<typename T>
+class Singleton {
+protected:
+
+  static T *_instance;
+
+public:
+
+  static T* GetInstance()
+  {
+    if (!_instance) _instance = new T();
+
+    return _instance;
+  }
+};
+
+template<typename T>
+T * Singleton<T>::_instance = 0;
+
+#endif
+\end{lstlisting}
+
+
+
+
+
+
+\begin{lstlisting}[caption=.cpp,language=C++]
+\end{lstlisting}
+
+
+
