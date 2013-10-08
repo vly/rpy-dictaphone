@@ -1,15 +1,11 @@
-/**
- * Created by Alfred Yang
- * Entery of Server Pi
- */
-
 #include "server.h"
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-	Server* s = Server::GetInstance();
-	s->setUpService();
-	s->startMainLoop();
+  Server *s = Server::GetInstance();
 
-	return 0;
+  s->setUpService();
+  s->startMainLoop();
+
+  return 0;
 }
