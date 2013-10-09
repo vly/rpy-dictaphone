@@ -1,8 +1,3 @@
-/**
- * Create by Alfred Yang
- * The base class for pi communication
- */
-
 #define LISTEN_THREAD 0
 #define WRITE_THREAD  1
 #define READ_THREAD   2
@@ -21,29 +16,33 @@
 #include <time.h>
 #include <unistd.h>
 
-class Comm 
-{
+class Comm {
 protected:
-	struct sockaddr_in serv_addr;
-	int server_socket;
-	int client_socket;
 
-	pthread_t threads[THREAD_NUM];
-	int thread_ids[THREAD_NUM];
-	bool thread_running[THREAD_NUM];
+  struct sockaddr_in serv_addr;
+  int server_socket;
+  int client_socket;
+
+  pthread_t threads[THREAD_NUM];
+  int  thread_ids[THREAD_NUM];
+  bool thread_running[THREAD_NUM];
+
 public:
-	MessageQuery* query;
+
+  MessageQuery *query;
+
 public:
-	Comm();
-	~Comm();
 
-	void createThreads();
-	bool isThreadRunning(int thread_index);
+  Comm();
+  ~Comm();
 
-	int sendMessage(Message* m);
-	Message* readMessage();
-	virtual bool dispatchMessage(Message* m) = 0;
+  void         createThreads();
+  bool         isThreadRunning(int thread_index);
+
+  int          sendMessage(Message *m);
+  Message    * readMessage();
+  virtual bool dispatchMessage(Message *m) = 0;
 };
 
-void* writeThread(void* arg);
-void* readThread(void* arg);
+void         * writeThread(void *arg);
+void         * readThread(void *arg);
