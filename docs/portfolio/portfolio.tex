@@ -373,6 +373,35 @@ int main(int argc, const char * argv[])
 \subsection{Performance Bounds}
 \subsection{Performance Experiments}
 
+
+
+
+
+\begin{center}
+\begin{table}
+\begin{tabular}{|c|c|c|}
+    \hline
+    \textbf{Trained Set} & \textbf{FPS} & \textbf{Accuracy} \\ \hline
+    
+    Frontal face & 13 & Acceptable \\ \hline
+    
+    Eye & 13-14 & Erratic \\ \hline
+    
+    Mouth & 13-14 & False positives \\ \hline
+    
+    Nose & 11 & Low detection, false positives \\ \hline
+    
+    Ear & 14 & No detection \\ \hline
+    
+    Eye pair & 14 & No detection \\ \hline
+
+\end{tabular}
+\end{table}
+\end{center}
+
+
+
+
 \section{Roles and Responsibilities}
 
 As outlined in our original project specification, there was overlap in our teams individual strengths so the roles were divided with some shared responsibilities. Although at different levels, we wanted all three group members to be involved with experimenting with the hardware, writing software and documenting. The cross-over in roles made the progress slightly slower, but allowed each of us to trial something new.
