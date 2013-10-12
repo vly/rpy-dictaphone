@@ -57,6 +57,8 @@
 
 % The appendix
 \usepackage{appendix}
+\usepackage{pdfpages}
+
 
 % Code highlighting
 \usepackage{listings}
@@ -70,6 +72,11 @@
     columns=fullflexible,
     showstringspaces=false
 }
+
+
+% For links
+\usepackage{hyperref}
+
 
 
 % For marking what's left to do
@@ -99,6 +106,8 @@ In this project we present a cost-effective, light-weight presentation recording
 The focus of the project has been to deliver an easy-to-use, fast to setup, and cost-effective solution to live presentation recording. The following table provides an overview of the core goals and projective we have strived towards over the course of the product development. The priority figure is the value on a scale of 1 to 5 (low to high respectively) that the design team have placed on the goal/objective (particularly during the initial prototype phase).
 
 
+\textcolor{red}{TODO: Add table ref. Add learning objective goals.}
+
 \begin{center}
 \begin{table}
 \begin{tabular}{|l|p{6cm}|c|}
@@ -110,7 +119,7 @@ The focus of the project has been to deliver an easy-to-use, fast to setup, and 
     
     Semi-portability & As the project aims to primarily cater for ad-hoc recording scenarios, portability plays an important part of the overall system design. This takes form in complexity of assembly, size and weight of the finished product, the power usage and requirement, as well as the storage capacity of the recording functionality.& 3  \\ \hline
 
-    Off-the-shelf hardware & To make the final product accessible to the largest share of prospective audience, the availability of compontents that make up the product becomes critical for the commercialisation of the project.& 2   \\ \hline
+    Off-the-shelf hardware & To make the final product accessible to the largest share of prospective audience, the availability of components that make up the product becomes critical for the commercialisation of the project.& 2   \\ \hline
 
     Modularity & Partially related to the off-the-shelf hardware objective, modularity of components and accessories would ensure greater usage and types of operating environments the product can be deployed in.& 3  \\ \hline
 
@@ -121,8 +130,24 @@ The focus of the project has been to deliver an easy-to-use, fast to setup, and 
 \end{center}
 
 \section{Feedback and Self-Reflection}
+
 \subsection{Self Assessment}
+
+
+\textcolor{red}{TODO: As a group we are very proud...}
+
 \subsection{Summary of Prototype Demonstration}
+
+Due to the hard work of all team members we were able to demonstrate a working prototype in our Week 10 laboratory. The presented product included an auto-startup feature so no laptop or router were needed for setup. We were able to successfully demonstrate to the class our face tracking, audio recording and motion sensing components of the solution. 
+
+Although what we presented was a cutdown version of what was proposed in the project specification (missing the speech-to-text translation), we were very proud of what we had achieved and the positive reception the project received from our peers.
+
+In preparation for the  demonstration we developed a short slide show, written speech and summary handout. All of these are available in the appendix. We also created a video of the working product incase we encountered technical issues during live demo. 
+
+See the video here: \url{http://www.youtube.com/watch?v=hckEBpT1VcU}
+
+
+
 \subsection{Peer Review Summary}
 
 \textcolor{red}{This is waiting on the lab instructor to give us back our peer-review sheets.}
@@ -179,11 +204,11 @@ GitHub worked for us because git was a version control system we all wanted to u
 
 As postgraduate students, we all had competing priorities with our time which meant that we could not work together in person regularly. It was also difficult to meet due to the amount of hardware involved. As a result we often worked in isolation with very defined tasks.
 
-So for us email was key for effective communication and delegating tasks. Once a week we would a group message was used to talk about our progress and goals for the coming week.
+So for us email was key for effective communication and delegating tasks. Once a week a group message was used to talk about our progress and goals for the coming week.
 
 \subsubsection{Face-to-face meetings}
 
-Being all together at once was a rare occasion and we had only five out-of-class-hours group meetings that we all attended. We used it to visually demonstrate what we had achieved with our tasks and discuss the issues arising from it. 
+Being all together at once was a rare occasion and we had only a total of five out-of-class-hours group meetings that we all attended. We used the time to visually demonstrate what we had achieved with our tasks and discuss arising issues. 
 
 If another group member was assigned to take over a task (e.g. handing over code to be optimised or integrated), we used this time to instruct in detail how the prototype code worked or how the hardware had been configured. 
 
@@ -278,9 +303,11 @@ The code shows that we use the simplest strategy to scheduling the message, whic
 \subsubsection{Source code or patches for all original work.}
 
 
-\subsubsection{Server}
+\subsubsection{Server Code}
 
 \include{server-source}
+
+\subsubsection{Client Code}
 
 \include{client-source}
 
@@ -509,6 +536,7 @@ See appendix for daily log of tasks.
 
 
 \section{Summary and Conclusions}
+
 \section{References}
 
 
@@ -520,12 +548,9 @@ See appendix for daily log of tasks.
 \includegraphics[width=\textwidth]{graphs/gantt-chart.pdf}
 
 
-\chapter{Project Specification }
+\chapter{Prototype Demonstration - Speech}
 
-\textcolor{red}{Add project spec}
-
-\chapter{Presentation speech (Milestone 3)}
-
+\newpage
 
 Hi, we're team $\langle$sql injection$\rangle$. We are Alfred, Val and Neil.Because the raspberry pi is small and portable, we wanted to build something that would take advantage of this. We also liked the idea of building something that would respond to its surroundings. So we decided on an ambitious project to modernise the phonograph (commonly known as a dictaphone), but combining subject tracking with targeted audio recording equipment.
 
@@ -538,6 +563,20 @@ Leaning objective 2 was about assessing trade-offs in hardware on a constrained 
 Also in attempting to improve the overall performance of project modules (eg face detection, real time recording). We investigated modification to process scheduling, however due to the bare bones nature of our system, there was no competition for CPU time.
 
 Learning objective 4 was about team work. This project was particularly hard to work on as a team. Like other teams in this class would have come across, we faced with the obstacle of limited time for such an ambitious project. Two of our members work full-time, and the other studies full-time, so we had to do a lot of work at night in isolation. The obvious solution was to modularise the project into components, and have each member deliver each week. As can be seen in the table, we also tried to reduce dependencies on deliverables, so if one ran over time it wouldn’t impact the next weeks deliverables.But our biggest team issue with the amount of hardware we were using. Besides the Pis, we only had purchased one microphone, one motion sensor, one set of servos etc. So only one team member had physical access to a piece of hardware at a time. To overcome this obstacle, we came up with the idea of writing hardware simulation scripts. For example, we wrote a C++ program that would simulate face detection and output fake coordinates - This meant Val could fine tune the motor movement without having the physical camera or the face detection code complete.Another problem with the amount of hardware, was that when we did meet together, we needed to bring a lot of equipment. The photo on the slide doesn’t really do justice to what it was like to haul 3x laptops, 3x pis, a router, networking cables, servo cables, PIR sensor breadboards, plus tools etc.Finally, as a team we also wanted to do cross-skill development, which made things slower but increased our personal learning. Each members primary role was designed to make use of their best strengths. But we also included cross-overs in the task so we could each try something new. For example, although Val was our expert hardware guy, Neil (who had very limited hardware experience) got to write some of the C interfaces to the hardware, which is something he had never done before. We did similar things with all roles so that we each learned something new.
+
+\chapter{Prototype Demonstration - Handout}
+\includepdf[pages=-]{appendix/summary.pdf}
+
+
+
+\chapter{Prototype Demonstration - Slides}
+\includepdf[pages=-]{appendix/presentation.pdf}
+
+
+\chapter{Project Specification}
+\includepdf[pages=-]{appendix/specification.pdf}
+
+
 
 \end{appendices}
 
