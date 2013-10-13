@@ -786,13 +786,6 @@ int Maestro::stepDown(Servo *servo) {
   return setPosition(servo, getPosition(servo) - NA_STEP_VALUE);
 }
 
-#define KEYCONTROL 0
-
-#if KEYCONTROL
-# include <termios.h>
-# include <unistd.h>
-#endif // if KEYCONTROL
-
 void Maestro::openDevice()
 {
   _fd = open(_device, O_RDWR | O_NOCTTY);

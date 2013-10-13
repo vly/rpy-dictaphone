@@ -103,38 +103,44 @@ In this project we present a cost-effective, light-weight presentation recording
 \section{Goals and Objectives}
 
 
-The focus of the project has been to deliver an easy-to-use, fast to setup, and cost-effective solution to live presentation recording. The following table provides an overview of the core goals and projective we have strived towards over the course of the product development. The priority figure is the value on a scale of 1 to 5 (low to high respectively) that the design team have placed on the goal/objective (particularly during the initial prototype phase).
+The focus of the project has been to deliver an easy-to-use, fast to setup, and cost-effective solution to live presentation recording. The following summary provides an overview of the core goals and projective we have strived towards over the course of the product development. The priority figure is the value on a scale of 1 to 5 (low to high respectively) that the team have placed on the goal/objective (particularly during the initial prototype phase).
 
 
-\textcolor{red}{TODO: Add table ref. Add learning objective goals.}
+\begin{description}
 
-\begin{center}
-\begin{table}
-\begin{tabular}{|l|p{6cm}|c|}
-    \hline
-    \textbf{Goal / Objective} & \textbf{Description} & \textbf{Priority} \\ \hline
-    Cost-effectiveness & One of the main factors that determines the viability of the end-product is the overall cost effectiveness. The aim is to provide a sub-\$200 product in a self-assembly state. & 5  \\ \hline
-    
-    Ease of use & The product has to be easy to use and operate by end-users. This includes setup, operation, troubleshooting stages of use. Some technical knowledge would be a required for the current form of the product. & 4  \\ \hline
-    
-    Semi-portability & As the project aims to primarily cater for ad-hoc recording scenarios, portability plays an important part of the overall system design. This takes form in complexity of assembly, size and weight of the finished product, the power usage and requirement, as well as the storage capacity of the recording functionality.& 3  \\ \hline
+  \item[Cost-effectiveness (Priority 5)] \hfill \\
+      One of the main factors that determines the viability of the end-product is the overall cost effectiveness. The aim is to provide a sub-\$200 product in a self-assembly state.
+  \item[Ease of use (Priority 4)] \hfill \\
+      The product has to be easy to use and operate by end-users. This includes setup, operation, troubleshooting stages of use. Some technical knowledge would be a required for the current form of the product.
+  \item[Semi-portability (Priority 3)] \hfill \\
+      As the project aims to primarily cater for ad-hoc recording scenarios, portability plays an important part of the overall system design. This takes form in complexity of assembly, size and weight of the finished product, the power usage and requirement, as well as the storage capacity of the recording functionality.
+  \item[Off-the-shelf hardware (Priority 2)] \hfill \\
+      To make the final product accessible to the largest share of prospective audience, the availability of components that make up the product becomes critical for the commercialisation of the project.
+  \item[Modularity (Priority 3)] \hfill \\
+      Partially related to the off-the-shelf hardware objective, modularity of components and accessories would ensure greater usage and types of operating environments the product can be deployed in.
 
-    Off-the-shelf hardware & To make the final product accessible to the largest share of prospective audience, the availability of components that make up the product becomes critical for the commercialisation of the project.& 2   \\ \hline
+\end{description}
 
-    Modularity & Partially related to the off-the-shelf hardware objective, modularity of components and accessories would ensure greater usage and types of operating environments the product can be deployed in.& 3  \\ \hline
+\textcolor{red}{TODO: Add the learning objectives to this list. They were mentioned in the project spec as a goal.}
 
-
-
-\end{tabular}
-\end{table}
-\end{center}
 
 \section{Feedback and Self-Reflection}
 
+We were fortunate to have formed a very focused team with complimentary skill sets. The feedback we received was very much a reflection of our hard work and determination. Overall we are very proud of what we have achieved.
+
+
 \subsection{Self Assessment}
 
+From the start we knew this would be an ambitious project. We wanted to build something impressive, useful and which would overly meet the learning objectives. On reflection we did over-estimated what we could achieve in the time frame, however the positive feedback from what we did accomplish have made us still regard this project as a success.
 
-\textcolor{red}{TODO: As a group we are very proud...}
+Each team member brought a vital skill set to the project. Val's hardware and unix knowledge gave us the building blocks for creating the project, Neil's programming skills created working prototypes for each component, and Alfred's optimisation ability polished the project and brought all the pieces together. Although we needed these skills to develop the solution, it was the hard working nature of all of the team members that was the real backbone of the project.
+
+\textcolor{red}{TODO: add sentence about each team member challenging their own ability and expanding their knowledge.}
+
+
+During the lab demonstration we were asked the question "What mark do you think you deserve?" Our response was "HD" and we still stand by this answer. We treated all aspects of the project seriously and put in the hours needed to achieve the end solution. We delivered each milestone on time and didn't compromise on the quality of our work.
+
+\textcolor{red}{TODO: perhaps expand this part with a "if we were to redo the project, what would we change" paragraph.}
 
 \subsection{Summary of Prototype Demonstration}
 
@@ -144,18 +150,38 @@ Although what we presented was a cutdown version of what was proposed in the pro
 
 In preparation for the  demonstration we developed a short slide show, written speech and summary handout. All of these are available in the appendix. We also created a video of the working product incase we encountered technical issues during live demo. 
 
+\begin{center}
+\href{http://www.youtube.com/watch?v=hckEBpT1VcU}{
+    \includegraphics[width=\textwidth]{graphs/youtube.png}
+}
+\end{center}
 See the video here: \url{http://www.youtube.com/watch?v=hckEBpT1VcU}
 
 
 
 \subsection{Peer Review Summary}
 
-\textcolor{red}{This is waiting on the lab instructor to give us back our peer-review sheets.}
+\textcolor{red}{TODO: Get the peer-review sheets off Daniel (I've sent him an email).}
 
 
 \subsection{Self Reflection / Lessons Learned}
 
-\textcolor{red}{Individual responses here...}
+Although we had a talented group, each individual team member took something away from this project.
+
+\subsubsection{Val}
+
+\textcolor{orange}{Val, please provide a few paragraphs for this section.}
+
+\subsubsection{Alfred}
+
+\textcolor{blue}{Alfred, please provide a few paragraphs for this section.}
+
+\subsubsection{Neil}
+
+\textcolor{red}{TODO: Neil, please provide a few paragraphs for this section.}
+
+
+
 
 
 \subsection{Description of how each learning objective is addressed}
@@ -174,21 +200,40 @@ For efficiency during the initial development stages, most hardware interface in
 
 Debugging and performance has been used extensively over the course of the project for both hardware and software components. For Python, Pudb was the debugger of choice. For C/C++ Instruments and LLDB/GDB were utilised. On the hardware side, servo controller built-in error-checking was utilised for all communication to ensure hardware errors were caught and dealt with.
  
+\subsubsection{Learning Objective 2}
+
+\textcolor{orange}{Val, are you working on this learning objective?}
+
+\subsubsection{Learning Objective 3}
+
+\textcolor{orange}{Val, are you working on this learning objective?}
+
+\subsubsection{Learning Objective 4}
+
+\textcolor{orange}{Val, are you working on this learning objective?}
+
 
 
 \section{Assumptions and Dependencies}
+
+\textcolor{red}{TODO: This is a confusing heading... perhaps we can review what we had in the project specification here?}
+
+
 \section{General Constraints}
+
 \section{Development Methodology}
 
-\textcolor{red}{Reinforce how we met learning objective 1 here.}
+\textcolor{red}{TODO: Discuss our background using agile and how we differ from SCRUM. Reinforce how we met learning objective 1 here.}
 
 
 \subsection{Programming languages}
 
-\textcolor{red}{Python for prototyping, C/C++ for performance.}
+\textcolor{red}{TODO: Python for prototyping, C/C++ for performance.}
 
 
 \subsection{Development tools}
+
+\textcolor{red}{TODO: Vim, Xcode, Instruments. Mention Pi compile performance...}
 
 \subsection{Collaboration tools}
 
@@ -213,9 +258,19 @@ Being all together at once was a rare occasion and we had only a total of five o
 If another group member was assigned to take over a task (e.g. handing over code to be optimised or integrated), we used this time to instruct in detail how the prototype code worked or how the hardware had been configured. 
 
 \section{Difficulties Encountered}
+
+\textcolor{red}{TODO: Slow-ness, CPU, GPU, meeting, depth sensing, hardware issues, debugging, benchmarking.}
+
+
 \section{Architecture}
 \subsection{System Design including configuration}
+
+\textcolor{orange}{Perhaps some hardware diagrams would work here?}
+
 \subsection{Data Design}
+
+\textcolor{red}{TODO: Drop this heading? I think we did in the project spec.}
+
 \subsection{Program Design}
 
 
@@ -225,6 +280,9 @@ The software architecture for this project is basically a C/S (Client and Servic
 
 
 \subsubsection{Architecture Decisions}
+
+\textcolor{red}{TODO: Alter table into description list because of LaTeX issues with large tables.}
+
 
 \begin{center}
 \begin{table}
@@ -300,7 +358,15 @@ The code shows that we use the simplest strategy to scheduling the message, whic
 
 \subsubsection{Software Design}
 
+\textcolor{red}{TODO: rehash the structure we used in the project spec}
+
+
 \subsubsection{Source code or patches for all original work.}
+
+
+\textcolor{orange}{Val to provide patch files for OS configuration.}
+
+\textcolor{red}{TODO: Add description to each source file.}
 
 
 \subsubsection{Server Code}
@@ -311,26 +377,10 @@ The code shows that we use the simplest strategy to scheduling the message, whic
 
 \include{client-source}
 
-
-%
-%\begin{lstlisting}[caption=rand-face-detect.cpp,language=C++]
-%\end{lstlisting}
-%
-%\begin{lstlisting}[caption=rand-face-detect.cpp,language=C++]
-%\end{lstlisting}
-%
-%\begin{lstlisting}[caption=rand-face-detect.cpp,language=C++]
-%\end{lstlisting}
-%
-%\begin{lstlisting}[caption=rand-face-detect.cpp,language=C++]
-%\end{lstlisting}
-
-
-
 \section{Testing Issues}
 \subsection{Testing Done}
 
-\textcolor{red}{Source code for simulating face detection.}
+\textcolor{red}{TODO: disucss hardware sharing issues, slowness, and bench marking of things}
 
 \begin{lstlisting}[caption=rand-face-detect.cpp,language=C++]
 #include <iostream>
@@ -398,10 +448,14 @@ int main(int argc, const char * argv[])
 
 
 \subsection{Performance Bounds}
+
+\textcolor{red}{TODO: Not sure about this heading... perhaps rehash whats in the project spec}
+
 \subsection{Performance Experiments}
 
 
 
+\textcolor{red}{TODO: Make table a reference figure.}
 
 
 \begin{center}
@@ -435,15 +489,15 @@ As outlined in our original project specification, there was overlap in our team
 
 \subsection{Val Lyashov}
 
-\textcolor{red}{Add table about hardware solution}
+\textcolor{red}{Add paragraph about hardware solution}
 
 \subsection{"Alfred" Yang Yuan}
 
-\textcolor{red}{Add table about software solution}
+\textcolor{red}{Add paragraph about software solution}
 
 \subsection{Neil Ang}
 
-\textcolor{red}{Add table about whatever is left}
+\textcolor{red}{Add paragraph about whatever is left}
 
 
 \section{Breakdown of Work Done by Team Member}
@@ -452,24 +506,26 @@ Each team member kept a detailed log of their activities. Below is a summary of 
 
 \subsection{Val Lyashov}
 
+See appendix for daily log of tasks.
+
 \begin{description}
 
   \item[Week 2] \hfill \\
-      Formed team with Neil and discussed ideas for the project.
+      Formed team with Neil and discussed ideas for the project. \textcolor{orange}{Val to provide expansion.}
   \item[Week 3] \hfill \\
-      Voted for a team restructure.
+      Voted for a team restructure. \textcolor{orange}{Val to provide expansion.}
   \item[Week 4] \hfill \\
-      Acquired new team member.
+      Acquired new team member. \textcolor{orange}{Val to provide expansion.}
   \item[Week 5] \hfill \\
-      Demonstrated cross-compile milestone in lab.
+      Demonstrated cross-compile milestone in lab. \textcolor{orange}{Val to provide expansion.}
   \item[Week 6] \hfill \\
-      ...
+      \textcolor{orange}{Val to provide expansion.}
   \item[Week 7] \hfill \\
-      ...
+       \textcolor{orange}{Val to provide expansion.}
   \item[Week 8] \hfill \\
-      Took a trip to Bunnings with Neil to build the servo mount.
+      Took a trip to Bunnings with Neil to build the servo mount. \textcolor{orange}{Val to provide expansion.}
   \item[Week 9] \hfill \\
-      ...
+       \textcolor{orange}{Val to provide expansion.}
   \item[Week 10] \hfill \\
       Presented project to lab group (see appendix). Started work on final project portfolio submission.
   \item[Week 11] \hfill \\
@@ -485,17 +541,17 @@ Each team member kept a detailed log of their activities. Below is a summary of 
 \begin{description}
 
   \item[Week 4] \hfill \\
-      Joined the team.
+      Joined the team. \textcolor{blue}{Alfred to provide expansion.}
   \item[Week 5] \hfill \\
-      Demonstrated cross-compile milestone in lab.
+      Demonstrated cross-compile milestone in lab. \textcolor{blue}{Alfred to provide expansion.}
   \item[Week 6] \hfill \\
-      ...
+       \textcolor{blue}{Alfred to provide expansion.}
   \item[Week 7] \hfill \\
-      ...
+       \textcolor{blue}{Alfred to provide expansion.}
   \item[Week 8] \hfill \\
-      ...
+       \textcolor{blue}{Alfred to provide expansion.}
   \item[Week 9] \hfill \\
-      ...
+       \textcolor{blue}{Alfred to provide expansion.}
   \item[Week 10] \hfill \\
       Presented project to lab group (see appendix). Started work on final project portfolio submission.
   \item[Week 11] \hfill \\
@@ -506,7 +562,9 @@ Each team member kept a detailed log of their activities. Below is a summary of 
 \end{description}
 
 \subsection{Neil Ang}
+
 See appendix for daily log of tasks.
+
 \begin{description}
 
   \item[Week 2] \hfill \\
@@ -537,8 +595,7 @@ See appendix for daily log of tasks.
 
 \section{Summary and Conclusions}
 
-\section{References}
-
+\textcolor{red}{TODO: add something profound, warming, agreeable, perhaps talk about the meaning of life etc.}
 
 
 \begin{appendices}
