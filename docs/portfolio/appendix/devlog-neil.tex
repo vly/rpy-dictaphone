@@ -1,0 +1,436 @@
+\section*{29th July}
+
+Decided to team up with Val, he is quite experienced in unix and using the raspberry pi, so will compliment my programming skill (and lack of unix and pi skill).
+
+\section*{31st July}
+
+New team member joined the group - Suraj. He has an electronics background and will be helping out with the power work on the project.
+
+
+
+\section*{1st August}
+
+My raspberry pi arrived in the mail. Had a bit of trouble scrounging around the house for a SD card. I could only find a 2GB card, and it's not big enough to install Raspbian on, so I installed Arch linux instead. I then ran into trouble because the only USB keyboard I owned is a mechanical keyboard without any keycaps inscription (i.e. blank keys). I am able to touch type, but only in the Colemak layout (not QWERTY). I had to look up each keypress when logging in the first time (it was very slow getting into the pi). I worked out that SSH is setup by default on Arch, so I switched to connecting remotely to it, which was fine.
+
+Our group also decided today to go with the idea to make as smart dictation device with user tracking. Fun times ahead.
+
+
+\section*{2nd August}
+
+I got the lab cross compile working on the OSP server. Following the instructions made it easy, but I don't think I learnt much about the process of building an image. I had trouble working with tmux, until I learnt you type ctrl-b then the command letter.
+
+
+\section*{3rd August}
+
+I started researching the OpenCV abilities. I got the libs installed on my laptop (MBP, running OSX). Using Xcode and llvm/clang, I went through the tutorials for OpenCV. I was able to to get face detection working using Haar feature-based cascade classifier for object detection. Face detection was very CPU intensive, so I experimented with reducing frame size and refresh rate to improve CPU performance.
+
+I now need to work out:
+
+\begin{enumerate}
+  \item How to make sure it runs smooth on the Pi
+  \item How to access the camera on the Pi.
+  \item How to deal with multiple faces on screen.
+  \item How to smooth face detection so it not "jerky" when working with the servos.
+\end{enumerate}
+
+I also had an idea to use hand gestures to control recording start and stop.
+
+
+
+\section*{4th August}
+
+New SD card turned up (16 GB), and I was able to get Raspbian installed fairly easily. I wrote up the instruction incase I need to do it again:
+
+\begin{enumerate}
+
+\item Plug your SD card into your MBP.
+\item Using Disk Utility, erase the card and set the format to ExFat.
+\item Download and unpack the OS image you want to use.
+\item Type `df -h` and find the location of the SD card. (If it is `/dev/disk1s1` we will later reference it as `rdisk1`, if it is `/dev/disk2s1` we will reference it as `rdisk2` etc.)
+\item In terminal unmount the card: `diskutil unmount /dev/disk1s1`
+\item In terminal run: `sudo dd bs=1m if=/path/to/linux-image.img of=/dev/rdisk1`
+\end{enumerate}
+
+The default username/password is pi/raspberry.
+
+I spent the rest of the night playing around with Raspbian. I don't have a cam to plug into the pi, so I couldn't test my face detection code. I've ordered an RPi camera from Element14.
+
+
+
+\section*{5th August}
+
+Researched using a Microsoft Kinect as an alternative to face recognition. It can measure depth, so it would be better for tracking someone as they move about the room. It would also mean that the program would work in the dark or if the user turned side on. There is an open source project (libfreenect) for interfacing with the Kinect in C++. I found an OpenNI library that can be used for natural interaction and skeletal mapping. However from what I've read, the Kinect can read camera data, but the Pi is not the powerful to do real time skeleton processing. No longer going to pursue this solution.
+
+Although I don't have a camera yet, I installed the OpenCV libs on the Pi and wrote a Makefile to compile my face detection script. It appears to have compiled fine under G++ (I was using clang++ on my laptop).
+
+
+
+\section*{6th August}
+
+Acquired the RPi camera board and tested it out. I installed X11 on my laptop and tried to run X windows over SSH to my laptop. I couldn't get it working. I then setup a VNC server on the Pi, and was able remotely view the Pi desktop. I took some photo stills with the built in RPi camera app and could see the output.
+
+Since the RPi camera board is not a USB camera, it is not natively supported by OpenCV and I couldn't test my face detection code.
+
+I tried downloading the userland scripts from the raspberrypi project to work out how to hack in OpenCV support. I was able to compile the userland libs, but still need to incorporate them into my face detection script. It will be a big job so I will leave it for another night.
+
+
+\section*{7th August}
+
+Continued work on my using the libs from userland with my face detection code. I also did a bit of research on OpenCV performance best practice. Apparently offloading as much workload to the GPU will enable it to run faster. Unfortunately OpenCV only supports NVIDIA/CUDA GPUs. Found out the Pi has a Broadcom chip and VideoCore IV GPU (which is not compatible with OpenCV). I looked through the code to try and work out if I could some how port OpenCV to work on Pi, however, I have never done any OpenGL before and it looks way out of my depth. While looking through the userland code, I discovered the Multi-Media Abstraction Layer (MMAL) framework, which contains references (in the form of enums) to face tracking. This may be a possible alternative to using OpenCV which will use the GPU.
+
+
+\section*{10th August}
+
+Got my hands on a USB camera to test the face tracking code I wrote before. It was super slow. The Pi could not process the frames at a reasonable speed. I was checking it over VNC, but I think we will need to find ways to speed it up.
+
+Also received some warnings in the libs that I will need to investigate. e.g. \textit{Gtk-WARNING ***: Locale not supported by C library. Using the fallback 'C' locale. Xlib: extension "RANDR" missing on display ":1.0"}.
+
+
+I've reduced frame size in the script to 320x240 (from 640x480) and FPS to 4. Processing the image from the USB camera is still very slow. The program captures an image, performs the face check, displays the result (and I'm testing this over VNC) and there is a lot of lag as well as >95\% CPU usage. Since the final project won't need to worry about display, I compiled a version which didn't perform the last step (graphical display) but CPU usage was still >80\%.
+
+I read some suggestions on how to improve face detection on this post. I switched out the cascader to lbpcascade\_frontalface.xml, increased the min face detection size and set the CV\_HAAR\_DO\_ROUGH\_SEARCH flag. CPU performance then increased to about 50\% usage. An improvement, but still not perfect.
+
+I have no idea how to do it, but from what I've read, using the GPU would drastically speed up the face detection. I know OpenCV doesn't natively support it, so I'm going to explore what I can do in this space next.
+
+
+
+\section*{11th August}
+
+Val and I made the hard decision of dropping Suraj as the third member of our group. After repeated failed attempts to get updates on the progress of his assigned tasks (which was clear he hadn't been working on), we thought it would be best for him to find a new group than stay with us and be down voted for not contributing. We now have the hard task of finding a replacement (most students have already joined new groups).
+
+
+\section*{12th August}
+
+Since Val and I had not registered a full group, we were both re-allocated to different groups. I went and saw the head tutor during his appointment hours to try and resolve this issue. The plan is for us to make a plea with the other re-allocated groups for a swap.
+
+I sent a message out to the other members, to see if they would like to join our group:
+
+\blockquote{
+Hi fellow OSP student,
+
+Val Lyashov and I are postgraduate students who have been working on the assignment since week 1. However, due to an unfortunate accident we've both been reallocated into separate groups.
+
+I've spoken with the head tutor Peter, and he has allowed us the option to switch with a member from our allocated groups so we can continue with the work we've already started together.
+
+For our project we combining computer vision and audio to create a cool new product, and it will also meet the learning objectives. It's an ambitious project, but we have already made significant progress and purchased the required hardware.
+
+Val and myself are both hard working and talented students who are willing to put in the extra hours to get a HD on this project. We are looking for a third member who also determined to do well, and will put in the work that is required. Ideally someone with good technical writing skills would compliment our group best, but anyone who believes themselves to be a hard worker would be fine.
+
+So if you think you would be interested in joining us, or if you have any further questions, please contact me ASAP. We only have until this Wednesday to try and make this work.
+
+Cheers,
+
+Neil Ang
+}
+
+We received a response from a student interested in joining, and another student who was facing a similar situation with their group.
+
+
+
+\section*{13th August}
+
+
+I've taken a hiatus from working on the project until the group situation is sorted out. No point continuing with my work if the group has been dissolved.
+
+\section*{14th August}
+
+We acquired a replacement group member, and I am working with Val again. Alfred is the new member and has strong skills with C/C++. He will make a good addition to the team and helpful with writing the low level C code that interfaces with the hardware. We caught him up to speed on the project and re-assigned tasks.
+
+We attempted the demonstrated the Cross compile milestone to the lab instructor, but because Alfred was new he hadn't completed the work. We will try again next week.
+
+\section*{17th August}
+
+Since Alfred strongest skill is in programming, and Val in unix/hardware, I've taken over responsibility for the documentation. Started work on the project specification. Using LaTeX to give it a professional presentation. Also organised a group meeting for next Tuesday.
+
+
+\section*{18th August}
+
+Continued work on project specification. As I'm the only one working on it, it will take a long time to write up.
+
+\section*{20th August}
+
+
+Had our group meeting, everything feels on track. I demonstrated the work I had done with OpenCV, and gave Alfred instructions on how to continue on with the work I started. He will be looking at integrating the RPi camera board with my face detection script.
+
+To help Val work on his servo controller, I wrote a small C++ script to imitate coordinate output by the face detection code without needing to run a camera. It will put out a random x and y position, pause and then output another coordinate within a specified tolerance (to mimic natural movement). I've noticed my C++ programming skills are improving. I also continued work on the project specification.
+
+\section*{21st August}
+
+
+Had our class tutorial and demonstrated the teams cross-compile. It worked, so we have passed the first milestone. As a group we spent some time discussing the program architecture. I'm going to do some research into pi-to-pi communication. Val suggested we could use a message queue over TCP or UDP so I will investigate that this weekend.
+
+We also had a discussion how the servos will respond to face detection. We can't capture depth so the servo won't accurately know how far to tilt in each direction. What we decided to do is have the servo move a little bit in the direction of the face (we will experiment to get a magic number), then re-evaluate the face position and move again. We also decided we will need a "seeking" or "hunting" mode on the project to search the room for a face when none can be found. It's not going to be easy.
+
+I spent the rest of the time updating the project specification. It is about a third finished.
+
+\section*{24th August}
+
+
+Updated the test face detection script to output numbers in a different range. I also worked on the project specification.
+
+\section*{26th August}
+
+
+Added more content to the project specification. Cancelled our weekly group meeting (scheduled for tomorrow), as there is nothing new to demo between the members.
+
+\section*{30th August}
+
+Worked hard to get the project specification finished. It was submitted successfully on time.
+
+
+\section*{8th September}
+
+Started work on porting pir-monitor from Python to C. First I started reading up on connecting the PIR. The sensor we will be using is the "SEN-08630". It has 3 wires to connect it: power, ground and alarm.
+
+"Red wire is power (5 to 12V). Brown wire is GND. Black wire is open collector Alarm.
+
+The alarm pin is an open collector meaning you will need a pull up resistor on the alarm pin. The open drain setup allows multiple motion sensors to be connected on a single input pin. If any of the motion sensors go off, the input pin will be pulled low." - \url{http://littlebirdelectronics.com/products/pir-motion-sensor}
+
+The first issue I ran into with this was how to physically connect the PIR sensor to the Pi. I realised I didn't have the correct cables to join them, so I drove down to Jaycar to buy a male-female jumper wire. Jaycar don't sell these cables, but showed me what parts I would need to build my own breakout board. I purchased a 26 pin connector, 1 metre of ribbon, a copper board and mini breadboard. I tried connecting them together but broke the pin connector. Feeling like I war running out of options, I contacted Val who invited me around to his place to borrow some of his jumper wires.
+
+With the sensor connected I tried running Val's python script. It worked well.
+
+I did a bit of research and found out there are two forms of pin monitoring I could use: polling and interrupts. Obviously interrupts would be the better option, but there is limited support from C libraries for this.
+
+After some more reading I found a C library written for the RPi chip (the lib is called bcm2835). I then wrote a C implementation of the Python code using this lib. It worked first time without issue. I played around with the delay when polling the sensor for movement, I found that event with a delay of only 33ms the CPU usage was really low (i.e. <1\%).
+
+
+
+
+\section*{10th September}
+
+Read up on IPC techniques, to see if we could use named pipes that were covered in class as a way to have our processes talk to each other. It appears that UNIX domain sockets could be a better option, if we were to use processes instead of threads.
+
+I also did a bit of research into using interrupts with the GPIO pins on the Pi. Seems that the newer OS versions support it, but it also looks more complex to implement. My thoughts now are that the C-based pir-monitor code is already very efficient (<1% cpu) and that it would be overkill to optimise at this point.
+
+
+
+
+\section*{11th September}
+
+Today Val gave me the servos and mount he had been working on, and I'm going try and rewrite it to work in C/C++ as well as integrate it with the face detection program.
+
+The device is a "Pololu Maestro Servo Controller". I found a sample C script (\url{http://www.pololu.com/docs/0J40/5.h.1}) for interacting with the device and tried to run it with it plugged into my MBP.
+
+However I got the error: \textit{"/dev/cu.usbmodem00034567: No such file or directory"}
+
+I had a look under /dev and couldn't find the device. I started reading up on /dev (here: \url{http://www.linuxjournal.com/article/2597}) to learn more about this directory and see if I was doing anything wrong. I didn't find any helpful answers.
+
+I returned to the manufacturers website and found this \textit{"We do not provide any software for Mac OS X, but the Maestro’s two virtual COM ports are compatible with Mac OS X 10.7 (Lion) and later."} Which made me think that it must be possible. I started up a VM running OS X 10.7 (I'm using 10.8) and looked for the /dev/cu.* devices. None.
+
+After more googling I realised that I had powered on the device with the provided battery, but not connected the USB cable (rookie mistake!!). As soon as I plugged it in the two devices appeared "/dev/cu.usbmodem00065291" and "/dev/cu.usbmodem00065293". These were different from what was expected from the manufacturers instructions, but using "/dev/cu.usbmodem00065291" worked with the script. I'm assuming two devices appeared because we have 2 servos connected.
+
+With it now working I tried running the python test scripts that Val had added to the repository. Unfortunately I had trouble running them on my machine and debugging them was difficult as I'm not experienced in python. So I thought I should try setting them aside and re-programming in ruby first (to learn how the device works), then optimise in C. Val had done some great work to get it running in Python, but being a professional ruby programmer I feel more comfortable approaching something new with a familiar language. I found a gem someone had started which looked promising (\url{https://github.com/adammck/pololumaestro}), but after downloading it and inspecting the source it appeared to be half finished and not functioning. If I have time remaining in this project, I will try and fix up the gem and send a pull request, but for now I need to get this working.
+
+
+
+
+\section*{15th September}
+
+
+Reading up on servo controller. The two /dev ports are not because of the two USBs, but two different ports \textit{"the Maestro shows up as two virtual serial ports on a computer if it is connected via USB. One of these ports is called the Command Port and the other is called the TTL port."} (Source: \url{http://www.pololu.com/docs/0J40/5.a}).
+
+I Loaded up a VM of Windows so I could run the Pololu system settings application. I used the manufacturer application to verify that the all the hardware was working.
+
+Val came around to my place to work on the project. I found out battery was not connected to the servos correctly which was causing all my issues with the code. The original test code I wrote earlier worked all along.
+
+Talking with Val I found out on Raspberry Pi I can reference the port like so: /dev/serial/by-path/platform-bcm2708\_usb-usb-0:1.2.2:1.0. Also if the servo controller is flashing yellow is "awaiting command" and a bright red light means there is an error. Errors need to be cleared before continuing.
+
+After a bit of "brute forcing" we worked out the pivot range of the servos. We tried combining the moving code with the face detect code, but it didn't work perfectly. It needs refinement.
+
+While testing out the servo the battery cables physically broke. Val took the battery jack home to re-solder. After it was repaired it still didn't seem to work. Current theory is that the connection is still broken or the battery power is low.
+
+
+
+\section*{16th September}
+
+
+I recharged the batteries for the servo controller and it didn't work. To see if it was the battery jack I thought I would try a different power source. Val told me earlier today that the servo controller needs 5V of power, but it can't come from the Raspberry Pi because it draws too much and the hardware will reset. I own an Arduino and remember it had a 5V pin. I plugged that into my computer and used to jumper wires to connect it the servo controller. Success! It was working again. It turns out the battery jack isn't working at all.
+
+Started to write a C++ based interface for communicating with the servo controller. Ran into to some trouble trying to use pure C++ and online posts suggest that I have to drop down to C to communicate with a device (e.g. \url{http://stackoverflow.com/questions/6064890/reading-a-linux-device-with-fstream}).
+
+I wrote a C++ class that would do some basic interaction:
+
+\begin{lstlisting}[language=C++]
+int goHome(unsigned char);
+int getPosition(unsigned char);
+int setPosition(unsigned char, unsigned short);
+bool isMoving(unsigned char);
+\end{lstlisting}
+
+Since the servo takes a few seconds to get into a position, I wrote a special busy wait function to constantly query the servos.
+
+\begin{lstlisting}[language=C++]
+void busyWait(Maestro *maestro, unsigned char channel){
+    while(maestro->isMoving(channel)){
+        usleep(100000);
+    }
+}
+\end{lstlisting}
+
+It works ok, but if a position is set on the servos that they can't reach, this function will never complete... hmmm.
+
+
+
+
+\section*{17th September}
+
+Kept working on my C++ wrapper for controlling the servo. I added a new "Servo" class to model the two individual servos in the library. I made them classes, but they could easily be replaced as structs.
+
+I also came up with a method for detecting a busyWait lock that I was seeing yesterday. The fix is to use the last recorded position to detect if the servo is still moving between sleeps:
+
+\begin{lstlisting}[language=C++]
+void busyWait(Maestro *maestro, Servo * servo){
+    int pos = maestro->getPosition(servo);
+    while(maestro->isMoving(servo)){
+        usleep(100000);
+        if(maestro->getPosition(servo) == pos){
+            break;
+        }
+        else {
+            pos = maestro->getPosition(servo);
+        }
+    }
+}
+\end{lstlisting}
+
+I also copied in some code into my example library to detect key presses. It was fun to use the keyboard to play around with moving the servos. I tried adding the camera mount but soon worked out that the mount had a bad effect on the servos reaching their programmed positions. I removed the mount and use some garden wire to fasten the camera to the servos. It doesn't look pretty but it overcomes the issues so I can continue testing.
+
+
+
+
+\section*{22nd September}
+
+We have obtained a new battery pack and lighter camera mount. Unfortunately one of the screws have come loose on the bottom servo, so I will need Val's assistance to fix it.
+
+I've been looking into a technique to work out intersecting shapes in C++. Previously in objective-c I've used the CGGeometry framework which has a lot of convenient methods to determine intersecting shapes. However, in C++ I can't find any reference to a standard Rect struct or shape based math functions. I find it hard to believe that C++ would not have this. After a bit of googling I found out that OpenCV has a rect struct implementation. Instead of writing my own I will just look at re-using it (\url{http://docs.opencv.org/modules/core/doc/basic_structures.html#Rect_}).
+
+Val came around to my place to work on the assignment. We connected up a new battery pack to the servos, but for some reason they made the movement very choppy.
+
+We also wanted to build a stronger mount to hold the servos down, so we took a trip down to Bunnings and got some timber cut and bought some metal brackets. After a bit of fiddling we had the mount built. There was a bit of an issue with the microphone appearing in the camera frame, so had to position it back and a little offside.
+
+I updated my C++ code to respond to the faces position. It was very simple. It would take the center point on a persons face then shift the servos in the direction that would make is more center. I ran the code on my MBP first, and it worked fantastic.
+
+We took some audio samples and found that the servo movement could be heard in the background of the recording. We also tried sending the recordings to a speech translation service. The translations we got back were not great. They were very inaccurate. We tried our experiments again, but spoke with an American accent the second time. The translations improved but were still off.
+
+The next thing we did was to try and run the face tracking code on the Pi. We had issues. The servo controller kept returning a strange error, and the face detection was slow. I tried debugging it, but nothing seemed to work. I will have to go through it line-by-line to work out the issues.
+
+\section*{23rd September}
+
+I spent hours tonight trying to debug my servo interface on the Pi. The code I wrote works perfectly on OS X, but not on the device. Which is strange because it is using standard C++ calls. Writing to the serial port is fine, but trying to read from it hangs. I tried modifying small bits of the code at a time to see if they would make a difference, but nothing seems to work. The weird thing is that reading from the device causes it error, but to get the error value you need to do another device read. I'm a little lost as to what to try next. I can rewrite my code to not use reads, but I think that should be a last resort.
+
+
+\section*{24th September}
+
+Took the whole day off work to meetup with the team at RMIT and work on the project. Unfortunately we couldn't get a meeting room because they were all booked out. After wandering around for a bit we setup shop in a student common room. The amount of cables and wires we need to plug in to make this work together caused a bit of mess.
+
+I spent the day trying to further debug the servo issue. After wasting a few hours I decided to go with plan B and stop performing 'reads' on the servo controller. What this means is that we can't use the 'busyWait' function I developed earlier, and just have to assume the servo reached its destination. I re-wrote the code to do this and put on GitHub.
+
+I then re-combined my simple face detect code to work with the servos. I spent a lot of time testing and fine-tuning the stepping values for moving the camera towards the centre.
+
+While testing I occasionally ran into an issue where the camera would receive a false-positive face detection in the background and shift away from the user. Because we were working on a student common room it would lock onto the face of another student in the background. To overcome this I came up with the idea of measuring the Euclidean distance from the last face position compared to the new one. This way if a false-positive was detected it wouldn't shift in that direction immediately. It could check to see if the face occurred within a close proximity of the last known face position, which yielded a surprising positive result. The subject tracking responded generally more smoothly after implementing this. If a subject was to suddenly move beyond the Euclidean threshold, the servos would still shift to that position but it takes an extra pass to update the last detected position before moving.
+
+I then worked with Alfred to implement his faster threaded face detection code. It didn't respond as well as on the MBP, but was still reasonable. Alfred had some new ideas to improve the face detection even further, by only scanning for faces in the last known position first. He is going to continue the work on this, so we gave him the servos to take home after the meeting.
+
+
+\section*{28th September}
+
+The team met together again to work on the solution for the whole day. Because we want the system to automatically startup when turned on I worked on writing a daemon script. I spent the morning reading up on how daemons can work, and how I could write a self starting script that would keep a process alive, or at least restart it if it quit unexpectedly.
+
+So I started working on a C script that would run in the background, spawn a child deamon that could monitor another process and restart it if it quits. I found a lot of helpful information on the topic here: \url{http://www.netzmafia.de/skripten/unix/linux-daemon-howto.html}
+
+On my first attempt I managed to write a 'fork bomb' that kept spawning children processes unchecked. I had to restart my machine to regain control of it. On my second attempt I wrote some code that would fork itself, then if it quit it would fork two more of itself and kept doubling. Closer but still not good.
+
+I eventually got the code working correctly:
+
+\begin{lstlisting}[language=C++,caption=daemon.c]
+// Based off: http://www.netzmafia.de/skripten/unix/linux-daemon-howto.html
+#define EXE "/Users/neil/Desktop/beeps"
+
+#include <sys/stat.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+
+int main(void) {
+
+    pid_t pid, sid;
+
+    /* Fork off the parent process */
+    pid = fork();
+    if (pid < 0) {
+        exit(EXIT_FAILURE);
+    }
+    /* If we got a good PID, then
+     we can exit the parent process. */
+    if (pid > 0) {
+        exit(EXIT_SUCCESS);
+    }
+
+    /* Change the file mode mask */
+    umask(0);
+
+    /* Open any logs here */
+
+    /* Create a new SID for the child process */
+    sid = setsid();
+    if (sid < 0) {
+        /* Log the failure */
+        exit(EXIT_FAILURE);
+    }
+
+    /* Change the current working directory */
+    if ((chdir("/")) < 0) {
+        /* Log the failure */
+        exit(EXIT_FAILURE);
+    }
+
+    /* Close out the standard file descriptors */
+    close(STDIN_FILENO);
+    close(STDOUT_FILENO);
+    close(STDERR_FILENO);
+
+    /* Daemon-specific initialisation goes here */
+    while (1) {
+        pid_t cid;
+
+        /* Create a child process */
+        cid = fork();
+
+        if (cid == 0) {
+            /* Replace child process with other program */
+            execv(EXE, NULL);
+            exit(EXIT_FAILURE); // this will never be reached
+        }
+        else if(cid < 0) {
+            /* Handle child create error */
+            exit(EXIT_FAILURE);
+        }
+
+        /* Wait for child process to die */
+        waitpid(cid, NULL, 0);
+        sleep(2);
+    }
+
+    exit(EXIT_SUCCESS);
+}
+\end{lstlisting}
+
+With that written I sent it to Val to integrate.
+
+I then talked to Alfred about the response speed with face detection and movement. Because it was running slower on the \rpi \xspace I had an idea to use trigonometry to make smarter position shifts. The theory was that because we can detect the face 'width' we could use that information to make rough guesses as to the depth of the face. e.g. A face that was closer would be wider and our servos would have to shift more (i.e a larger number of steps) when reposition to the centre, whereas a face a few metres back would be narrower and the servos would have to shift less to get them centred. I spent a good 2-3 hours working on this problem but found the math to be too difficult and the shifting would require a lot of time to come up with the right magic numbers to insert into the shifting formula.
+
+
+\section*{29th September}
+
+The very next day the group got together again to work on the project. We won't get a chance to meet before our lab demonstration so we treated the project as though it was due that day. We all worked hard to finish off our parts. 
+
+I spent most of the days writing a speech and slide show to give in Wednesday's lab. I also shot a backup video incase we ran into any problems and the product stopped working. I also created a one pager as a handout for the class.
+
+\section*{2nd October}
+
+Today was demo day. A few hours before the demonstration we found an issue with the project. If the hardware wasn't connected in the right order during startup it would crash. Alfred and Val got together 20 mins before the lab was meant to start and quickly patched the issue. 
+
+Our project was the second demonstration and was very well received by our peers. There were no technical hiccups and a lot of interest in the project from everyone. After the class a great sense of accomplishment came over us, and we were very proud of what we had made. We celebrated by going to the pub.
+
+Since the project was technically working, we decided to spend the remanding weeks focusing on producing the portfolio.
