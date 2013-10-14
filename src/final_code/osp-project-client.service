@@ -1,0 +1,16 @@
+[Unit]
+Description=OSP Project Daemon
+After=syslog.target 
+
+[Service]
+Type=oneshot
+User=audio
+Group=audio
+ExecStart=/usr/local/bin/osp_client
+ExecStart=/usr/bin/python /var/osp/pipe.py
+ExecStop=/bin/killall osp_client
+ExecStop=/bin/killall python
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
