@@ -174,7 +174,12 @@ Although we had a talented group, each individual team member took something awa
 
 \subsubsection{Alfred}
 
-\textcolor{blue}{Alfred, please provide a few paragraphs for this section.}
+During the lab, I learnt how to use linux command, and how to use cross-complier to build a linux image.
+
+I used a lot multi-threading programming, as a result of that I am now quiet familiar with Synchronisation in a linux way. In addition, the face detection had requirement on memory management, so I spent a long time to investigate how to implement this in C++. Also, the message dispatch helped me understand about how to schedule jobs.
+
+Finally, thanks for Neil and Val, they help me a lot in this project. This is definitely the most successful group work for me while at RMIT.
+
 
 \subsubsection{Neil}
 
@@ -545,24 +550,28 @@ See appendix for daily log of tasks.
 
 \begin{description}
 
+  \item[Week 3] \hfill \\
+      Bought a \rpi. Tried to find a great team aiming for a HD in this course.
+
   \item[Week 4] \hfill \\
-      Joined the team. \textcolor{blue}{Alfred to provide expansion.}
+      Joined the team. Read the document and the some source of OpenCV. Then bought an USB camera to run Neil's program on \rpi.
   \item[Week 5] \hfill \\
-      Demonstrated cross-compile milestone in lab. \textcolor{blue}{Alfred to provide expansion.}
+      Demonstrated cross-compile milestone in lab. Tested two different algorithm to improve performance of the face detection. The two algorithms did not increase the performance dramatically. So I put the face detection algorithm on another thread, in order to make the program run faster.
   \item[Week 6] \hfill \\
-       \textcolor{blue}{Alfred to provide expansion.}
+      Investigated the implementation of PIR motion sensing. Started to code first version for communication protocol between two \rpis. 
   \item[Week 7] \hfill \\
-       \textcolor{blue}{Alfred to provide expansion.}
+       Implemented serialisation and synchronisation in communication and copy-on-write in message serialisation. Implemented message scheduling, including FIFS and message dispatch.
   \item[Week 8] \hfill \\
-       \textcolor{blue}{Alfred to provide expansion.}
+       Wrote the software architecture of this project. Tried to connect all the parts in the project with well defined messaging.
   \item[Week 9] \hfill \\
-       \textcolor{blue}{Alfred to provide expansion.}
+       Wrote the Client part of the project, and connected the Server and Client via 
+		  existing message dispatch process. Increased the face detection performance to make it run much more faster on \rpi. Combined Val's recording code with a pipe.
   \item[Week 10] \hfill \\
       Presented project to lab group (see appendix). Started work on final project portfolio submission.
   \item[Week 11] \hfill \\
-      Worked on final project portfolio submission.
+      Worked on final project portfolio submission. Wrote partial document about what the architecture, and explained why I built the software like this. In addition, added some comments for some programming tricks.
   \item[Week 12] \hfill \\
-      Continued work on project portfolio submission.
+      Continued work on project portfolio submission. Cleaned the code for the final submission.
 
 \end{description}
 
