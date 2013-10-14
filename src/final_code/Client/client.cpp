@@ -29,12 +29,13 @@ Client::~Client()
 
 void Client::connectToServer()
 {
-  if (connect(client_socket, (struct sockaddr *)&serv_addr,
-              sizeof(serv_addr)) < 0)
-  {
-    printf("\n Error: Connect Failed\n");
-    exit(1);
-  }
+CONNECTION:
+	if(connect(client_socket, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
+        {   
+                printf("\n Error: Connect Failed\n");
+		goto CONNECTION;
+                exit(1);
+        } 
 }
 
 void* inputFunction(void *arg)
