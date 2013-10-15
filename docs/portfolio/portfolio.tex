@@ -140,7 +140,19 @@ Each team member brought a vital skill set to the project. Val's hardware and un
 
 During the lab demonstration we were asked the question "What mark do you think you deserve?" Our response was "HD" and we still stand by this answer. We treated all aspects of the project seriously and put in the hours needed to achieve the end solution. We delivered each milestone on time and didn't compromise on the quality of our work.
 
-\textcolor{red}{TODO: perhaps expand this part with a "if we were to redo the project, what would we change" paragraph.}
+
+At the end of this project there are a number of design changes we would make during the production of a second prototype. These include:
+
+\begin{itemize}
+    \item \textbf{Stronger servos:} The servos used for the project, although worked OK supporting the weight of the usb camera, struggled with the extra weight introduced by the shotgun microphone, cables, component mount and clamps. Spending approximately an additional 20% more money would provide better servos which come standard with metal gear kits.
+
+    \item \textbf{Mounts and clamps:} The team have gone through various versions of camera and microphone mount prototypes before ending up with the final one used during the presentation. Although solid and fully adjustable, weight was a major tradeoff. The central shaft also reduced the vertical movement by approximately 30 degrees. A dedicated pan/swing mounting assembly as those used for dslr/movie camera mounts would provide greater range and smoothness of movements.
+
+    \item \textbf{Camera:} Although the USB camera used for the project ended up working quite well, the resource constraints of the Raspberry Pi have forced the team to squeeze efficiency for face detection to work in real-time. These included significantly reducing the frame capture size and number of features detected. A camera with greater hardware-level control over the output (e.g. monochrome capture mode) would help to further reduce the resource overhead. The native Raspberry Pi camera module seams like a good candidate, however, the current drivers and documentation are not mature enough for achieving the required results in this instance.
+
+    \item \textbf{Power source:} Having gone through a number of issues of getting a consistent external power source to drive the servos via the USB servo controller, and trying to manage the cable spaghetti caused by all the components a single power source to drive all the parts of this project would go a long way to resolve these issues. External laptop battery packs, although fairly heavy, do provide consistent power to run the project for at least 6 hours. The added bonus, is the size of such a battery pack could also serve as a base for the servo assembly.
+\end{itemize}
+
 
 \subsection{Summary of Prototype Demonstration}
 
@@ -161,7 +173,15 @@ See the video here: \url{http://www.youtube.com/watch?v=hckEBpT1VcU}
 
 \subsection{Peer Review Summary}
 
-\textcolor{red}{TODO: Get the peer-review sheets off Daniel (I've sent him an email).}
+The reviews from our classmates during the presentation were very positive. There have been encouragement from a number of students and our lab assistant to continue development of this project towards a commercially viable state. 
+
+Some suggestions offered by the peer feedback forms as well as verbally included:
+
+\begin{itemize}
+    \item demonstrate the inter workings of the RPis (a behind-the-scenes view of sorts) through a streaming debug activity to an external monitor
+    \item debug audio monitoring capability
+    \item move to a better spec ARM board such as the Beagleboard to improve the performance of face detection
+\end{itemize}
 
 
 \subsection{Self Reflection / Lessons Learned}
@@ -170,7 +190,13 @@ Although we had a talented group, each individual team member took something awa
 
 \subsubsection{Val}
 
-\textcolor{orange}{Val, please provide a few paragraphs for this section.}
+Having never worked with a Raspberry Pi before, I found the project quite enlightening, particularly in understanding the lower-level hardware interfacing through GPIO pins. 
+
+The project also provided an awesome opportunity for me to learn off the other team members concepts and techniques I would otherwise encounter only as theory. It's been great to have such a wide knowledge base to draw upon when working towards troubleshooting and resolving hardware and software issues.
+
+The work involving the servos and the Pololu servo controller was also the first time I had a chance to prototype a hardware device library from API documentation, which has subsequently greatly increased my confidence in own abilities.
+
+Lastly, being required to work on a resource constrained device (Raspberry Pi) has really highlighted the value of measurement and optimisation of system performance, which provided real-world context a lot of the topics covered during our lectures.
 
 \subsubsection{Alfred}
 
@@ -195,7 +221,7 @@ Finally, thanks for Neil and Val, they help me a lot in this project. This is de
 Over the course of the project development, this team have made significant leaps in their knowledge of computer-hardware interfacing, operating system level functionality and application optimisation in a resource constrained environment. This section highlights how various learning objectives of the OSP course have been met.
  
 \subsubsection{Learning Objective 1}
-Over the course of the project, all of the ongoing development code has been managed through Github to ensure team members were always using the latest stable code when working on their assigned tasks.
+For the duration of this project, all of our ongoing development code has been managed through Github to ensure team members were always using the latest stable code when working on their assigned tasks.
 
 With the face detection (computer vision) generating major CPU load when running on the Raspberry Pi, the team has gone through a significant amount of iterations of the functionality in order to achieve real-time response to the enviroment.
 
@@ -293,6 +319,28 @@ The software architecture for this project is basically a C/S (Client and Servic
 
 \textcolor{red}{TODO: Alter table into description list because of LaTeX issues with large tables.}
 
+
+%\begin{description}
+%
+%  \item[Communication - TCP vs UDP] \hfill \\
+%      lorem ipsum.
+%      
+%  \item[Performance - Idle vs Multi-threaded] \hfill \\
+%      lorem ipsum.
+%
+%  \item[Library - OpenCV vs Pi face detect library] \hfill \\
+%      lorem ipsum.
+%
+%  \item[Thread communication - Pipeline vs Shared memory] \hfill \\
+%      lorem ipsum.
+%
+%  \item[Memory - Instance every copy vs Copy on write] \hfill \\
+%      lorem ipsum.
+%      
+%  \item[Message scheduling - FCFS vs Complex algorithm] \hfill \\
+%      lorem ipsum.
+%      
+%\end{description}
 
 \begin{center}
 \begin{table}
