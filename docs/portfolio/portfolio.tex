@@ -18,6 +18,12 @@
 
 \date{Semester 2, 2013}
 
+% Set watermark while in development
+\usepackage{draftwatermark}
+\SetWatermarkText{DRAFT}
+\SetWatermarkScale{5}
+\SetWatermarkColor[gray]{0.95}
+
 
 % Change section numbering
 %\renewcommand\thesection{\Roman{section}}
@@ -246,15 +252,15 @@ Debugging and performance has been used extensively over the course of the proje
  
 \subsubsection{Learning Objective 2}
 
-\textcolor{orange}{Val, are you working on this learning objective?}
+\textcolor{green}{Val, are you working on this learning objective?}
 
 \subsubsection{Learning Objective 3}
 
-\textcolor{orange}{Val, are you working on this learning objective?}
+\textcolor{green}{Val, are you working on this learning objective?}
 
 \subsubsection{Learning Objective 4}
 
-\textcolor{orange}{Val, are you working on this learning objective?}
+\textcolor{green}{Val, are you working on this learning objective?}
 
 
 
@@ -272,7 +278,48 @@ Debugging and performance has been used extensively over the course of the proje
 
 \subsection{Programming languages}
 
-\textcolor{red}{TODO: Python for prototyping, C/C++ for performance.}
+For the outset our team decided that we want the system to run efficiently as possible. Therefore it was an obvious choice to use C and C++ as the base language for the software. However, as we were experimenting with technology and techniques we had not used before, we used Python as a way to quickly prototype functionality. Once we were satisfied with the the prototype we would then port the code to C and C++.
+
+Below is the example code we developed for interacting with the PIR-sensor. It was particularly import to prototype because it also involved determining if we had wired it correctly to the \rpi.
+
+\begin{lstlisting}[caption={Python code for interacting with the PIR-sensor},label=pir-sensor-test.py,language=python]
+
+import RPi.GPIO as GPIO
+import time
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup((7), GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+GPIO.add_event_detect(7, GPIO.RISING)
+
+while True:
+    if GPIO.event_detected(7):
+        print("Movement")
+\end{lstlisting}
+
+Once we knew the Python code was working and the sensor had been wired to the \rpi\xspace correctly, it was trivial to then port it to C++.
+
+\begin{lstlisting}[caption={C++ port of PIR-sensor code},label=pir-sensor-test.cpp,language=C++]
+#include <bcm2835.h>
+
+int main(int argc, char **argv)
+{
+    bcm2835_init();
+    bcm2835_gpio_fsel(RPI_GPIO_P1_07, BCM2835_GPIO_FSEL_INPT);
+    bcm2835_gpio_set_pud(RPI_GPIO_P1_07, BCM2835_GPIO_PUD_UP);
+
+    while (1) {
+        if(bcm2835_gpio_lev(RPI_GPIO_P1_07) != 1) {
+            printf("Movement\n");
+        }
+    }
+
+   bcm2835_close();
+
+   return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+When we presented the project to our laboratory class, all production code in the project had been ported to C/C++ except the audio recording daemon. This was due to the time constraints with getting the project ready for demonstration. As a result we saw a time delay executing the daemon, caused by the overhead associated in loading Python to execute the script.
 
 
 \subsection{Development tools}
@@ -309,7 +356,7 @@ If another group member was assigned to take over a task (e.g. handing over code
 \section{Architecture}
 \subsection{System Design including configuration}
 
-\textcolor{orange}{Perhaps some hardware diagrams would work here?}
+\textcolor{green}{Perhaps some hardware diagrams would work here?}
 
 \subsection{Data Design}
 
@@ -430,7 +477,7 @@ The code shows that we use the simplest strategy to scheduling the message, whic
 \subsubsection{Source code or patches for all original work.}
 
 
-\textcolor{orange}{Val to provide patch files for OS configuration.}
+\textcolor{green}{Val to provide patch files for OS configuration.}
 
 \textcolor{red}{TODO: Add description to each source file.}
 
@@ -578,21 +625,21 @@ See appendix for daily log of tasks.
 \begin{description}
 
   \item[Week 2] \hfill \\
-      Formed team with Neil and discussed ideas for the project. \textcolor{orange}{Val to provide expansion.}
+      Formed team with Neil and discussed ideas for the project. \textcolor{green}{Val to provide expansion.}
   \item[Week 3] \hfill \\
-      Voted for a team restructure. \textcolor{orange}{Val to provide expansion.}
+      Voted for a team restructure. \textcolor{green}{Val to provide expansion.}
   \item[Week 4] \hfill \\
-      Acquired new team member. \textcolor{orange}{Val to provide expansion.}
+      Acquired new team member. \textcolor{green}{Val to provide expansion.}
   \item[Week 5] \hfill \\
-      Demonstrated cross-compile milestone in lab. \textcolor{orange}{Val to provide expansion.}
+      Demonstrated cross-compile milestone in lab. \textcolor{green}{Val to provide expansion.}
   \item[Week 6] \hfill \\
-      \textcolor{orange}{Val to provide expansion.}
+      \textcolor{green}{Val to provide expansion.}
   \item[Week 7] \hfill \\
-       \textcolor{orange}{Val to provide expansion.}
+       \textcolor{green}{Val to provide expansion.}
   \item[Week 8] \hfill \\
-      Took a trip to Bunnings with Neil to build the servo mount. \textcolor{orange}{Val to provide expansion.}
+      Took a trip to Bunnings with Neil to build the servo mount. \textcolor{green}{Val to provide expansion.}
   \item[Week 9] \hfill \\
-       \textcolor{orange}{Val to provide expansion.}
+       \textcolor{green}{Val to provide expansion.}
   \item[Week 10] \hfill \\
       Presented project to lab group (see appendix). Started work on final project portfolio submission.
   \item[Week 11] \hfill \\
