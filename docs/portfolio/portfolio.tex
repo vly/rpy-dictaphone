@@ -246,13 +246,22 @@ For efficiency during the initial development stages, most hardware interface in
 Debugging and performance has been used extensively over the course of the project for both hardware and software components. For Python, Pudb was the debugger of choice. For C/C++ Instruments and LLDB/GDB were utilised. On the hardware side, servo controller built-in error-checking was utilised for all communication to ensure hardware errors were caught and dealt with.
 
 \textcolor{red}{TODO: Open sourced project to show mastery: https://github.com/neilang/pir-monitor}
+
 \textcolor{red}{TODO: Open sourced project to show mastery: https://github.com/neilang/maestro-wrapper}
 
 
  
 \subsubsection{Learning Objective 2}
 
-\textcolor{green}{Val, are you working on this learning objective?}
+Working with the Raspberry Pi, our team encountered significant challenges in producing a functional project prototype while having so little processing power available at our disposal.
+
+Significant amount of trial and error was carried out in optimising performance of face tracking functionality of the our project (as can be observed by the Github repository history). 
+
+The target(s) coordinates derived from face-tracking functionality were then used to tilt and pan the assembly via two servos at the base of the camera and microphone combo. Initial experimentation with control of servos via Raspberry Pi's GPIO pins shown to be too inaccurate and resulting servo movement too jagged to be used due to CPU interrupts effecting the clock cycle count. The chosen solution was to acquire an external hardware servo controller, the Pololu Maestro. Running into issues with available libraries; our team put together a control library to communicate with the controller over the virtual  serial port. Prototyped first in Python using the device and protocol documentation, it was then ported C for improved performance. The library has subsequently been open-sourced on GitHub.
+
+The audio-recording functionality was moved to a secondary Raspberry Pi unit to maximise the recorded audio quality which was otherwise impacted by the face-tracking overhead.
+
+Communication between the two Raspberry Pis was done over the network interface, with a purpose-built client/server daemon that managed the activation and deactivation of system elements.
 
 \subsubsection{Learning Objective 3}
 
@@ -260,7 +269,7 @@ Debugging and performance has been used extensively over the course of the proje
 
 \subsubsection{Learning Objective 4}
 
-\textcolor{green}{Val, are you working on this learning objective?}
+\textcolor{red}{Neil, you are working on this learning objective!}
 
 
 
@@ -270,6 +279,9 @@ Debugging and performance has been used extensively over the course of the proje
 
 
 \section{General Constraints}
+
+\textcolor{red}{TODO: Time, skills, hardware.}
+
 
 \section{Development Methodology}
 
@@ -325,6 +337,9 @@ When we presented the project to our laboratory class, all production code in th
 \subsection{Development tools}
 
 \textcolor{red}{TODO: Vim, Xcode, Instruments. Mention Pi compile performance...}
+
+
+Compiling code on the \rpi\xspace was slow. Really slow.
 
 \subsection{Collaboration tools}
 
@@ -492,9 +507,13 @@ The code shows that we use the simplest strategy to scheduling the message, whic
 
 
 \section{Testing Issues}
+
+\textcolor{red}{TODO: slow, hard.}
+
+
 \subsection{Testing Done}
 
-\textcolor{red}{TODO: disucss hardware sharing issues, slowness, and bench marking of things}
+\textcolor{red}{TODO: discuss hardware sharing issues, slowness, and bench marking of things}
 
 \begin{lstlisting}[caption=rand-face-detect.cpp,language=C++]
 #include <iostream>
@@ -714,6 +733,11 @@ See appendix for daily log of tasks.
 \section{Summary and Conclusions}
 
 \textcolor{red}{TODO: add something profound, warming, agreeable, perhaps talk about the meaning of life etc.}
+
+\textcolor{red}{... As product the project has commercial potential. Unfortunately there are a lot of hurdles to overcome before this would become a reality. ...}
+
+
+\textcolor{red}{TODO: update references!!!}
 
 
 \begin{appendices}
