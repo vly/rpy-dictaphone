@@ -386,10 +386,28 @@ If another group member was assigned to take over a task (e.g. handing over code
 
 \section{Difficulties Encountered}
 
+
+Throughout the project there were an array of issues we encountered.
 \textcolor{red}{TODO: Slow-ness, CPU, GPU, meeting, depth sensing, hardware issues, debugging, benchmarking.}
+
+\subsubsection{Subject tracking}
+
+Early in the process we discovered that for optimal subject tracking we would need to include "depth sensing" into the project. This was so we could correctly triangulate the position of the subject and accurately reorient the microphone in their direction. However, we worked out that the \rpi\xspace would not be able to handle more than simple image processing. Since this hardware was a constraint of the assignment, our options were limited to face detection, colour detection and background masking. 
+
+The impact of using face detection was that we needed to `guess' how far we would need to shift the microphone when the subject moved. Our solution was to take the centre point of the face and using a grid determine which direction to shift the mount. The servos were painstakingly tuned to shift enough without `overshooting' into the next grid segment. Figure \ref{fig:face} shows an example of our grid solution.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{graphs/face.jpg}
+\caption{Left - Face detected outside of centre grid segment. Right - Mount reoriented until face back within centre grid segment.}
+\label{fig:face}
+\end{figure}
 
 
 \section{Architecture}
+
+\textcolor{red}{TODO: ...}
+
 \subsection{System Design including configuration}
 
 \textcolor{green}{Perhaps some hardware diagrams would work here?}
