@@ -336,7 +336,29 @@ When we presented the project to our laboratory class, all production code in th
 
 \subsection{Development tools}
 
-\textcolor{red}{TODO: Vim, Xcode, Instruments. Mention Pi compile performance...}
+Each team member had different preferences of IDE and development tools, but our combined.
+
+
+\begin{description}
+
+  \item[Vim] \hfill \\
+    When working off the \rpi, we would occasionally need to tweak some code or write something experimental. Vim was an ideal tool for this, because we be connect over SSH and it would allow us to use regular text editor features (e.g. syntax highlighting). As a long time C++ programmer, Alfred preferred to use Vim on his local machine as well.
+  \item[Xcode] \hfill \\
+      Compiling on the device was slow, so most of the work was done on a local machine via an IDE. Xcode was ideal because of its built in static analyser and llvm technologies. The static analyser was helpful in diagnosing memory leaks before the code was compiled and running. Writing C/C++ in Xcode meant that we could also take advantage of the advanced clang/clang++ compiler, however on the \rpi\xspace we re-compiled using gcc/g++.
+
+  \item[Instruments] \hfill \\
+      Figure \ref{fig:instruments} is a screen shot of how we used Instruments to profile the running applications for performance. We used it to determine what parts of our code were slowest so we could try and optimise those parts.
+  
+  \item[Git] \hfill \\
+      Version control was essential for working on this project. Git was a natural choice because of our shared background with tool.
+\end{description}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{graphs/instruments.png}
+\caption{Time profiler running to determine longest calling methods.}
+\label{fig:instruments}
+\end{figure}
 
 
 Compiling code on the \rpi\xspace was slow. Really slow.
