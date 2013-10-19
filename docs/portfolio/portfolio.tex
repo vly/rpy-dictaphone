@@ -586,17 +586,58 @@ void Message::initMessage(int id, string message_data)
 
 \subsubsection{Copy on write}
 
-PI has little memory size, so it is impossible to reallco memory for passing large frame data buffer that come from face detection frame. More specify, it turn to be waste of memory coping more than one instance of any kind of instance in the project. In order to reduce the usage of memory, we adopt the Copy on write strategy. This strategy only makes a copy when there is some modification on the object, and the most of time they shall only create a new pointer point to the original address.The trade-off for this strategy is that it is no thread-safe, because more than one thread want to access the object when about to change the original data. However, in our project, all the processes, such as face detection and messages, are read-only process, which means that we do not have to consider race condition when we use this approach. The code of message is shown as below:
+The \rpi\xspace has a limited memory size, so it is impossible to realloc memory from the large frame data buffer that come from the face detection frame. Generally, it is a waste of memory to create a local copy of any data when working on resource constrained device.
+
+To make effective use of memory, we adopted a copy-on-write strategy throughout the code base. This strategy only makes a copy of a variable when there modification that needs to be made to the object. This is achieved by always creating and passing pointers to an object rather than the object itself.
+
+Unfortunately, the tradeoff for this approach is that it is not thread-safe. More than one thread may want to access the object and change its original data. To overcome this in our project, we made all the processes (such as face detection and messages) read-only, so a race condition would not occur.
 
 
-\textcolor{red}{TODO: INSERT CODE}
 
-\subsubsection{Message serialization}
+\subsubsection{Message serialisation}
 
-As the communication between server and client, we encode the message data into an array that uses '\textbackslash0' at the end. And the message array can also be encoded into message.The code of message serialization is shown as below:
+For communication between the server and client we needed to encode the message data. Since the data was of variable length we used `\textbackslash0' as the last character to indicate its length.
 
-\textcolor{red}{TODO: INSERT CODE}
+As the communication between server and client, we encode the message data into an array that uses `\textbackslash0' at the end. And the message array can also be encoded into message.The code of message serialization is shown as below:
+The following code is an example of how data was serialised.
 
+\begin{lstlisting}[caption={Example of message serialisation technique.},language=C++]
+
+Message * Message::createMessage(void *data)
+{
+  Message *m = new Message();
+
+  int *p = (int *)data;
+
+  m->_impl->head->mh_id           = *(p + 0);
+  m->_impl->head->mh_size         = *(p + 1);
+  m->_impl->head->mh_handle_proxy = *(p + 2);
+  m->_impl->head->mh_reserve      = *(p + 3);
+  char *c   = (char *)((p + 4) + 1);
+  int   len = strlen(c);
+  m->_impl->body         = (message_body *)malloc(
+    sizeof(char) * (len + 1) + sizeof(int));
+  m->_impl->body->mb_len = *(p + 4);
+    memcpy(m->_impl->body->mb_data, c, len);
+  m->_impl->body->mb_data[len] = 0;
+
+  return m;
+}
+
+void * Message::messageData() const
+{
+  void *p = malloc(messageLength());
+
+  memset(p, 0, messageLength());
+  memcpy(p, _impl->head, sizeof(message_head));
+  int *pi = ((int *)p + 4);
+  *pi = _impl->body->mb_len;
+  char *c = (char *)(pi + 1);
+  memcpy(c, _impl->body->mb_data, _impl->body->mb_len);
+  c[_impl->body->mb_len] = 0;
+  return p;
+}
+\end{lstlisting}
 
 \subsubsection{Message queue class}
 
