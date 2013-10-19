@@ -228,7 +228,7 @@ The face detection was also very fun to work with. It was surprising easy to pro
 As a team I think we functioned very well. I normally try to avoid teamwork but our collection of skills and determination meant we delivered a project of a high standard.
 
 
-Finally, this projec also gave me a chance to create two new open source projects. While researching how to interact with our hardware I found very little code examples available. In an effort to help others, I decided to open source hardware based components of the project.
+Finally, this project also gave me a chance to create two new open source projects. While researching how to interact with our hardware I found very little code examples available. In an effort to help others, I decided to open source hardware based components of the project.
 
 
 \subsection{Description of how each learning objective is addressed}
@@ -239,7 +239,7 @@ Over the course of the project development, this team have made significant leap
 \subsubsection{Learning Objective 1}
 For the duration of this project, all of our ongoing development code has been managed through Github to ensure team members were always using the latest stable code when working on their assigned tasks.
 
-With the face detection (computer vision) generating major CPU load when running on the Raspberry Pi, the team has gone through a significant amount of iterations of the functionality in order to achieve real-time response to the enviroment.
+With the face detection (computer vision) generating major CPU load when running on the Raspberry Pi, the team has gone through a significant amount of iterations of the functionality in order to achieve real-time response to the environment.
 
 
 For efficiency during the initial development stages, most hardware interface interaction (e.g. servo controller, PIR sensor etc.) were prototyped using the Python programming language, and later ported into C when performance optimisation was required.
@@ -247,9 +247,8 @@ For efficiency during the initial development stages, most hardware interface in
 
 Debugging and performance has been used extensively over the course of the project for both hardware and software components. For Python, Pudb was the debugger of choice. For C/C++ Instruments and LLDB/GDB were utilised. On the hardware side, servo controller built-in error-checking was utilised for all communication to ensure hardware errors were caught and dealt with.
 
-\textcolor{red}{TODO: Open sourced project to show mastery: https://github.com/neilang/pir-monitor}
+A positive outcome from this project was that two original pieces of work we created for the solution have now been open sourced so other people building similar projects can leverage our work. We open sourced our code for interacting with a PIR-sensor\footnote{\url{https://github.com/neilang/pir-monitor}} on the \rpi. We also open sourced our C++ wrapper\footnote{\url{https://github.com/neilang/maestro-wrapper}} for interacting with the Polulu maestro servo controller. We selected these pieces of code because during our research we could not find any adequate existing examples for this.
 
-\textcolor{red}{TODO: Open sourced project to show mastery: https://github.com/neilang/maestro-wrapper}
 
 
  
@@ -278,10 +277,6 @@ As was outlined in our original project specification (see appendix), our group 
 Each member had a main responsibility within the team, however our approach to developing the components, which was "prototype, port, integrate, optimise" allowed different group members to experience working on the same component. Similarly to pair programming, it provided a system of multiple code reviews and allowed the experienced members experiment and learn new skills.
 
 Due to time-poor circumstance, we relied heavily on version control, GitHub and regularly discussion to ensure we on target with all our tasks. As our development logs (see appendix) demonstrate we worked project heavily each week and also held meetings to work together on fixing or integrating hardware.
-
-
-
-
 
 
 
