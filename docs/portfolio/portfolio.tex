@@ -89,6 +89,11 @@
 \usepackage{color}
 
 
+
+%For process listing
+\usepackage{dirtree}
+\usepackage{multicol}
+
 \begin{document}
 
 
@@ -445,7 +450,7 @@ To overcome this we relied heavily on online communication and members deliverin
 
 \section{Architecture}
 
-\textcolor{red}{TODO: add intro summary about architecture}
+Generally the system architecture followed our original plan outlined in the project specification. However, we did make some minor adjustments to ensure the main application booted on startup and initiated without the need to physically start a recording session.
 
 \subsection{System Design including configuration}
 
@@ -455,7 +460,33 @@ To overcome this we relied heavily on online communication and members deliverin
 
 \textcolor{red}{TODO: Drop this heading? I think we did in the project spec.} \textcolor{green}{Val, do you want to add anything about audio formats here?}
 
+
+
 \subsection{Program Design}
+
+There were two main running applications for this project, one for each device. The system was setup so that these main programs would initiate when the \rpi\xspace was powered on and no user interaction was required. Figure \ref{fig:processes} illustrates a simplified overview of the main program components.
+
+
+\begin{figure}
+\begin{multicols}{2}
+\dirtree{%
+.1 server.
+.3 pir-monitor.
+.3 face-detect.
+.3 servo-ctrl.
+.3 comm.
+}\columnbreak
+\dirtree{%
+.1 client.
+.3 voice-ctrl.
+.3 comm.
+}
+\end{multicols}
+\caption{A simplified representation of each programs components.}\label{fig:processes}
+\end{figure}
+
+
+\subsubsection{Software Design}
 
 
 The software architecture for this project is basically a Server and Client pattern. The server and client are connecting with Linux sockets using the UDP protocol. The project was divided into many separate sub-components within the server and client, and distributed evenly to balance the CPU performance. Each of the components adopt a message protocol to communicate with each other. To improve the in-dependancy in the code, each component was designed to only do its own job and not be aware of what the other components are doing. Figure \ref{fig:udp} is simple illustration of the protocol.
@@ -720,9 +751,6 @@ bool Client::dispatchMessage(Message *m)
 
 
 
-\subsubsection{Software Design}
-
-\textcolor{red}{TODO: rehash the structure we used in the project spec}
 
 
 \subsubsection{Source code or patches for all original work.}
