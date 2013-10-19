@@ -505,18 +505,83 @@ There were a lot of tradeoffs we encountered with designing the software. Due to
 
 \subsubsection{Sharing memory for threads communication}
 
-All the threads have their own stack, but they shall share the heap memory. So we build all the service in heap memory. (use malloc) In addition,  in order for easy accessing from different threads, we allocate a pointer in static memory block that point to the heap. 
 
-The code of Singleton is shown as below:
+Although each thread receives its own stack, they all share the heap memory. Therefore we were able to take advantage of heap to easily communicate between threads using the singleton pattern. We would allocate a pointer in the static memory block that references the heap and give us easy access to the different threads. 
 
-\textcolor{red}{TODO: INSERT CODE}
+The following code is an example of our singleton implementation.
+
+\begin{lstlisting}[caption={Singleton implementation example},language=C++]
+#ifndef __SINGLETON_H__
+#define __SINGLETON_H__
+
+template<typename T>
+class Singleton {
+protected:
+
+  static T *_instance;
+
+public:
+
+  static T* GetInstance()
+  {
+    if (!_instance) _instance = new T();
+
+    return _instance;
+  }
+};
+
+template<typename T>
+T * Singleton<T>::_instance = 0;
+
+#endif
+\end{lstlisting}
+
+\subsubsection{Memory scheduling}
+
+The most difficult part of the message definition is that the length of the message is not know before it is constructed. Due to the memory limits on the \rpi, we were unable to simply create an oversized buffer to cater for all situations. Our solution was to use only create a char array of size one, then use malloc to increase the length dynamically.
+The code for dynamically setting the message length is shown below:
+
+\begin{lstlisting}[caption={Example of dynamic message length allocation},language=C++]
+struct message_head
+{
+  int mh_id;
+  int mh_size;
+  int mh_handle_proxy;
+  int mh_reserve;
+};
+
+struct message_body
+{
+  int  mb_len;
+  char mb_data[1];
+};
+
+struct message
+{
+  message_head *head;
+  message_body *body;
+};
+
+void Message::initMessage(int id, string message_data)
+{
+  _impl->head->mh_id = id;
+
+  _impl->head->mh_handle_proxy = getMessageHandleProxy(id);
+  _impl->head->mh_reserve      = 0;
+
+  _impl->body = (message_body *)malloc(sizeof(int) +
+                                       sizeof(char) * (message_data.size() + 1));
+  _impl->body->mb_len = message_data.size();
+    memcpy(_impl->body->mb_data, message_data.c_str(), message_data.size());
+  *(_impl->body->mb_data + message_data.size()) = 0;
+
+  _impl->head->mh_size = sizeof(message_head) + sizeof(int)
+                         + sizeof(char) * (message_data.size() + 1);
+}
+
+\end{lstlisting}
 
 
-\subsubsection{Memory Scheduling}
-
-The most different part for the message definition is that the length of the message does not know before it construct. However, we cannot create a big buffer because of the memory limited for the PI. As a result of that, I use a strategy only define 1 char array, and use malloc to increase the length dynamically.The code of dynamical message length is shown as below:
-
-\textcolor{red}{TODO: INSERT CODE}
 
 
 \subsubsection{Copy on write}
