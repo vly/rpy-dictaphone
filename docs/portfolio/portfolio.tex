@@ -641,16 +641,66 @@ void * Message::messageData() const
 
 \subsubsection{Message queue class}
 
-The message queue acts as the communication component in the system. All other components push message to the message queue and the dispatch messages to appropriate component. The most important functionality for message queue should be synchronization. That is to say, only one thread can push or pop message at the same time in order to prevent race condition. More specific, the message queue use conditional valuable to control the race condition. The core code of message queue is shown as below:
+The message queue acts as the communication component in the system. All other components push message to the message queue and it will dispatch messages to appropriate destinations. The most important functionality of the message queue is synchronisation. That is to say, only one thread can push or pop a message at one time in order to prevent race condition. More specifically, the message queue uses a conditional variable to implement protection against race conditions.The core code of the message queue is shown as below.
 
-\textcolor{red}{TODO: INSERT CODE}
+\begin{lstlisting}[caption={Example of message queue},language=C++]
+#include "message_query.h"
+#include "message.h"
 
+MessageQuery::MessageQuery()
+{
+  pthread_mutex_init(&_mutex, NULL);
+  pthread_cond_init(&_con, NULL);
+}
+
+void MessageQuery::pushMessage(Message *m)
+{
+  pthread_mutex_lock(&_mutex);
+  _query.push_back(m);
+  pthread_cond_signal(&_con);
+  pthread_mutex_unlock(&_mutex);
+}
+
+Message * MessageQuery::popMessage()
+{
+  pthread_mutex_lock(&_mutex);
+
+  while (_query.empty()) pthread_cond_wait(&_con, &_mutex);
+
+  Message *reVal = _query.front();
+  _query.pop_front();
+  pthread_mutex_unlock(&_mutex);
+  return reVal;
+}
+\end{lstlisting}
 
 \subsubsection{FCFS strategy}
 
-The code shows that we use the simplest strategy to scheduling the message, which means that when there is a message push into the message queue, the dispatching thread shall read the first message in the message queue send to the appropriate component to serve it. In addition, the dispatch thread shall be hinge up and wait when there are no messages in message queue.The message shall be dispatched messages using design pattern: chain of responsibility. The process base on the message ID, which have been introduced in message protocol part. The dispatch component shall query message id and push the message to the serve components.The core code of client message dispatching is shown as below:
+We took a simple approach to for scheduling messages in the message queue. When one or more messages were pushed into the queue, the dispatching thread would read the first message and send it to the appropriate component. In addition to this, when the queue is empty the dispatching thread will hang up and wait.
 
-\textcolor{red}{TODO: INSERT CODE}
+The design pattern for the dispatched messages was `chain of responsibility'. The core of the client message dispatching code is shown below.
+
+\begin{lstlisting}[caption={Example of message dispatch},language=C++]
+bool Client::dispatchMessage(Message *m)
+{
+  bool bHandle = false;
+
+  if (m->_impl->head->mh_handle_proxy == proxy_client)
+  {
+    printf("client dispatching message");
+
+    if (m->_impl->head->mh_id == M_BEGIN_AUDIO_RECORDING) startAudioRecording();
+
+    else if (m->_impl->head->mh_id == M_END_AUDIO_RECORDING) stopAudioRecording();
+
+
+    bHandle = true;
+  }
+  else this->sendMessage(m);
+
+  return bHandle;
+}
+\end{lstlisting}
 
 
 
