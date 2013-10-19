@@ -425,7 +425,7 @@ The impact of using face detection was that we needed to `guess' how far we woul
 
 Our project had a lot of extra hardware attached. A PIR-sensor, 2x Servos via a USB servo controller, USB camera, USB sound card and microphone. For the majority of cases the hardware worked perfectly on our local machines and the \rpis. However, the custom C code for interacting with the USB servo controller did not work the same cross-device.
 
-We wrote a custom solution\footnote{Which has been open sourced here: https://github.com/neilang/maestro-wrapper} for communicating with the \textit{Pololu Maestro Servo Controller} which implemented the command protocol specified on the manufactures website\footnote{http://www.pololu.com/docs/0J40/5.e}. Unfortunately, unlike OS X, this solution had issues reading data from the device when running on a Linux system. Similar to how we built our other components, we first prototyped this solution in Python, which worked as designed, but when running the same code in a C port the controller would error while reading. The controller did have an in-built facility to diagnose issues through error codes, however to retrieve the error codes we needed to be able to read from the device.
+We wrote a custom solution\footnote{Which has been open sourced here: \url{https://github.com/neilang/maestro-wrapper}} for communicating with the \textit{Pololu Maestro Servo Controller} which implemented the command protocol specified on the manufactures website\footnote{\url{http://www.pololu.com/docs/0J40/5.e}}. Unfortunately, unlike OS X, this solution had issues reading data from the device when running on a Linux system. Similar to how we built our other components, we first prototyped this solution in Python, which worked as designed, but when running the same code in a C port the controller would error while reading. The controller did have an in-built facility to diagnose issues through error codes, however to retrieve the error codes we needed to be able to read from the device.
 
 We spent roughly two days debugging this issue, however as time was against us we decided to re-write the solution to avoid reading from the device. We were able to do this because writing to the device still worked fine. As a result we lost the ability to program defensively against this component and just had to assume commands issued to it were returning successfully.
 
@@ -458,7 +458,7 @@ Generally the system architecture followed our original plan outlined in the pro
 
 \subsection{Data Design}
 
-\textcolor{red}{TODO: Drop this heading? I think we did in the project spec.} \textcolor{green}{Val, do you want to add anything about audio formats here?}
+\textcolor{green}{Val, do you want to add anything about audio formats here? Otherwise I think we should drop this heading.}
 
 
 
@@ -484,6 +484,27 @@ There were two main running applications for this project, one for each device. 
 \end{multicols}
 \caption{A simplified representation of each programs components.}\label{fig:processes}
 \end{figure}
+
+\subsubsection{server and client}
+
+The \textit{server} and \textit{client} were the main running applications. They communicated with each other via a message queue. They responsibilities were for maintaining their sub-components running states.
+
+\subsubsection{pir-monitor}
+
+The \textit{pir-monitor} communicated with the PIR-sensor connected to the devices GPIO ports. It was responsible for keeping a record of last known motion in the room. If no movement was detected for 30 seconds it would signal the server to shutdown recording.
+
+\subsubsection{face-detect}
+
+The \textit{face-detect} component was responsible for communicating with the camera hardware and processing the images for facial images. It would signal the \textit{servo-ctrl} when a new position was detected.
+
+\subsubsection{servo-ctrl}
+
+The \textit{servo-ctrl} component was responsible for communicating with the servo controller hardware. It maintained a record of the servos max, min and current position. It would invoke the move commands on the hardware when a new face position was detected.
+
+\subsubsection{comm}
+
+The communication between components and the devices were handled by a message queue. Messages were sent between devices over UDP.
+
 
 
 \subsubsection{Software Design}
