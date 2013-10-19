@@ -388,7 +388,7 @@ If another group member was assigned to take over a task (e.g. handing over code
 
 
 Throughout the project there were an array of issues we encountered.
-\textcolor{red}{TODO: Slow-ness, CPU, GPU, meeting, depth sensing, hardware issues, debugging, benchmarking.}
+\textcolor{red}{TODO: Slow-ness, CPU, GPU, debugging, benchmarking.}
 
 \subsubsection{Subject tracking}
 
@@ -405,8 +405,19 @@ The impact of using face detection was that we needed to `guess' how far we woul
 \label{fig:face}
 \end{figure}
 
+\subsubsection{Hardware issues}
 
-\subsubsection{Meeting}
+Our project had a lot of extra hardware attached. A PIR-sensor, 2x Servos via a USB servo controller, USB camera, USB sound card and microphone. For the majority of cases the hardware worked perfectly on our local machines and the \rpis. However, the custom C code for interacting with the USB servo controller did not work the same cross-device.
+
+We wrote a custom solution\footnote{Which has been open sourced here: https://github.com/neilang/maestro-wrapper} for communicating with the \textit{Pololu Maestro Servo Controller} which implemented the command protocol specified on the manufactures website\footnote{http://www.pololu.com/docs/0J40/5.e}. Unfortunately, unlike OS X, this solution had issues reading data from the device when running on a Linux system. Similar to how we built our other components, we first prototyped this solution in Python, which worked as designed, but when running the same code in a C port the controller would error while reading. The controller did have an in-built facility to diagnose issues through error codes, however to retrieve the error codes we needed to be able to read from the device.
+
+We spent roughly two days debugging this issue, however as time was against us we decided to re-write the solution to avoid reading from the device. We were able to do this because writing to the device still worked fine. As a result we lost the ability to program defensively against this component and just had to assume commands issued to it were returning successfully.
+
+\subsubsection{Audio issues}
+
+\textcolor{red}{TODO: Talk to Val about filling in this part}
+
+\subsubsection{Team Meetings}
 
 We had a good team with very enthusiastic team members who wanted to do well, however we had a lot of trouble finding time when all members were available to meet. Two of our team worked full-time and the third studied full-time. Meeting was also problematic because of the amount of hardware required to power and connect to our project.
 
