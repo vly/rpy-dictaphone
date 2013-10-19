@@ -387,16 +387,13 @@ If another group member was assigned to take over a task (e.g. handing over code
 \section{Difficulties Encountered}
 
 
-Throughout the project there were an array of issues we encountered.
-\textcolor{red}{TODO: Slow-ness, CPU, GPU, debugging, benchmarking.}
+Throughout the project there were an array of issues we encountered. Below is a summary of some of the significant difficulties we encountered.
 
 \subsubsection{Subject tracking}
 
 Early in the process we discovered that for optimal subject tracking we would need to include "depth sensing" into the project. This was so we could correctly triangulate the position of the subject and accurately reorient the microphone in their direction. However, we worked out that the \rpi\xspace would not be able to handle more than simple image processing. Since this hardware was a constraint of the assignment, our options were limited to face detection, colour detection and background masking. 
 
 The impact of using face detection was that we needed to `guess' how far we would need to shift the microphone when the subject moved. Our solution was to take the centre point of the face and using a grid determine which direction to shift the mount. The servos were painstakingly tuned to shift enough without `overshooting' into the next grid segment. Figure \ref{fig:face} shows an example of our grid solution.
-
-
 
 \begin{figure}
 \centering
@@ -416,6 +413,14 @@ We spent roughly two days debugging this issue, however as time was against us w
 \subsubsection{Audio issues}
 
 \textcolor{red}{TODO: Talk to Val about filling in this part}
+
+
+\subsubsection{Performance tuning}
+
+As mentioned before, we had a lot of trouble ensuring the hardware would be able to handle the CPU requirements of face detection and audio encoding. Our simple solution was to divide the workload over two \rpis, but this brought on the complexity of adding communication to the solution.
+
+Time estimation is a difficult task and in the original project specification we had planned to add more features like speech-to-text translation and a portable power solution. However, tuning the system to run efficiently took up more time than anticipated and we had to re-scope the project to exclude those features. Although we presented a cut-down prototype for the demonstration, we felt it was more important to get the main parts right than deliver slow performing complete solution.
+
 
 \subsubsection{Team Meetings}
 
