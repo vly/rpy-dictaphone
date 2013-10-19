@@ -330,8 +330,6 @@ void face_detect::startMainLoop()
 {
   isRunning = true;
   pthread_create(&face_main_thread, NULL, faceCaptureFunction, (void *)_instance);
-
-  //	faceCaptureFunction((void*)this);
 }
 
 void face_detect::stopMainLoop()
@@ -341,9 +339,7 @@ void face_detect::stopMainLoop()
 }
 
 void face_detect::receiveMessage(const Message& m)
-{
-  // TODO: handle the message ...
-}
+{}
 
 void face_detect::loadCascadeClassifier(const char        *strPath,
                                         CascadeClassifier *pc)
