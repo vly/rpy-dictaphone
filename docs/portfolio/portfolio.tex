@@ -19,10 +19,10 @@
 \date{Semester 2, 2013}
 
 % Set watermark while in development
-\usepackage{draftwatermark}
-\SetWatermarkText{DRAFT}
-\SetWatermarkScale{5}
-\SetWatermarkColor[gray]{0.95}
+%\usepackage{draftwatermark}
+%\SetWatermarkText{DRAFT}
+%\SetWatermarkScale{5}
+%\SetWatermarkColor[gray]{0.95}
 
 
 % Change section numbering
@@ -3072,14 +3072,44 @@ if __name__ == "__main__":
 
 \section{Testing Issues}
 
-\textcolor{red}{TODO: slow, hard.}
+Testing our system was both hard and slow. The real world contextual behaviour of our project, our program did not lend itself to the traditional unit testing pattern.
+
+Our testing was mostly based around behaviour and performance. This was largely a manual process. For example, we would alter the stepping value for the servos, compile the change on the device, then review what impact that had on the quality of movement in the product. It was repetitive and painstakingly slow task. We performed similar testing for face detection, audio recording quality, motion detection, and servo movement.
+
 
 
 \subsection{Testing Done}
 
-\textcolor{red}{TODO: discuss hardware sharing issues, slowness, and bench marking of things}
 
-\begin{lstlisting}[caption=rand-face-detect.cpp,language=C++]
+\begin{table}
+\begin{tabular}{|c|c|c|}
+    \hline
+    \textbf{Trained Set} & \textbf{FPS} & \textbf{Accuracy} \\ \hline
+    
+    Frontal face & 13 & Acceptable \\ \hline
+    
+    Eye & 13-14 & Erratic \\ \hline
+    
+    Mouth & 13-14 & False positives \\ \hline
+    
+    Nose & 11 & Low detection, false positives \\ \hline
+    
+    Ear & 14 & No detection \\ \hline
+    
+    Eye pair & 14 & No detection \\ \hline
+
+\end{tabular}
+\caption{Trained data sets}
+\label{table:parts}
+\end{table}
+
+In most of our testing we would review performance and accuracy. Table \ref{table:parts} lists the results from testing different trained facial data sets. Although we were able to increase the frames per second with different facial features, the accuracy of detection decreased or was erratic and unusable.
+
+Besides each owning a \rpi, we only had one physical copy of each hardware part we needed. This meant that while one member was working on a piece of hardware, the others could not test their code against it.
+
+To overcome this limitation we came up with the concept of artificially simulating the hardware using software. The below code is an example of a program we wrote to simulate the camera and face detection component detecting faces and passing it to the servo controllers.
+
+\begin{lstlisting}[caption=rand\_face\_detect.cpp,language=C++]
 #include <iostream>
 #include <cstdlib>
 #include <unistd.h>
@@ -3144,41 +3174,18 @@ int main(int argc, const char * argv[])
 \end{lstlisting}
 
 
-\subsection{Performance Bounds}
-
-\textcolor{red}{TODO: Not sure about this heading... perhaps rehash whats in the project spec}
-
 \subsection{Performance Experiments}
 
+Similar to testing, performance evaluation required us to run the entire the program to measure the effect of changes. Figure \ref{fig:chart} illustrates a performance experiment we did with resizing an image before processing it. The reduced resolutions increased the frames per second, up until 160x120 where it had no impact.
 
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{graphs/chart.png}
+\caption{FPS at different image sizes.}
+\label{fig:chart}
+\end{figure}
 
-\textcolor{red}{TODO: Make table a reference figure.}
-
-
-\begin{center}
-\begin{table}
-\begin{tabular}{|c|c|c|}
-    \hline
-    \textbf{Trained Set} & \textbf{FPS} & \textbf{Accuracy} \\ \hline
-    
-    Frontal face & 13 & Acceptable \\ \hline
-    
-    Eye & 13-14 & Erratic \\ \hline
-    
-    Mouth & 13-14 & False positives \\ \hline
-    
-    Nose & 11 & Low detection, false positives \\ \hline
-    
-    Ear & 14 & No detection \\ \hline
-    
-    Eye pair & 14 & No detection \\ \hline
-
-\end{tabular}
-\end{table}
-\end{center}
-
-
-
+The hardest part about experiment with our system to improve performance was that we had to ensure it still responded as design. For example, some code changes would improve the CPU usage but decrease subject detection rate. These things were hard to measure and record.
 
 \section{Roles and Responsibilities}
 
@@ -3186,15 +3193,15 @@ As outlined in our original project specification, there was overlap in our team
 
 \subsection{Val Lyashov}
 
-\textcolor{red}{Add paragraph about hardware solution}
+Val was our hardware and unix expert. He was primarily responsible for the physical design of the solution, but he was also involved in prototyping some of the software-hardware interfaces.
 
 \subsection{"Alfred" Yang Yuan}
 
-\textcolor{red}{Add paragraph about software solution}
+Alfred was our lead software developer. He has extensive experience in C++ development and was able to architect all the components together and optimise their performance.
 
 \subsection{Neil Ang}
 
-\textcolor{red}{Add paragraph about whatever is left}
+Neil was designated leader of the group, but was also involved in porting the software components to C/C++, presenting and documenting the project. He researched and prototyped the early face detection code.
 
 
 \section{Breakdown of Work Done by Team Member}
