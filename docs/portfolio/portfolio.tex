@@ -444,9 +444,16 @@ To overcome this we relied heavily on online communication and members deliverin
 \subsection{Program Design}
 
 
-The software architecture for this project is basically a C/S (Client and Service) pattern. The server and client are connecting with Linux socket, using UDP protocol. The project has been divided into separated components, and after we build demo program for each part, we calculate the CPU usage, and than distribute the component into server and client.In terms of components, they adopt messages to communicating with each other. That is to say, each component only cares about their own jobs, which improves the hoisin and independency for the system.
+The software architecture for this project is basically a Server and Client pattern. The server and client are connecting with Linux sockets using the UDP protocol. The project was divided into many separate sub-components within the server and client, and distributed evenly to balance the CPU performance. Each of the components adopt a message protocol to communicate with each other. To improve the in-dependancy in the code, each component was designed to only do its own job and not be aware of what the other components are doing. Figure \ref{fig:udp} is simple illustration of the protocol.
 
-\textcolor{red}{TODO: Add communication digram here}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{graphs/udp.png}
+\caption{Communication protocol used by each component.}
+\label{fig:udp}
+\end{figure}
+
 
 
 \subsubsection{Architecture Decisions}
@@ -476,7 +483,25 @@ There were a lot of tradeoffs we encountered with designing the software. Due to
 
 
 
-\textcolor{red}{TODO: Add sequence digram here}
+
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{graphs/server-seq.png}
+\caption{Sequence diagram demonstrating server component interaction.}
+\label{fig:server-seq}
+\end{figure}
+
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{graphs/client-seq.png}
+\caption{Sequence diagram demonstrating client component interaction.}
+\label{fig:client-seq}
+\end{figure}
+
+
+
 
 \subsubsection{Sharing memory for threads communication}
 
