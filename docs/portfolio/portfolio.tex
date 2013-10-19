@@ -431,7 +431,7 @@ To overcome this we relied heavily on online communication and members deliverin
 
 \section{Architecture}
 
-\textcolor{red}{TODO: ...}
+\textcolor{red}{TODO: add intro summary about architecture}
 
 \subsection{System Design including configuration}
 
@@ -439,7 +439,7 @@ To overcome this we relied heavily on online communication and members deliverin
 
 \subsection{Data Design}
 
-\textcolor{red}{TODO: Drop this heading? I think we did in the project spec.}
+\textcolor{red}{TODO: Drop this heading? I think we did in the project spec.} \textcolor{green}{Val, do you want to add anything about audio formats here?}
 
 \subsection{Program Design}
 
@@ -451,52 +451,29 @@ The software architecture for this project is basically a C/S (Client and Servic
 
 \subsubsection{Architecture Decisions}
 
-\textcolor{red}{TODO: Alter table into description list because of LaTeX issues with large tables.}
+There were a lot of tradeoffs we encountered with designing the software. Due to the size of the project we selected solution that would reduce complexity while still providing reasonable performance.
 
+\begin{description}
 
-%\begin{description}
-%
-%  \item[Communication - TCP vs UDP] \hfill \\
-%      lorem ipsum.
-%      
-%  \item[Performance - Idle vs Multi-threaded] \hfill \\
-%      lorem ipsum.
-%
-%  \item[Library - OpenCV vs Pi face detect library] \hfill \\
-%      lorem ipsum.
-%
-%  \item[Thread communication - Pipeline vs Shared memory] \hfill \\
-%      lorem ipsum.
-%
-%  \item[Memory - Instance every copy vs Copy on write] \hfill \\
-%      lorem ipsum.
-%      
-%  \item[Message scheduling - FCFS vs Complex algorithm] \hfill \\
-%      lorem ipsum.
-%      
-%\end{description}
+  \item[Communication - TCP vs UDP] \hfill \\
+      We could of used either TCP or UDP for the inter \rpi\xspace communication. Since we only needed to communicate between two devices which would have a reduced rate of packet loss, we chose UDP. For our project a loss packet would not greatly effect the solution, so this also allowed us to avoid the complexity of managing failed deliveries.
+      
+  \item[Performance - Idle vs Multi-threaded] \hfill \\
+      We took a multi-threaded approach to programming the solution. Many of the components need to wait for communication messages before proceeding, so if we were to idle the functions it would increase the queries between each component and reduce the systems cohesion. With the multi-threaded face detection, the worst case scenario is scanning the whole image and not detecting any faces. As multiple threads are scanning images for faces it can drop system performance dramatically.
+  \item[Library - OpenCV vs Pi face detect library] \hfill \\
+      There is a RPI Camera board which could be used as an alternative to a USB camera. We obtained a RPI Camera board but choose to use a USB camera because it was easier to debug the face detection code on our local machines and the OpenCV library natively supported USB.
 
-\begin{center}
-\begin{table}
-\begin{tabular}{|p{0.3\textwidth}|p{0.2\textwidth}|p{0.5\textwidth}|}
-    \hline
-    \textbf{Aspects} & \textbf{Options} & \textbf{Decisions} \\ \hline
-    
-     Communication & 1. TCP \newline 2. UDP & 1. This is a small project that we only measure two PI communications, so the package loses shall happen in low possibility. \newline  2. In terms of complexity of communication, we do not need the message queue manages whether the message is delivered or not. \newline \textit{Option 2 adopted.} \\ \hline
+  \item[Thread communication - Pipeline vs Shared memory] \hfill \\
+      We choose to use shared memory for inter-thread communication. This was because shared memory provided better communication performance. Due to the number of threads we were using it also reduced the complexity needed to maintain the solution over something like a pipeline.
 
-     Performance & 1. Idle \newline 2. Multiple threads & 1. There are brunches of components needs to wait communication messages to take next step. If we use idle function, it shall increase the queries between each component, dropping the system's cohesion. \newline  2. The worst case for face detection algorithm shall take a long time on detecting, dropping the system’s performance dramatically. \newline \textit{Option 2 adopted.} \\ \hline
+  \item[Memory - Instance every copy vs Copy on write] \hfill \\
+      There is a lot of message data sent within the solution which can be accessed by all components. Instead of each component creating their own copy of a message instance, a copy-on-write method was adopted to avoid wasted object duplication.
+      
+  \item[Message scheduling - FCFS vs Complex algorithm] \hfill \\
+      Every message in the system had the same priority, so first come first serve was the best algorithm to implement and maintain for message scheduling. 
+      
+\end{description}
 
-     Library & 1. Open CV \newline 2. PI face detection library & 1. Easy to debug on the laptop. \newline  2. Open CV library supports the USB camera, which can easily located on servo. \newline \textit{Option 1 adopted.} \\ \hline
-     
-     Thread Communication & 1. Pipeline \newline 2. Sharing memory & 1. Sharing memory provides better performance on communication. \newline  2. There are too many components that need to communication, if we use pipeline, it shall increase the complex for the project and decrease the maintenance. \newline \textit{Option 2 adopted.} \\ \hline
-     
-     Memory & 1. Instance every copy \newline 2. Copy on write & 1. All components may assess the message data. if every component create an instance, there shall be a lot memory waste for brunches of different instance for same object. \newline  2. Copy on write provides more performance; because it shall not spend too much time on copying the data form one object to another. \newline \textit{Option 2 adopted.} \\ \hline
-
-     Message scheduling & 1. FCFS \newline 2. More complex algorithms & 1. FCFS is easy to implement and maintain. \newline  2. This is an easy project, and every message may have same priority. \newline \textit{Option 1 adopted.} \\ \hline
-
-\end{tabular}
-\end{table}
-\end{center}
 
 
 \textcolor{red}{TODO: Add sequence digram here}
