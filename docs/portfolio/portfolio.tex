@@ -454,7 +454,21 @@ We spent roughly two days debugging this issue, however as time was against us w
 
 \subsubsection{Audio issues}
 
-\textcolor{green}{TODO: Val could you please help with filling in this part. Stuff about noise on the line etc.}
+A number of issues were encountered while working on the audio component of the project.
+ 
+The general challenges included:
+\begin{itemize}
+\item capture clean audio of tracked target
+\item store audio in a more manageable format for archiving (e.g. mp3)
+\item process audio for audio-to-text conversion (stage 4 objective)
+\end{itemize}
+
+The Raspberry Pi was never built with audio-capturing as a use-case, for which the lack of audio-in stands a testament. An external USB audio card with a line-in was selected to provide the functionality.
+ 
+A major issue encountered with with the above setup was the notable level of noise artefacts introduced by the Pi during recording. Researching the issue, a solution involving forcing the USB controller to usb1 speeds and physically distancing the external soundcard from the actual RPi unit has vastly improved the audio-quality.
+ 
+Another notable issue arose when working on audio-storage and format conversion functionality which was challenging given the RPi's processing power.
+A number of solutions were explored before selecting the Shine fixed-point mp3 encoding library for the end-prototype.
 
 
 \subsubsection{Performance tuning}
@@ -3348,8 +3362,9 @@ Throughout the project we endeavoured to meet all the learning objectives. Our s
 
 There are still hurdles to overcome, but we believe the project could have commercial potential.
 
-\textcolor{red}{This feels unfinished... don't know what else to write... maybe add  a picture?}
+All of our team members have enjoyed the project immensely. At times, it did feel we bit off more than we could chew in regards to the scope, however this resulted in all of us going outside of our comfort zone and work together to achieve the prototype we presented in Week 10. This helped to realise practical, real-world applications to the material covered during the OSP lectures, and expand our horizons on what it takes to deliver a real-world solution when facing with a never-ending list of constraint.
 
+From both our peers and the lab tutor there was a unanimous suggestion to continue development of this project towards a more commercially-viable state, which has provided a huge boost of confidence for the team members.
 
 \begin{appendices}
 
