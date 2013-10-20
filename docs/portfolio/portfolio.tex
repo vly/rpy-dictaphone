@@ -274,7 +274,27 @@ Communication between the two Raspberry Pis was done over the network interface,
 
 \subsubsection{Learning Objective 3}
 
-\textcolor{green}{Val, are you working on this learning objective?}
+The project team have put an emphasis on tracking on going development of project functions. As part of that, system and communication diagrams were created to detail and maintain visibility of the connection points of individual project sections to each other.
+ 
+Some of diagrams and descriptions that can be found throughout their relevant sections of this folio include:
+
+\begin{itemize}
+
+\item \textbf{Kernel and hardware interaction:} Detailing the connectivity and interfaces of external hardware components of the project including PIR sensor, servos, microphone and an external camera.
+ 
+\item \textbf{Processes and interprocess communication:} Having ended up with a solution involving multiple Raspberry Pis, the intercommunication channel between them, as well as the client-server communication functionality which runs over it are detailed and represented in a series of diagrams.
+ 
+\item \textbf{Concurrency and synchronisation:} State of the project system was maintained and synchronised over the communication channel. 
+ 
+\item \textbf{Preemptive and non-preemptive scheduling:} Scheduling became particularly important during investigation into optimal audio recording setup. The original system design utilised only a single Raspberry Pi unit, requiring little interrupts during audio-recording stage. Due to the system overhead of face-detection functionality, a design decision was made to move the audio recording to a separate RPi. For optimal audio recording performance, kernel 3.8.13 recompiled with the real-time kernel patch enabling full preemption. Additionally, the audio recording process was set to -20 nice value.
+ 
+\item \textbf{Memory hierarchy, management, and cost-performance trade-offs:} Significant issues were encountered with getting the face-detection functionality to a perceived real-time state. Substantial evaluation and analysis of potential solutions/configurations and trade offs have been carried out to achieve the prototype state demonstrated in the lab. The topic is further expended on in later sections.
+ 
+\item \textbf{File system design and implementation:} For audio recording, a number optimisations were made to improve the quality of the end-recordings. Some of the optimisation included mounting the FS with noatime flag to turn off Last Access Time recording on file reads, decreasing the "swappiness" value to  introduce a greater delay to storage writes. 
+
+\end{itemize}
+
+More information and in-depth specifics can be found in the relevant sections further in this document.
 
 \subsubsection{Learning Objective 4}
 
