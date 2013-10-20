@@ -461,7 +461,11 @@ Generally the system architecture followed our original plan outlined in the pro
 
 \subsection{Data Design}
 
-\textcolor{green}{Val, do you want to add anything about audio formats here? Otherwise I think we should drop this heading.}
+Data storage on the Raspberry Pi is severely limited by the size of the SD card. Although for most applications / use cases for the RPi a typical SD card is sufficient, the long term prospects for usage of our project platform is effected by the audio storage issue.
+ 
+To address this issue, we have investigated various audio formats in search of a balance between audio quality, end filesize, and usability for other project functions such as voice-to-text conversion. Some audio formats considered included WAV (base format), WMA voice, and MP3. Some voice recording specific codecs such as DSP Truespeech although look great in spec, have no open source libraries available to use for this project.
+ 
+For the prototype recording functionality archived audio state, we chose MP3 at 11.5kHz, 16kbps mono as this provided approximately a 5mb/hour filesize which is a huge improvement over WAV which clocked in at approximately 600mb/hour.
 
 
 
