@@ -3218,27 +3218,41 @@ See appendix for daily log of tasks.
 \begin{description}
 
   \item[Week 2] \hfill \\
-      Formed team with Neil and discussed ideas for the project. \textcolor{green}{Val to provide expansion.}
+    Formed team with Neil and discussed ideas for the project. Brain stormed a few areas we have common interest in. Began researching existing projects on similar veins.
   \item[Week 3] \hfill \\
-      Voted for a team restructure. \textcolor{green}{Val to provide expansion.}
+    Narrowed down the project focus and problem we would be tackling.
+    Third member we ended up with in Week 2, showed little interest in aiming outside of immediate comfort zone, and we (Neil and myself) felt wasn't a good fit. This was communicated and we parted ways.
+    Began acquiring hardware components for prototyping/experimentation.
+    Started to break down the project into tasks and commenced development.
   \item[Week 4] \hfill \\
-      Acquired new team member. \textcolor{green}{Val to provide expansion.}
+   Acquired new team member, Alfred.
+   Hardware began to arrive, and hardware interface development kicked off.
   \item[Week 5] \hfill \\
-      Demonstrated cross-compile milestone in lab. \textcolor{green}{Val to provide expansion.}
+    Demonstrated cross-compile milestone in lab.
+    Basic servo functionality working, writing interface and developing camera mount. Started running into issues with power supply to drive servos, using Arduino's 5V rail for temporary power.
+
   \item[Week 6] \hfill \\
-      \textcolor{green}{Val to provide expansion.}
+    Microphone and external soundcards have arrived. Began working on recording functionality. Huge audio quality issues encountered.
+    Issues with getting smooth servo transitions via software control over GPIO pins. Ordered external servo controller for experimentation.
+    Getting PIR sensor working on the RPi.
   \item[Week 7] \hfill \\
-       \textcolor{green}{Val to provide expansion.}
+    External servo controller arrived. No suitable device driver found, prototyped one in Python based on the propriatry protocol documentation. Shows a lot more promise vs. original software control. Testing external battery pack to drive the servos via the external controller.
+    Have recompiled the Linux kernel on the RPi for dedicated for audio recording, including the real-time kernel patch for full preemption. Notable audio quality improvements.
+
   \item[Week 8] \hfill \\
-      Took a trip to Bunnings with Neil to build the servo mount. \textcolor{green}{Val to provide expansion.}
+    Took a trip to Bunnings with Neil to build the servo mount. Base assembly and servo harness put together. Not pretty but works. Constructed the microphone mounting point. Weight is an issue on the servos even though the specs say they are ratefd for 5kg load.
   \item[Week 9] \hfill \\
-       \textcolor{green}{Val to provide expansion.}
+    Putting all compontents together, helping out with the integration of communications between the 2 RPis, stabilising the power supply for the servos.
+     Working on imrpoving the audio recording functionality and experimenting with voice-to-text via Google's Speech API (part of Chrome). Doesn't appear to like Australian accents.
   \item[Week 10] \hfill \\
-      Presented project to lab group (see appendix). Started work on final project portfolio submission.
+    Configuring on-boot initiation of all system compontents, including connectivity logic. Written services for systemd, and daemonising the running components.
+    Began running through the presentation format.
+ 
   \item[Week 11] \hfill \\
-      Worked on final project portfolio submission.
+    Working on documentation and project folio.
+    Making some of the developed code more generic and open sourcing, namely the Pololu controller bit.
   \item[Week 12] \hfill \\
-      Continued work on project portfolio submission.
+     Working on project folio.
 
 \end{description}
 
