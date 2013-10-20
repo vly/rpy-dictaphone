@@ -1570,7 +1570,7 @@ private:
 \begin{lstlisting}[caption=maestro.cpp,language=C++]
 #include "maestro.h"
 #define NA_STEP_VALUE 150
-
+// Based off: http://www.pololu.com/docs/0J40/5.h.1
 int Maestro::goHome(Servo *servo) {
   unsigned char command[] = { 0xA2, servo->getChannel() };
 
