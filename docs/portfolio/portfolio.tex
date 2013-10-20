@@ -502,7 +502,7 @@ The system is comprised of two \rpis, networked together. The first device (or S
 \label{fig:hardware}
 \end{figure}
 
-At boot time the Server \rpi\xspace initialises the master service, and awaits a client to connect. One a connection has been established, the PIR sensor is activated and awaits movement in the direction of the speaker. One movement is detected, the face-tracking functionality is activated. As soon as a lock has been established on the speaker, servo pan and tilt functionality is engaged, and the Client RPi is notified to begin audio recording.
+At boot time the Server \rpi\xspace initialises the master service, and awaits a client to connect. Once a connection has been established, the PIR sensor is activated and awaits movement in the direction of the speaker. One movement is detected, the face-tracking functionality is activated. As soon as a lock has been established on the speaker, servo pan and tilt functionality is engaged, and the Client RPi is notified to begin audio recording.
 
 If speaker tracker functionality loses track of the target, it enters search mode where it pans from the last known coordinates until the target lock is reacquired. Failing that, it times out and returns to PIR listening state, notifying the Client \rpi\xspace to stop recording. The Client \rpi\xspace at that point, uses the downtime to begin conversion of recorded audio into the final archive format (MP3 mono) and removes original WAV file.
 
