@@ -491,7 +491,18 @@ Generally the system architecture followed our original plan outlined in the pro
 
 \subsection{System Design including configuration}
 
-\textcolor{green}{Perhaps some hardware diagrams would work here?}
+The system is comprised of two \rpis, networked together. The first device (or Server) is for subject tracking. It is connected to a USB camera, PIR-sensor and servo controller. The second device (or Client) is for audio recording. It is connected to a directional microphone. Figure \ref{fig:hardware} is an illustration of the complete hardware design.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{graphs/hardware.pdf}
+\caption{Complete system hardware.}
+\label{fig:hardware}
+\end{figure}
+
+At boot time the Server RPi initialises the master service, and awaits a client to connect. One a connection has been established, the PIR sensor is activated and awaits movement in the direction of the speaker. One movement is detected, the face-tracking functionality is activated. As soon as a lock has been established on the speaker, servo pan and tilt functionality is engaged, and the Client RPi is notified to begin audio recording.
+
+If speaker tracker functionality loses track of the target, it enters search mode where it pans from the last known coordinates until the target lock is reacquired. Failing that, it times out and returns to PIR listening state, notifying the Client RPi to stop recording. The Client RPi at that point, uses the downtime to begin conversion of recorded audio into the final archive format (MP3 mono) and removes original WAV file.
 
 \subsection{Data Design}
 
